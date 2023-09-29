@@ -17,12 +17,14 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     color: black;
+    font-family : "Noto Sans KR";
   }
   #root {
   height: 100dvh;
 }
   *{
     box-sizing: border-box;
+    font-family : "Noto Sans KR";
   }
 `;
 

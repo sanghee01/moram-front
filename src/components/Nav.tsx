@@ -14,22 +14,34 @@ function Nav() {
 }
 const Container = styled.div`
   width: 100%;
-  height: 80px;
+  height: auto;
   display: flex;
-  padding: 0 15px;
+  padding: 15px 15px;
   justify-content: flex-start;
   align-items: center;
   background-color: aliceblue;
   gap: 15px;
 
   & button {
-    width: auto;
+    max-width: 140px;
     height: 40px;
+    padding: 0 10px;
     font-size: 1.1rem;
-    padding: 10px 30px;
+    font-weight: bolder;
+    flex-grow: 1;
     border-radius: 20px;
     border: 0;
     background-color: #acecac;
+  }
+
+  @media screen and (max-width: 500px) {
+    flex-wrap: wrap;
+    & button {
+      width: calc(
+        50% - 30px
+      ); /* 화면이 작을 때 버튼을 2개씩 나누기 위한 스타일 */
+      max-width: 50%;
+    }
   }
 `;
 
