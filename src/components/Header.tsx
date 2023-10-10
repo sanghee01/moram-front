@@ -44,16 +44,13 @@ const Container = styled.div`
 
 const Nav = styled.div`
   height: 80px;
-  padding: 0 20%;
+  padding: 0 15%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: aliceblue;
 
-  @media screen and (max-width: 1300px) {
-    padding: 0 10%;
-  }
   @media screen and (max-width: 900px) {
     padding: 0 5%;
   }
