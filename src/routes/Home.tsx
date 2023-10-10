@@ -1,15 +1,9 @@
 import { styled } from "styled-components";
-import Nav from "../components/Nav";
-
 function Home() {
   return (
     <>
-      <Nav />
       <Container>
-        <img
-          width="100%"
-          src="https://moram.b1nd.com/static/media/DefaultBanner.36c8f1c1.jpg"
-        />
+        <img src="https://moram.b1nd.com/static/media/DefaultBanner.36c8f1c1.jpg" />
         <ContainerBlock>
           <h1>인기 게시글</h1>
           <ImgContainer>
@@ -44,11 +38,7 @@ function Home() {
   );
 }
 
-const Container = styled.div`
-  max-width: 1500px;
-  padding: 0 20px;
-  margin: 0 auto;
-`;
+const Container = styled.div``;
 const ContainerBlock = styled.div`
   width: calc (100% - 40px);
   padding: 30px 30px;

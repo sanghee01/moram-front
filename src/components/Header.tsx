@@ -1,75 +1,156 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 function Header() {
   const navigate = useNavigate();
   return (
     <Container>
-      <LogoImg
-        onClick={() => navigate("/")}
-        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvY8KSeVLVzsKJOsGiwdJl9diyZH49lTNzIHAy3pcDigpYGJ__hISu_bxuyO7zZ-D6WxI&usqp=CAU"
-        alt="메인"
-      />
-      <SearchInput placeholder="통합 검색" />
-      <BtnContainer>
-        <button onClick={() => navigate("/login")}>로그인</button>
-        <button onClick={() => navigate("/register")}>회원가입</button>
-      </BtnContainer>
+      <Nav>
+        <LogoImg
+          onClick={() => navigate("/")}
+          src="assets/logo.png"
+          alt="메인"
+        />
+        <RightContainer>
+          <SearchInput placeholder="통합 검색" />
+          <BtnContainer>
+            <button onClick={() => navigate("/login")}>로그인</button>
+            <button onClick={() => navigate("/register")}>회원가입</button>
+          </BtnContainer>
+        </RightContainer>
+      </Nav>
+      <Tabs>
+        <Tab>
+          <Link to="/comunity">커뮤니티</Link>
+        </Tab>
+        <Tab>
+          <Link to="/notice">공지사항</Link>
+        </Tab>
+        <Tab>
+          <Link to="/qna">문의하기</Link>
+        </Tab>
+        <Tab>
+          <Link to="/intro">모람모람</Link>
+        </Tab>
+      </Tabs>
     </Container>
   );
 }
 
 const Container = styled.div`
-  width: 100%;
-  height: 70px;
-  padding: 0 2%;
+  position: sticky;
+  top: 0px;
+`;
+
+const Nav = styled.div`
+  height: 80px;
+  padding: 0 20%;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: aliceblue;
-  position: sticky;
-  top: 0px;
+
+  @media screen and (max-width: 1300px) {
+    padding: 0 10%;
+  }
+  @media screen and (max-width: 900px) {
+    padding: 0 5%;
+  }
+  @media screen and (max-width: 450px) {
+    padding: 0 2%;
+  }
 `;
+
 const LogoImg = styled.img`
   height: 100%;
+
+  @media screen and (max-width: 1300px) {
+    height: 85%;
+  }
+  @media screen and (max-width: 700px) {
+    height: 70%;
+  }
 `;
+
+const RightContainer = styled.div`
+  width: 50%;
+  display: flex;
+  justify-content: right;
+  gap: 10px;
+`;
+
 const SearchInput = styled.input`
-  flex-grow: 1;
-  font-size: 0.9em;
-  padding: 0 15px;
-  margin: 0 3%;
-  width: 150px;
-  height: 55%;
-  border-radius: 20px;
-  border: 1px solid black;
+  width: 50%;
+  padding: 7px 15px;
+  border-radius: 8px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0.1);
+  outline: none;
+
+  @media screen and (max-width: 1300px) {
+    width: 70%;
+  }
+  @media screen and (max-width: 450px) {
+    font-size: 0.9rem;
+  }
 `;
 const BtnContainer = styled.div`
-  width: 200px;
-  height: 65%;
   display: flex;
-  justify-content: space-evenly;
   gap: 10px;
-
   & button {
-    font-size: 1.1rem;
-    flex-grow: 1;
+    width: 80px;
     background-color: rgb(75, 75, 75);
     color: white;
     border: 0;
-    border-radius: 10px;
+    border-radius: 8px;
+    font-size: 0.9rem;
   }
   & button:hover {
-    cursor: pointer;
     filter: contrast(130%);
   }
   & button:active {
     filter: hue-rotate(300deg);
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 900px) {
     & button {
-      font-size: 0.8rem;
+      width: 70px;
+      font-size: 0.9rem;
     }
+    & button:nth-child(2) {
+      display: none;
+    }
+  }
+`;
+
+const Tabs = styled.div`
+  background-color: #0e2b49;
+  padding: 0 20%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  @media screen and (max-width: 1000px) {
+    padding: 0 10%;
+  }
+  @media screen and (max-width: 600px) {
+    padding: 0 5%;
+    font-size: 0.9rem;
+  }
+`;
+
+const Tab = styled.span`
+  & a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: white;
+    font-weight: bolder;
+    padding: 15px 0;
+  }
+  & a:hover {
+    background-color: #0e243e;
   }
 `;
 
