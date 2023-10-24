@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 function Comunity() {
@@ -11,31 +12,132 @@ function Comunity() {
     의학계열: false,
     교육계열: false,
   });
+  const [postings, setPostings] = useState<any>(null);
+  const [categoryFilter, setCategoryFilter] = useState<any>("");
+  const [tagFilter, setTagFilter] = useState<any>("");
 
-  const toggleCollege = (college: any) => {
+  const toggleBigCategory = (bigCategory: any) => {
     setIsExpanded((prevState: any) => ({
       ...prevState,
-      [college]: !prevState[college],
+      [bigCategory]: !prevState[bigCategory],
     }));
   };
 
+  useEffect(() => {
+    getPostings();
+  }, []);
+
+  useEffect(() => {
+    getPostings(categoryFilter, tagFilter);
+  }, [categoryFilter, tagFilter]);
+
+  const getPostings = async (category = "", tag = "") => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/posting?category=${category}&tag=${tag}`
+      );
+      setPostings(response.data);
+      console.log(response.data);
+    } catch (error: any) {
+      alert(error?.response?.data || "알 수 없는 오류 발생.");
+    }
+  };
+
+  const date = (dateStr: string) => {
+    const dateObj = new Date(dateStr);
+    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(dateObj.getDate()).padStart(2, "0")} ${String(
+      dateObj.getHours()
+    ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
+  };
   return (
-    <Sidebar>
-      {Object.keys(data).map((category: any) => (
-        <BigCategory key={category}>
-          <button onClick={() => toggleCollege(category)}>
-            {isExpanded[category] ? "▼" : "▶"} {category}
-          </button>
-          {isExpanded[category] && (
+    <Container>
+      {/* 좌측에 있는 과 선택 버튼 */}
+      <Sidebar>
+        {Object.keys(data).map((bigCategory: any) => (
+          <BigCategory key={bigCategory}>
+            <button
+              onClick={() => toggleBigCategory(bigCategory)}
+              style={
+                isExpanded[bigCategory]
+                  ? { background: "lightblue" }
+                  : { backgroundColor: "white" }
+              }
+            >
+              {bigCategory}
+            </button>
+            {/* 계열 클릭해서 펼쳐졌을 때 */}
+            {isExpanded[bigCategory] && (
+              <CategoryContainer>
+                {data[bigCategory].map((category: any) => (
+                  <div
+                    key={category}
+                    onClick={() => {
+                      setCategoryFilter(category);
+                      category === categoryFilter && setCategoryFilter("");
+                    }}
+                    style={
+                      category === categoryFilter
+                        ? { background: "#5a59ff" }
+                        : {}
+                    }
+                  >
+                    {category}
+                  </div>
+                ))}
+              </CategoryContainer>
+            )}
+          </BigCategory>
+        ))}
+      </Sidebar>
+
+      <Article>
+        <Tag>
+          <div
+            style={tagFilter === "자유" ? { background: "skyblue" } : {}}
+            onClick={() => setTagFilter("자유")}
+          >
+            자유
+          </div>
+          <div
+            style={tagFilter === "질문" ? { background: "skyblue" } : {}}
+            onClick={() => setTagFilter("질문")}
+          >
+            질문
+          </div>
+          <div
+            style={tagFilter === "정보" ? { background: "skyblue" } : {}}
+            onClick={() => setTagFilter("정보")}
+          >
+            정보
+          </div>
+          <div
+            style={tagFilter === "스터디" ? { background: "skyblue" } : {}}
+            onClick={() => setTagFilter("스터디")}
+          >
+            스터디
+          </div>
+          <div
+            style={tagFilter === "취업" ? { background: "skyblue" } : {}}
+            onClick={() => setTagFilter("취업")}
+          >
+            취업
+          </div>
+        </Tag>
+        {postings?.map((posting: any) => (
+          <Content key={posting.id}>
             <div>
-              {data[category].map((college: any) => (
-                <div key={college}>{college}</div>
-              ))}
+              [{posting.category}] [{posting.tag}] {posting.id} {posting.title}{" "}
             </div>
-          )}
-        </BigCategory>
-      ))}
-    </Sidebar>
+            <div>
+              {posting.nickname} | {date(posting.writeTime)}
+            </div>
+          </Content>
+        ))}
+      </Article>
+    </Container>
   );
 }
 
@@ -61,17 +163,61 @@ const data = {
   교육계열: ["교육학과", "유아교육과", "초등교육과", "특수교육과"],
 } as any;
 
-const Sidebar = styled.div`
-  width: 300px;
-  height: 500px;
-  border-radius: 10px;
-  background-color: #d3d3d3;
+const Container = styled.div`
+  display: flex;
+  padding: 10px;
+  gap: 10px;
+`;
+
+const Article = styled.article`
   display: flex;
   flex-direction: column;
-  margin: 10px;
+  padding: 10px;
+  flex-grow: 1;
+  height: 600px;
+  gap: 10px;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: whitesmoke;
+  border-radius: 20px;
+  padding: 15px;
+
+  & div {
+    display: flex;
+  }
+`;
+
+const Tag = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: whitesmoke;
+  border-radius: 20px;
+  padding: 15px;
+  gap: 10px;
+
+  & div {
+    background-color: white;
+    padding: 10px 20px;
+    border-radius: 15px;
+  }
+`;
+
+const Sidebar = styled.div`
+  width: 300px;
+  height: 600px;
+  border-radius: 10px;
+  background-color: #0e2b49;
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
   justify-content: flex-start;
   align-items: center;
-  gap: 10px;
+  gap: 15px;
   overflow-y: scroll;
 `;
 
@@ -80,6 +226,39 @@ const BigCategory = styled.div`
 
   & button {
     width: 100%;
+    height: 45px;
+    border: 0px;
+    border-radius: 20px;
+    background-color: skyblue;
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+`;
+
+const CategoryContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 10px;
+
+  & div {
+    width: 100%;
+    height: 40px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  & div:nth-child(2n) {
+    background-color: #f0f8ff;
+  }
+
+  & div:hover {
+    cursor: pointer;
   }
 `;
 export default Comunity;
