@@ -14,7 +14,7 @@ function Comunity() {
   });
   const [postings, setPostings] = useState<any>(null);
   const [categoryFilter, setCategoryFilter] = useState<any>("");
-  const [tagFilter, setTagFilter] = useState<any>("");
+  const [TagContainerFilter, setTagContainerFilter] = useState<any>("");
 
   const toggleBigCategory = (bigCategory: any) => {
     setIsExpanded((prevState: any) => ({
@@ -28,13 +28,13 @@ function Comunity() {
   }, []);
 
   useEffect(() => {
-    getPostings(categoryFilter, tagFilter);
-  }, [categoryFilter, tagFilter]);
+    getPostings(categoryFilter, TagContainerFilter);
+  }, [categoryFilter, TagContainerFilter]);
 
-  const getPostings = async (category = "", tag = "") => {
+  const getPostings = async (category = "", TagContainer = "") => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/posting?category=${category}&tag=${tag}`
+        `http://localhost:8000/posting?category=${category}&TagContainer=${TagContainer}`
       );
       setPostings(response.data);
       console.log(response.data);
@@ -94,42 +94,23 @@ function Comunity() {
       </Sidebar>
 
       <Article>
-        <Tag>
-          <div
-            style={tagFilter === "자유" ? { background: "skyblue" } : {}}
-            onClick={() => setTagFilter("자유")}
-          >
-            자유
-          </div>
-          <div
-            style={tagFilter === "질문" ? { background: "skyblue" } : {}}
-            onClick={() => setTagFilter("질문")}
-          >
-            질문
-          </div>
-          <div
-            style={tagFilter === "정보" ? { background: "skyblue" } : {}}
-            onClick={() => setTagFilter("정보")}
-          >
-            정보
-          </div>
-          <div
-            style={tagFilter === "스터디" ? { background: "skyblue" } : {}}
-            onClick={() => setTagFilter("스터디")}
-          >
-            스터디
-          </div>
-          <div
-            style={tagFilter === "취업" ? { background: "skyblue" } : {}}
-            onClick={() => setTagFilter("취업")}
-          >
-            취업
-          </div>
-        </Tag>
+        <TagContainer>
+          {tagList.map((tag: any) => (
+            <div
+              style={
+                TagContainerFilter === tag ? { background: "skyblue" } : {}
+              }
+              onClick={() => setTagContainerFilter(tag)}
+            >
+              {tag}
+            </div>
+          ))}
+        </TagContainer>
         {postings?.map((posting: any) => (
           <Content key={posting.id}>
             <div>
-              [{posting.category}] [{posting.tag}] {posting.id} {posting.title}{" "}
+              [{posting.category}] [{posting.TagContainer}] {posting.id}{" "}
+              {posting.title}{" "}
             </div>
             <div>
               {posting.nickname} | {date(posting.writeTime)}
@@ -163,6 +144,8 @@ const data = {
   교육계열: ["교육학과", "유아교육과", "초등교육과", "특수교육과"],
 } as any;
 
+const tagList = ["자유", "정보", "질문", "스터디", "취업"];
+
 const Container = styled.div`
   display: flex;
   padding: 10px;
@@ -191,7 +174,7 @@ const Content = styled.div`
   }
 `;
 
-const Tag = styled.div`
+const TagContainer = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -204,6 +187,9 @@ const Tag = styled.div`
     background-color: white;
     padding: 10px 20px;
     border-radius: 15px;
+  }
+  & div:hover {
+    cursor: pointer;
   }
 `;
 
