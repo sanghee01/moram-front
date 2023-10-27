@@ -8,6 +8,7 @@ import Notice from "./routes/Notice";
 import Qna from "./routes/Qna";
 import Intro from "./routes/Intro";
 import Footer from "./components/Footer";
+import Profile from "./routes/Profile";
 
 function AppRouter() {
   return (
@@ -22,6 +23,7 @@ function AppRouter() {
           <Route path="/notice" element={<Notice />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
         </Routes>
         <Footer />
