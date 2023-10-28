@@ -1,12 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { userState } from "../state";
 import { useEffect } from "react";
 
+/**카카오로그인시 redirect 받는 컴포넌트 */
 function LoginSuccess() {
   const location = useLocation();
   const getUser = new URLSearchParams(location.search).get("user");
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const navigate = useNavigate();
   useEffect(() => {
     if (getUser) {
@@ -20,12 +21,11 @@ function LoginSuccess() {
         console.error("사용자 정보 파싱 중 오류 발생:", error);
       }
     }
-  }, [getUser]);
+  }, []);
 
   return (
     <div>
       <h1>로그인 성공!</h1>
-      <p>사용자 정보: {user}</p>
     </div>
   );
 }

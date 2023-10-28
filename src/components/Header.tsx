@@ -6,7 +6,7 @@ import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState<any>(userState);
+  const [user, setUser] = useRecoilState<any>(userState); //유저 정보
 
   const logout = async () => {
     setUser(null);
@@ -34,11 +34,13 @@ function Header() {
           <BtnContainer>
             {user ? (
               <>
+                {/* 로그인 상태일 시 컴포넌트 */}
                 <button>{user.nickname}</button>
                 <button onClick={() => logout()}>로그아웃</button>
               </>
             ) : (
               <>
+                {/* 비로그인 상태일 시 컴포넌트 */}
                 <button onClick={() => navigate("/login")}>로그인</button>
                 <button onClick={() => navigate("/register")}>회원가입</button>
               </>

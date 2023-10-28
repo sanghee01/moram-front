@@ -6,12 +6,13 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "./state";
 
 function App() {
-  const setUser = useSetRecoilState(userState);
+  const setUser = useSetRecoilState(userState); //유저 설정
 
   useEffect(() => {
     getUser();
   }, []);
 
+  /**새로고침시에도 세션을 이용하여 유저 이메일, 닉네임 정보 받는 함수*/
   const getUser = async () => {
     try {
       const response = await axios.get(
