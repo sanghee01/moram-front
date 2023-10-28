@@ -24,11 +24,7 @@ function Header() {
   return (
     <Container>
       <Nav>
-        <LogoImg
-          onClick={() => navigate("/")}
-          src="assets/logo.png"
-          alt="메인"
-        />
+        <LogoImg onClick={() => navigate("/")} src="assets/logo.png" />
         <RightContainer>
           <SearchInput placeholder="통합 검색" />
           <BtnContainer>
@@ -50,7 +46,7 @@ function Header() {
       </Nav>
       <Tabs>
         <Tab>
-          <Link to="/comunity">커뮤니티</Link>
+          <Link to="/community">커뮤니티</Link>
         </Tab>
         <Tab>
           <Link to="/notice">공지사항</Link>
