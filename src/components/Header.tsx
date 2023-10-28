@@ -50,7 +50,7 @@ function Header() {
       </Nav>
       <Tabs>
         <Tab>
-          <Link to="/comunity">커뮤니티</Link>
+          <Link to="/community">커뮤니티</Link>
         </Tab>
         <Tab>
           <Link to="/notice">공지사항</Link>

@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 function Community() {
+  /**좌측 계열 패널 확장 */
   const [isExpanded, setIsExpanded] = useState<any>({
     인문학계열: false,
     사회과학계열: false,
@@ -12,10 +14,11 @@ function Community() {
     의학계열: false,
     교육계열: false,
   });
-  const [postings, setPostings] = useState<any>(null);
-  const [categoryFilter, setCategoryFilter] = useState<any>("");
-  const [TagContainerFilter, setTagContainerFilter] = useState<any>("");
+  const [postings, setPostings] = useState<any>(null); // 게시물들 데이터
+  const [categoryFilter, setCategoryFilter] = useState<any>(""); // 과 필터
+  const [tagFilter, setTagFilter] = useState<any>(""); // 태그('자유','질문'...) 필터
 
+  /**계열 확장, 축소 함수*/
   const toggleBigCategory = (bigCategory: any) => {
     setIsExpanded((prevState: any) => ({
       ...prevState,
@@ -23,18 +26,21 @@ function Community() {
     }));
   };
 
+  //커뮤니티 접속 시 게시물 받아오기 */
   useEffect(() => {
-    //getPostings();
+    getPostings();
   }, []);
 
+  //학과, 태그 필터 변경 시 필터해서 게시물 다시 받아오기
   useEffect(() => {
-    getPostings(categoryFilter, TagContainerFilter);
-  }, [categoryFilter, TagContainerFilter]);
+    getPostings(categoryFilter, tagFilter);
+  }, [categoryFilter, tagFilter]);
 
-  const getPostings = async (category = "", TagContainer = "") => {
+  /**게시물 정보 받아오는 함수 */
+  const getPostings = async (category = "", tag = "") => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/posting?category=${category}&TagContainer=${TagContainer}`
+        `${process.env.REACT_APP_APIADDRESS}/posting?category=${category}&tag=${tag}`
       );
       setPostings(response.data);
       console.log(response.data);
@@ -43,6 +49,7 @@ function Community() {
     }
   };
 
+  /** 날짜 형식 변환 함수 */
   const date = (dateStr: string) => {
     const dateObj = new Date(dateStr);
     return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
@@ -72,7 +79,7 @@ function Community() {
             {isExpanded[bigCategory] && (
               <CategoryContainer>
                 {data[bigCategory].map((category: any) => (
-                  <div
+                  <button
                     key={category}
                     onClick={() => {
                       setCategoryFilter(category);
@@ -85,7 +92,7 @@ function Community() {
                     }
                   >
                     {category}
-                  </div>
+                  </button>
                 ))}
               </CategoryContainer>
             )}
@@ -94,24 +101,26 @@ function Community() {
       </Sidebar>
 
       <Article>
+        {/* 태그 필터 버튼 모임 */}
         <TagContainer>
           {tagList.map((tag: any) => (
-            <div
+            <button
               key={tag}
-              style={
-                TagContainerFilter === tag ? { background: "lightblue" } : {}
-              }
-              onClick={() => setTagContainerFilter(tag)}
+              style={tagFilter === tag ? { background: "#b0b0fc" } : {}}
+              onClick={() => {
+                setTagFilter(tag);
+                tag === tagFilter && setTagFilter("");
+              }}
             >
-              {tag}
-            </div>
+              {tag} {tag === tagFilter && "-"}
+            </button>
           ))}
         </TagContainer>
         {postings?.map((posting: any) => (
           <Content key={posting.id}>
             <div>
-              [{posting.category}] [{posting.TagContainer}] {posting.id}{" "}
-              {posting.title}{" "}
+              [{posting.category}] [{posting.tag}]&nbsp;
+              <Link to={`/community/${posting.id}`}> {posting.title}</Link>
             </div>
             <div>
               {posting.nickname} | {date(posting.writeTime)}
@@ -173,6 +182,9 @@ const Content = styled.div`
   & div {
     display: flex;
   }
+  & a {
+    color: black;
+  }
 `;
 
 const TagContainer = styled.div`
@@ -184,14 +196,17 @@ const TagContainer = styled.div`
   padding: 15px;
   gap: 10px;
 
-  & div {
+  & button {
+    transition: 0.5s all;
     background-color: white;
     padding: 10px 20px;
     border-radius: 15px;
     font-weight: 500;
+    border: 0;
   }
-  & div:hover {
+  & button:hover {
     cursor: pointer;
+    background-color: #d6d6ff;
   }
 `;
 
@@ -221,6 +236,12 @@ const BigCategory = styled.div`
     font-weight: 700;
     color: white;
     border: 2px solid white;
+    transition: 0.3s all;
+  }
+
+  & button:hover {
+    filter: contrast(200%);
+    cursor: pointer;
   }
 `;
 
@@ -230,7 +251,7 @@ const CategoryContainer = styled.div`
   gap: 10px;
   padding: 20px 10px;
 
-  & div {
+  & button {
     width: 100%;
     height: 40px;
     background-color: white;
@@ -240,10 +261,12 @@ const CategoryContainer = styled.div`
     align-items: center;
     font-size: 1.1rem;
     font-weight: 600;
+    color: black;
   }
 
-  & div:hover {
+  & button:hover {
     cursor: pointer;
+    background: #d1bcf8;
   }
 `;
 export default Community;

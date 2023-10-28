@@ -9,6 +9,7 @@ import Qna from "./routes/Qna";
 import Intro from "./routes/Intro";
 import Footer from "./components/Footer";
 import LoginSuccess from "./routes/LoginSuccess";
+import Posting from "./routes/Posting";
 
 function AppRouter() {
   return (
@@ -20,6 +21,7 @@ function AppRouter() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/community/:id" element={<Posting />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
