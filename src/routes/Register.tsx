@@ -28,7 +28,7 @@ function Register() {
   const register = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/register",
+        `${process.env.REACT_APP_APIADDRESS}/user/register`,
         {
           nickname,
           email,
@@ -44,7 +44,9 @@ function Register() {
 
   const kakao = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/kakao");
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/user/kakao`
+      );
       alert(response?.data);
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
@@ -56,7 +58,7 @@ function Register() {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/mailsend",
+        `${process.env.REACT_APP_APIADDRESS}/user/mailsend`,
         {
           email: email,
         },
@@ -75,9 +77,8 @@ function Register() {
     timer = setInterval(() => setCount((prev) => prev - 1), 1000);
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/mailverify",
-        { email, authcode: verifyCode },
-        { withCredentials: true }
+        `${process.env.REACT_APP_APIADDRESS}/user/mailverify`,
+        { email, authcode: verifyCode }
       );
       if (response.data) {
         alert(response.data);

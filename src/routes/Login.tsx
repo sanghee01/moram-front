@@ -21,16 +21,18 @@ function Login() {
   const login = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/user/login",
+        `${process.env.REACT_APP_APIADDRESS}/user/login`,
         {
           email,
           password,
         },
         { withCredentials: true }
       );
-      setUser(response.data.content);
-      console.log(response.data.content);
+      const user = response.data.content;
+      setUser(user);
+      console.log(user);
       alert(response?.data.message);
+      navigate("/");
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
     }
@@ -38,9 +40,12 @@ function Login() {
 
   const kakao = async () => {
     try {
-      const response = await axios.get("http://localhost:8000/user/kakao", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/user/kakao`,
+        {
+          withCredentials: true,
+        }
+      );
       alert(response?.data);
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
@@ -72,7 +77,10 @@ function Login() {
             로그인
           </button>
           <button>
-            <a href="http://localhost:8000/user/kakao" target="_blank">
+            <a
+              href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
+              target="_self"
+            >
               카카오로 로그인/회원가입
             </a>
           </button>

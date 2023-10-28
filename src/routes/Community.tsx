@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-function Comunity() {
+function Community() {
   const [isExpanded, setIsExpanded] = useState<any>({
     인문학계열: false,
     사회과학계열: false,
@@ -24,7 +24,7 @@ function Comunity() {
   };
 
   useEffect(() => {
-    getPostings();
+    //getPostings();
   }, []);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ function Comunity() {
   const getPostings = async (category = "", TagContainer = "") => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/posting?category=${category}&TagContainer=${TagContainer}`
+        `${process.env.REACT_APP_APIADDRESS}/posting?category=${category}&TagContainer=${TagContainer}`
       );
       setPostings(response.data);
       console.log(response.data);
@@ -62,11 +62,11 @@ function Comunity() {
               onClick={() => toggleBigCategory(bigCategory)}
               style={
                 isExpanded[bigCategory]
-                  ? { background: "lightblue" }
-                  : { backgroundColor: "white" }
+                  ? { background: "white", color: "black" }
+                  : { backgroundColor: "#0e2b49" }
               }
             >
-              {bigCategory}
+              {bigCategory} {isExpanded[bigCategory] ? "-" : "+"}
             </button>
             {/* 계열 클릭해서 펼쳐졌을 때 */}
             {isExpanded[bigCategory] && (
@@ -80,7 +80,7 @@ function Comunity() {
                     }}
                     style={
                       category === categoryFilter
-                        ? { background: "#5a59ff" }
+                        ? { background: "#b0b0fc" }
                         : {}
                     }
                   >
@@ -97,8 +97,9 @@ function Comunity() {
         <TagContainer>
           {tagList.map((tag: any) => (
             <div
+              key={tag}
               style={
-                TagContainerFilter === tag ? { background: "skyblue" } : {}
+                TagContainerFilter === tag ? { background: "lightblue" } : {}
               }
               onClick={() => setTagContainerFilter(tag)}
             >
@@ -187,6 +188,7 @@ const TagContainer = styled.div`
     background-color: white;
     padding: 10px 20px;
     border-radius: 15px;
+    font-weight: 500;
   }
   & div:hover {
     cursor: pointer;
@@ -203,7 +205,7 @@ const Sidebar = styled.div`
   padding: 15px;
   justify-content: flex-start;
   align-items: center;
-  gap: 15px;
+  gap: 25px;
   overflow-y: scroll;
 `;
 
@@ -212,12 +214,13 @@ const BigCategory = styled.div`
 
   & button {
     width: 100%;
-    height: 45px;
+    height: 50px;
     border: 0px;
     border-radius: 20px;
-    background-color: skyblue;
     font-size: 1.15rem;
     font-weight: 700;
+    color: white;
+    border: 2px solid white;
   }
 `;
 
@@ -239,12 +242,8 @@ const CategoryContainer = styled.div`
     font-weight: 600;
   }
 
-  & div:nth-child(2n) {
-    background-color: #f0f8ff;
-  }
-
   & div:hover {
     cursor: pointer;
   }
 `;
-export default Comunity;
+export default Community;

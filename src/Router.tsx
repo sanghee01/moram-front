@@ -3,11 +3,12 @@ import Home from "./routes/Home";
 import Header from "./components/Header";
 import Login from "./routes/Login";
 import Register from "./routes/Register";
-import Comunity from "./routes/Comunity";
+import Community from "./routes/Community";
 import Notice from "./routes/Notice";
 import Qna from "./routes/Qna";
 import Intro from "./routes/Intro";
 import Footer from "./components/Footer";
+import LoginSuccess from "./routes/LoginSuccess";
 
 function AppRouter() {
   return (
@@ -18,10 +19,11 @@ function AppRouter() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/comunity" element={<Comunity />} />
+          <Route path="/community" element={<Community />} />
           <Route path="/notice" element={<Notice />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
+          <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
         </Routes>
         <Footer />
