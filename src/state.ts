@@ -1,10 +1,6 @@
 import { atom } from "recoil";
 
-interface User {
-  nickname: string;
-  email: string;
-}
-export const userState = atom<User | null>({
+export const userState = atom<any | null>({
   key: "userState",
   default: null,
 });

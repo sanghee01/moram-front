@@ -1,8 +1,26 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
+import { userState } from "../state";
+import axios from "axios";
 
 function Header() {
   const navigate = useNavigate();
+  const [user, setUser] = useRecoilState<any>(userState); //유저 정보
+
+  const logout = async () => {
+    setUser(null);
+    localStorage.removeItem("user");
+    // try {
+    //   const response = await axios.get(
+    //     `${process.env.REACT_APP_APIADDRESS}/user/logout`
+    //   );
+    //   alert(response?.data);
+    //   setUser(null);
+    // } catch (error: any) {
+    //   alert(error.response?.data || "알 수 없는 에러 발생");
+    // }
+  };
   return (
     <Container>
       <Nav>
@@ -14,8 +32,19 @@ function Header() {
         <RightContainer>
           <SearchInput placeholder="통합 검색" />
           <BtnContainer>
-            <button onClick={() => navigate("/login")}>로그인</button>
-            <button onClick={() => navigate("/register")}>회원가입</button>
+            {user ? (
+              <>
+                {/* 로그인 상태일 시 컴포넌트 */}
+                <button>{user.nickname}</button>
+                <button onClick={() => logout()}>로그아웃</button>
+              </>
+            ) : (
+              <>
+                {/* 비로그인 상태일 시 컴포넌트 */}
+                <button onClick={() => navigate("/login")}>로그인</button>
+                <button onClick={() => navigate("/register")}>회원가입</button>
+              </>
+            )}
           </BtnContainer>
         </RightContainer>
       </Nav>
