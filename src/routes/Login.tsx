@@ -35,8 +35,7 @@ function Login() {
         {
           email,
           password,
-        },
-        { withCredentials: true }
+        }
       );
       const user = response.data.content;
       setUser(user);
