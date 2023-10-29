@@ -42,7 +42,8 @@ export const Buttons = styled.div`
   justify-content: space-between;
   gap: 12px;
   margin-top: 30px;
-  & button {
+  & button,
+  a {
     height: 50px;
     width: 100%;
     border-radius: 15px;
@@ -52,7 +53,11 @@ export const Buttons = styled.div`
     font-size: 1.05rem;
     font-weight: 700;
   }
-  & button:nth-child(2) {
+  & a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
     color: #181601;
     background-color: #fee501;
   }
@@ -66,4 +71,13 @@ export const Buttons = styled.div`
   & button:active {
     filter: hue-rotate(340deg);
   }
+`;
+
+export const Label = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  margin-top: 10px;
 `;
