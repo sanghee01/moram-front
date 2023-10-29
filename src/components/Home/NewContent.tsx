@@ -1,34 +1,45 @@
 import { styled } from "styled-components";
 
 interface NewContentProps {
-  src: string;
+  img: string;
   category: string;
   title: string;
   date: string;
   content: string;
+  tag: string;
 }
 
-function NewContent({ src, category, title, date, content }: NewContentProps) {
+function NewContent({
+  img,
+  category,
+  title,
+  date,
+  content,
+  tag,
+}: NewContentProps) {
   return (
-    <Content>
-      <img src={src} alt="이미지" />
-      <section>
-        <div>
-          <span>
-            [{category}] {title}
-          </span>
-          <span>{date}</span>
-        </div>
+    <Container>
+      <img src={img} alt="이미지" />
+      <div>
+        <Title>
+          <div>
+            <span>
+              [{tag}] {title}
+            </span>
+            <Category>{category}</Category>
+          </div>
+          <Time> {date}</Time>
+        </Title>
         <p>{content}</p>
-      </section>
-    </Content>
+      </div>
+    </Container>
   );
 }
 
-const Content = styled.div`
+const Container = styled.div`
   display: flex;
   gap: 20px;
-  margin-top: 10px;
+  margin-top: 13px;
 
   &:hover {
     cursor: pointer;
@@ -39,21 +50,14 @@ const Content = styled.div`
     object-fit: cover;
     border-radius: 8px;
   }
-  & section {
-    display: flex;
-    flex-direction: column;
 
-    & div {
-      display: flex;
-      gap: 10px;
-    }
-    @media screen and (max-width: 1000px) {
-      & div {
-        flex-direction: column;
-        gap: 0;
-      }
-    }
+  & p {
+    margin: 5px 0;
   }
+  & div {
+    width: 100%;
+  }
+
   @media screen and (max-width: 1000px) {
     & img {
       width: 70px;
@@ -66,6 +70,39 @@ const Content = styled.div`
       height: 50px;
     }
   }
+`;
+
+const Title = styled.header`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+
+  & div {
+    width: 80%;
+  }
+
+  @media screen and (max-width: 1000px) {
+    flex-direction: column;
+    align-items: start;
+    gap: 0;
+    & div {
+      width: inherit;
+    }
+  }
+`;
+
+const Time = styled.span`
+  opacity: 0.5;
+  font-weight: 500;
+  font-size: 0.9rem;
+`;
+
+const Category = styled.span`
+  background-color: #eee6f8;
+  padding: 2px 5px;
+  border-radius: 5px;
+  margin-left: 10px;
 `;
 
 export default NewContent;
