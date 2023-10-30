@@ -9,17 +9,15 @@ function Header() {
   const [user, setUser] = useRecoilState<any>(userState); //유저 정보
 
   const logout = async () => {
-    setUser(null);
-    localStorage.removeItem("user");
-    // try {
-    //   const response = await axios.get(
-    //     `${process.env.REACT_APP_APIADDRESS}/user/logout`
-    //   );
-    //   alert(response?.data);
-    //   setUser(null);
-    // } catch (error: any) {
-    //   alert(error.response?.data || "알 수 없는 에러 발생");
-    // }
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/user/logout`
+      );
+      alert(response?.data);
+      setUser(null);
+    } catch (error: any) {
+      alert(error.response?.data || "알 수 없는 에러 발생");
+    }
   };
   return (
     <Container>

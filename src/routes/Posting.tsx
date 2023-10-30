@@ -51,7 +51,7 @@ function Posting() {
       let api;
       !replyId
         ? (api = `${process.env.REACT_APP_APIADDRESS}/comment/${postId}`)
-        : (api = `${process.env.REACT_APP_APIADDRESS}/comment/${postId}/${replyId}`);
+        : (api = `${process.env.REACT_APP_APIADDRESS}/comment/${postId}?parentId=${replyId}`);
       const response = await axios.post(`${api}`, {
         content: commentContent,
       });
