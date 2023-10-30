@@ -1,7 +1,14 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Logo, Container, Form, Input, Buttons } from "../styles/LoginStyles";
+import {
+  Logo,
+  Container,
+  Form,
+  Input,
+  Buttons,
+  Label,
+} from "../styles/LoginStyles";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../state";
 
@@ -10,6 +17,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const setUser = useSetRecoilState(userState);
   const navigate = useNavigate();
+
+  /**input에서 사용하는 onChange 함수 */
   const onChange = (e: any) => {
     const {
       target: { id, value },
@@ -18,31 +27,31 @@ function Login() {
     if (id === "password") setPassword(value);
   };
 
+  /**로그인 버튼 클릭 시 실행되는 함수 */
   const login = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/login", {
-        email,
-        password,
-      });
-      setUser({ ...response.data });
-      alert(response?.data);
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/user/login`,
+        {
+          email,
+          password,
+        }
+      );
+      const user = response.data.content;
+      setUser(user);
+      console.log(user);
+      alert(response?.data.message);
+      navigate("/");
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
     }
   };
 
-  const kakao = async () => {
-    try {
-      const response = await axios.get("http://localhost:8000/user/kakao");
-      alert(response?.data);
-    } catch (error: any) {
-      alert(error.response?.data || "알 수 없는 에러 발생");
-    }
-  };
   return (
     <Container>
       <Form>
         <Logo>모람모람 로그인하기</Logo>
+        <Label>이메일</Label>
         <Input
           id="email"
           type="email"
@@ -50,6 +59,7 @@ function Login() {
           onChange={onChange}
           value={email}
         />
+        <Label>비밀번호</Label>
         <Input
           id="password"
           type="password"
@@ -60,11 +70,16 @@ function Login() {
         <Buttons>
           <button
             style={{ backgroundColor: "rgb(40, 98, 255)" }}
-            onClick={login}
+            onClick={() => login()}
           >
             로그인
           </button>
-          <button onClick={kakao}>카카오로 로그인/회원가입</button>
+          <a
+            href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
+            target="_self"
+          >
+            카카오로 로그인/회원가입
+          </a>
           <button onClick={() => navigate("/register")}>
             이메일로 회원가입하기
           </button>
