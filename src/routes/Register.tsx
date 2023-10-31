@@ -27,7 +27,7 @@ function Register() {
     const {
       target: { id, value },
     } = e;
-    if (id === "email") setEmail(value);
+    if (id === "email" && !verified) setEmail(value);
     if (id === "password") setPassword(value);
     if (id === "passwordVerify") setPasswordVerify(value);
     if (id === "verifyCode") setVerifyCode(value);
@@ -47,10 +47,10 @@ function Register() {
           nickname,
           email,
           password,
-        },
-        { withCredentials: true }
+        }
       );
-      alert(response?.data);
+      alert(response?.data + "\n로그인을 해주세요.");
+      navigate("/login");
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
     }

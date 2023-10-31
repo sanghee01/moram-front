@@ -1,22 +1,39 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { CategorySpan } from "../styles/CommunityStyles";
+import { categoryList } from "../categoryList";
 
 function Community() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const categoryQuery: any = queryParams.get("category");
+  const tagQuery = queryParams.get("tag");
   /**좌측 계열 패널 확장 */
-  const [isExpanded, setIsExpanded] = useState<any>({
-    인문학계열: false,
-    사회과학계열: false,
-    자연과학계열: false,
-    공학계열: false,
-    예술계열: false,
-    의학계열: false,
-    교육계열: false,
-  });
+  const categoryKeys = Object.keys(categoryList);
+  let initialIsExpandedState = categoryKeys.reduce((acc: any, category) => {
+    acc[category] = false;
+    return acc;
+  }, {}); //계열(bigcategory) 구하기
+
+  /**좌측 패널 확장 기록 불러오기 */
+  let foundCategory: any = null;
+  for (const key in categoryList) {
+    if (categoryList[key].includes(categoryQuery)) {
+      foundCategory = key;
+      break;
+    }
+  }
+  initialIsExpandedState[foundCategory] = true;
+  console.log(initialIsExpandedState);
+  const [isExpanded, setIsExpanded] = useState(initialIsExpandedState);
   const [postings, setPostings] = useState<any>(null); // 게시물들 데이터
-  const [categoryFilter, setCategoryFilter] = useState<any>(""); // 과 필터
-  const [tagFilter, setTagFilter] = useState<any>(""); // 태그('자유','질문'...) 필터
+  const [categoryFilter, setCategoryFilter] = useState<string>(
+    categoryQuery || ""
+  ); // 과 필터
+  const [tagFilter, setTagFilter] = useState<string>(tagQuery || ""); // 태그('자유','질문'...) 필터
 
   /**계열 확장, 축소 함수*/
   const toggleBigCategory = (bigCategory: any) => {
@@ -28,7 +45,7 @@ function Community() {
 
   //커뮤니티 접속 시 게시물 받아오기 */
   useEffect(() => {
-    getPostings();
+    getPostings(categoryFilter, tagFilter);
   }, []);
 
   //학과, 태그 필터 변경 시 필터해서 게시물 다시 받아오기
@@ -49,6 +66,21 @@ function Community() {
     }
   };
 
+  const changeQuery = (newCategory: any, newTag: any) => {
+    // 변경된 쿼리 매개변수를 포함한 새 URL을 생성합니다.
+    const newSearchParams = new URLSearchParams();
+    if (newCategory) {
+      newSearchParams.set("category", newCategory);
+    }
+    if (newTag) {
+      newSearchParams.set("tag", newTag);
+    }
+
+    navigate({
+      pathname: location.pathname,
+      search: `?${newSearchParams.toString()}`,
+    });
+  };
   /** 날짜 형식 변환 함수 */
   const date = (dateStr: string) => {
     const dateObj = new Date(dateStr);
@@ -63,7 +95,7 @@ function Community() {
     <Container>
       {/* 좌측에 있는 과 선택 버튼 */}
       <Sidebar>
-        {Object.keys(data).map((bigCategory: any) => (
+        {Object.keys(categoryList).map((bigCategory: any) => (
           <BigCategory key={bigCategory}>
             <button
               onClick={() => toggleBigCategory(bigCategory)}
@@ -78,12 +110,16 @@ function Community() {
             {/* 계열 클릭해서 펼쳐졌을 때 */}
             {isExpanded[bigCategory] && (
               <CategoryContainer>
-                {data[bigCategory].map((category: any) => (
+                {categoryList[bigCategory].map((category: any) => (
                   <button
                     key={category}
                     onClick={() => {
                       setCategoryFilter(category);
-                      category === categoryFilter && setCategoryFilter("");
+                      changeQuery(category, tagFilter);
+                      if (category === categoryFilter) {
+                        setCategoryFilter("");
+                        changeQuery("", tagFilter);
+                      }
                     }}
                     style={
                       category === categoryFilter
@@ -109,17 +145,23 @@ function Community() {
               style={tagFilter === tag ? { background: "#b0b0fc" } : {}}
               onClick={() => {
                 setTagFilter(tag);
-                tag === tagFilter && setTagFilter("");
+                changeQuery(categoryFilter, tag);
+                if (tag === tagFilter) {
+                  setTagFilter("");
+                  changeQuery(categoryFilter, "");
+                }
               }}
             >
               {tag} {tag === tagFilter && "-"}
             </button>
           ))}
         </TagContainer>
+        {/* 포스팅 목록 */}
         {postings?.map((posting: any) => (
           <Content key={posting.id}>
             <div>
-              [{posting.category}] [{posting.tag}]&nbsp;
+              <Category>[{posting.category}]</Category>{" "}
+              <Category>[{posting.tag}]</Category>&nbsp;
               <Link to={`/community/${posting.id}`}> {posting.title}</Link>
             </div>
             <div>
@@ -131,28 +173,6 @@ function Community() {
     </Container>
   );
 }
-
-const data = {
-  인문학계열: ["국어국문학과", "영어영문학과", "사학과", "철학과", "심리학과"],
-  사회과학계열: [
-    "경제학과",
-    "사회학과",
-    "정치외교학과",
-    "언론정보학과",
-    "행정학과",
-  ],
-  자연과학계열: ["수학과", "물리학과", "화학과", "생명과학과", "지구과학과"],
-  공학계열: [
-    "컴퓨터공학과",
-    "전자공학과",
-    "기계공학과",
-    "화학공학과",
-    "건축공학과",
-  ],
-  예술계열: ["미술학과", "음악학과", "연극영화학과", "무용학과", "디자인학과"],
-  의학계열: ["의학과", "치과학과", "간호학과", "한의학과"],
-  교육계열: ["교육학과", "유아교육과", "초등교육과", "특수교육과"],
-} as any;
 
 const tagList = ["자유", "정보", "질문", "스터디", "취업"];
 
@@ -269,4 +289,9 @@ const CategoryContainer = styled.div`
     background: #d1bcf8;
   }
 `;
+
+const Category = styled(CategorySpan)`
+  margin-right: 5px;
+`;
+
 export default Community;
