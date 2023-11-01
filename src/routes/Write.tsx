@@ -1,7 +1,8 @@
 import { styled } from "styled-components";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { categoryList, tagList } from "../tagList";
+import { useNavigate } from "react-router-dom";
 
 function Write() {
   const [bigCategory, setBigCategory] = useState<string>("");
@@ -9,6 +10,7 @@ function Write() {
   const [tag, setTag] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const navigate = useNavigate();
 
   console.log(category, tag, title, content);
   const postPosting = async (e: any) => {
@@ -24,6 +26,7 @@ function Write() {
         img3Url: undefined,
       });
       alert(response.data);
+      navigate("/community");
     } catch (error: any) {
       alert(error?.response?.data || "알 수 없는 오류 발생.");
     }
