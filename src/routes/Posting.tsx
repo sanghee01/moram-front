@@ -4,6 +4,8 @@ import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Input } from "../styles/LoginStyles";
 import { SmallBtn } from "../styles/ButtonStyles";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
 
 function Posting() {
   const params = useParams();
@@ -14,6 +16,7 @@ function Posting() {
   const [replyId, setReplyId] = useState<null | Number>(null); //답글할 id
   const [replyNickname, setReplyNickname] = useState<null | String>(null); //답글할 닉네임
   const [replyComment, setReplyComment] = useState<null | String>(null); //답글할 댓글 내용
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     getPosting();
@@ -41,6 +44,17 @@ function Posting() {
         `${process.env.REACT_APP_APIADDRESS}/comment/${postId}`
       );
       setComments(response.data); //포스팅 데이터 받기
+    } catch (error: any) {
+      alert(error.response.data);
+    }
+  };
+
+  const like = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/like/${postId}`
+      );
+      setComments(response.data.message); //포스팅 데이터 받기
     } catch (error: any) {
       alert(error.response.data);
     }
@@ -114,7 +128,12 @@ function Posting() {
           )}
           <InputContainer>
             <CommentInput onChange={onChange} value={commentContent} />
-            <Btn onClick={() => postComment()}>작성</Btn>
+            <Btn
+              onClick={() => user && postComment()}
+              style={user || { background: "gray" }}
+            >
+              {user ? "작성" : "로그인 필요"}
+            </Btn>
           </InputContainer>
         </>
       ) : (

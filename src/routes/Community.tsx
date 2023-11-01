@@ -139,22 +139,30 @@ function Community() {
       <Article>
         {/* 태그 필터 버튼 모임 */}
         <TagContainer>
-          {tagList.map((tag: any) => (
-            <button
-              key={tag}
-              style={tagFilter === tag ? { background: "#b0b0fc" } : {}}
-              onClick={() => {
-                setTagFilter(tag);
-                changeQuery(categoryFilter, tag);
-                if (tag === tagFilter) {
-                  setTagFilter("");
-                  changeQuery(categoryFilter, "");
-                }
-              }}
-            >
-              {tag} {tag === tagFilter && "-"}
-            </button>
-          ))}
+          <div>
+            {tagList.map((tag: any) => (
+              <button
+                key={tag}
+                style={tagFilter === tag ? { background: "#b0b0fc" } : {}}
+                onClick={() => {
+                  setTagFilter(tag);
+                  changeQuery(categoryFilter, tag);
+                  if (tag === tagFilter) {
+                    setTagFilter("");
+                    changeQuery(categoryFilter, "");
+                  }
+                }}
+              >
+                {tag} {tag === tagFilter && "-"}
+              </button>
+            ))}
+          </div>
+          <button
+            onClick={() => navigate("/write")}
+            style={{ background: "#b0b0fc" }}
+          >
+            글 작성
+          </button>
         </TagContainer>
         {/* 포스팅 목록 */}
         {postings?.map((posting: any) => (
@@ -187,7 +195,6 @@ const Article = styled.article`
   flex-direction: column;
   padding: 10px;
   flex-grow: 1;
-  height: 600px;
   gap: 10px;
 `;
 
@@ -214,7 +221,11 @@ const TagContainer = styled.div`
   background-color: whitesmoke;
   border-radius: 20px;
   padding: 15px;
-  gap: 10px;
+  justify-content: space-between;
+  & div {
+    display: flex;
+    gap: 10px;
+  }
 
   & button {
     transition: 0.5s all;
