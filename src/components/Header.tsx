@@ -13,7 +13,7 @@ function Header() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/user/logout`
       );
-      alert(response?.data);
+      alert("로그아웃 되었습니다.");
       setUser(null);
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
@@ -29,7 +29,9 @@ function Header() {
             {user ? (
               <>
                 {/* 로그인 상태일 시 컴포넌트 */}
-                <button>{user.nickname}</button>
+                <button onClick={() => navigate("/profile")}>
+                  {user.nickname}
+                </button>
                 <button onClick={() => logout()}>로그아웃</button>
               </>
             ) : (
@@ -84,6 +86,10 @@ const Nav = styled.div`
 
 const LogoImg = styled.img`
   height: 100%;
+
+  &:hover {
+    cursor: pointer;
+  }
 
   @media screen and (max-width: 1300px) {
     height: 85%;

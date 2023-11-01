@@ -12,6 +12,7 @@ import Profile from "./routes/Profile";
 import LoginSuccess from "./routes/LoginSuccess";
 import Posting from "./routes/Posting";
 import ProfileEdit from "./routes/ProfileEdit";
+import Write from "./routes/Write";
 
 function AppRouter() {
   return (
@@ -30,6 +31,7 @@ function AppRouter() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-edit" element={<ProfileEdit />} />
           <Route path="/login-success" element={<LoginSuccess />} />
+          <Route path="/write" element={<Write />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
         </Routes>
         <Footer />

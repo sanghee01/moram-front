@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { CategorySpan } from "../../styles/CommunityStyles";
 
 interface NewContentProps {
   img: string;
@@ -98,10 +99,7 @@ const Time = styled.span`
   font-size: 0.9rem;
 `;
 
-const Category = styled.span`
-  background-color: #eee6f8;
-  padding: 2px 5px;
-  border-radius: 5px;
+const Category = styled(CategorySpan)`
   margin-left: 10px;
 `;
 
