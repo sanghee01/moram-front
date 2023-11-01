@@ -10,21 +10,36 @@ function Write() {
   const [tag, setTag] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<any>({
+    img1Url: "",
+    img2Url: "",
+    img3Url: "",
+  });
+
   const navigate = useNavigate();
 
-  console.log(category, tag, title, content);
+  const handleUploadImage = (e: any) => {
+    setImageUrl({
+      ...imageUrl,
+      [e.target.name]: URL.createObjectURL(e.target.files[0]),
+    });
+  };
+  console.log(imageUrl);
   const postPosting = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/posting", {
-        title: title,
-        content: content,
-        category: category,
-        tag: tag,
-        img1Url: undefined,
-        img2Url: undefined,
-        img3Url: undefined,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/posting`,
+        {
+          title: title,
+          content: content,
+          category: category,
+          tag: tag,
+          img1Url: imageUrl.img1Url,
+          img2Url: imageUrl.img2Url,
+          img3Url: imageUrl.img3Url,
+        }
+      );
       alert(response.data);
       navigate("/community");
     } catch (error: any) {
@@ -72,6 +87,32 @@ function Write() {
             onChange={(e: any) => setContent(e.target.value)}
             placeholder="내용을 입력하세요."
           />
+          <label htmlFor="img1Url">이미지 업로드</label>
+          <UploadImgBox>
+            <input
+              type="file"
+              name="img1Url"
+              accept="image/*"
+              onChange={handleUploadImage}
+            />
+            <input
+              type="file"
+              name="img2Url"
+              accept="image/*"
+              onChange={handleUploadImage}
+            />
+            <input
+              type="file"
+              name="img3Url"
+              accept="image/*"
+              onChange={handleUploadImage}
+            />
+          </UploadImgBox>
+          <ShowImgBox>
+            {imageUrl.img1Url && <ShowImg src={imageUrl.img1Url} />}
+            {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
+            {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
+          </ShowImgBox>
           <button type="submit">작성완료</button>
         </FormBox>
       </form>
@@ -122,6 +163,7 @@ const FormBox = styled.section`
       padding: 8px;
       background-color: white;
       border: 1px solid #e2e0e0;
+      margin-bottom: 5px;
     }
     & button {
       cursor: pointer;
@@ -142,6 +184,21 @@ const FormBox = styled.section`
       transition: all 0.2s;
     }
   }
+`;
+const ShowImg = styled.img`
+  height: 150px;
+`;
+const UploadImgBox = styled.div`
+  display: flex;
+  gap: 10px;
+  & input {
+    width: 30%;
+  }
+`;
+const ShowImgBox = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 `;
 
 export default Write;
