@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 const data = {
@@ -33,13 +33,15 @@ function Write() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
 
-  const postPosting = async () => {
+  console.log(category, tag, title, content);
+  const postPosting = async (e: any) => {
+    e.preventDefault();
     try {
       const response = await axios.post("http://localhost:8000/posting/add", {
-        category: category,
-        tag: tag,
         title: title,
         content: content,
+        category: category,
+        tag: tag,
         img1Url: undefined,
         img2Url: undefined,
         img3Url: undefined,
@@ -49,10 +51,9 @@ function Write() {
       alert(error?.response?.data || "알 수 없는 오류 발생.");
     }
   };
-
   return (
     <Container>
-      <form>
+      <form method="post">
         <FormBox>
           <label htmlFor="category">학과</label>
           <select
