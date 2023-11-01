@@ -11,6 +11,7 @@ import Footer from "./components/Footer";
 import Profile from "./routes/Profile";
 import LoginSuccess from "./routes/LoginSuccess";
 import Posting from "./routes/Posting";
+import ProfileEdit from "./routes/ProfileEdit";
 import Write from "./routes/Write";
 
 function AppRouter() {
@@ -28,6 +29,7 @@ function AppRouter() {
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile-edit" element={<ProfileEdit />} />
           <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="/write" element={<Write />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
