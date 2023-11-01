@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { CategorySpan } from "../styles/CommunityStyles";
-import { categoryList } from "../categoryList";
+import { categoryList } from "../tagList";
 
 function Community() {
   const location = useLocation();

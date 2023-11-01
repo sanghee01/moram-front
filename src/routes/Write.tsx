@@ -1,30 +1,7 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
-const data = {
-  인문학계열: ["국어국문학과", "영어영문학과", "사학과", "철학과", "심리학과"],
-  사회과학계열: [
-    "경제학과",
-    "사회학과",
-    "정치외교학과",
-    "언론정보학과",
-    "행정학과",
-  ],
-  자연과학계열: ["수학과", "물리학과", "화학과", "생명과학과", "지구과학과"],
-  공학계열: [
-    "컴퓨터공학과",
-    "전자공학과",
-    "기계공학과",
-    "화학공학과",
-    "건축공학과",
-  ],
-  예술계열: ["미술학과", "음악학과", "연극영화학과", "무용학과", "디자인학과"],
-  의학계열: ["의학과", "치과학과", "간호학과", "한의학과"],
-  교육계열: ["교육학과", "유아교육과", "초등교육과", "특수교육과"],
-} as any;
-
-const tagList = ["자유", "정보", "질문", "스터디", "취업"];
+import { categoryList, tagList } from "../tagList";
 
 function Write() {
   const [bigCategory, setBigCategory] = useState<string>("");
@@ -37,7 +14,7 @@ function Write() {
   const postPosting = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/posting/add", {
+      const response = await axios.post("http://localhost:8000/posting", {
         title: title,
         content: content,
         category: category,
@@ -53,26 +30,26 @@ function Write() {
   };
   return (
     <Container>
-      <form method="post">
+      <form onSubmit={postPosting}>
         <FormBox>
           <label htmlFor="category">학과</label>
           <select
             id="category"
-            onClick={(e: any) => setBigCategory(e.target.value)}
+            onChange={(e: any) => setBigCategory(e.target.value)}
           >
             <option>대분류 선택</option>
-            {Object.keys(data).map((item: any) => {
+            {Object.keys(categoryList).map((item: any) => {
               return <option key={item}>{item}</option>;
             })}
           </select>
-          <select onClick={(e: any) => setCategory(e.target.value)}>
+          <select onChange={(e: any) => setCategory(e.target.value)}>
             <option>소분류 선택</option>
-            {data[bigCategory]?.map((item: any) => {
+            {categoryList[bigCategory]?.map((item: any) => {
               return <option key={item}>{item}</option>;
             })}
           </select>
           <label htmlFor="tag">태그</label>
-          <select id="tag" onClick={(e: any) => setTag(e.target.value)}>
+          <select id="tag" onChange={(e: any) => setTag(e.target.value)}>
             <option>태그 선택</option>
             {tagList.map((item: any) => {
               return <option key={item}>{item}</option>;
@@ -92,7 +69,7 @@ function Write() {
             onChange={(e: any) => setContent(e.target.value)}
             placeholder="내용을 입력하세요."
           />
-          <button onSubmit={postPosting}>작성완료</button>
+          <button type="submit">작성완료</button>
         </FormBox>
       </form>
     </Container>
