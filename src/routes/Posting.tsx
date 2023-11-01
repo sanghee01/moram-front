@@ -108,6 +108,9 @@ function Posting() {
           </h4>
           <hr />
           <p>{posting.content}</p>
+          <img src={posting.img1Url} />
+          <img src={posting.img2Url} />
+          <img src={posting.img3Url} />
           <BtnContainer>
             <LikeBtn>❤️ {posting.likesCount}</LikeBtn>
           </BtnContainer>
