@@ -32,7 +32,7 @@ function Write() {
         `${process.env.REACT_APP_APIADDRESS}/posting`,
         {
           title: title,
-          content: content,
+          content: content.replace(/\n/g, "<br/>"),
           category: category,
           tag: tag,
           img1Url: imageUrl.img1Url,
@@ -40,7 +40,7 @@ function Write() {
           img3Url: imageUrl.img3Url,
         }
       );
-      alert(response.data);
+      alert(response.data.message);
       navigate("/community");
     } catch (error: any) {
       alert(error?.response?.data || "알 수 없는 오류 발생.");

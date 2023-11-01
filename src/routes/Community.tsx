@@ -28,12 +28,18 @@ function Community() {
   }
   initialIsExpandedState[foundCategory] = true;
   console.log(initialIsExpandedState);
+
   const [isExpanded, setIsExpanded] = useState(initialIsExpandedState);
   const [postings, setPostings] = useState<any>(null); // 게시물들 데이터
   const [categoryFilter, setCategoryFilter] = useState<string>(
     categoryQuery || ""
   ); // 과 필터
   const [tagFilter, setTagFilter] = useState<string>(tagQuery || ""); // 태그('자유','질문'...) 필터
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   /**계열 확장, 축소 함수*/
   const toggleBigCategory = (bigCategory: any) => {
@@ -93,8 +99,9 @@ function Community() {
   };
   return (
     <Container>
+      <HamburgerMenu onClick={toggleSidebar}>☰</HamburgerMenu>
       {/* 좌측에 있는 과 선택 버튼 */}
-      <Sidebar>
+      <Sidebar isOpen={isSidebarOpen}>
         {Object.keys(categoryList).map((bigCategory: any) => (
           <BigCategory key={bigCategory}>
             <button
@@ -239,9 +246,31 @@ const TagContainer = styled.div`
     cursor: pointer;
     background-color: #d6d6ff;
   }
+
+  @media screen and (max-width: 900px) {
+    flex-wrap: wrap;
+    gap: 10px;
+
+    & div {
+      display: flex;
+      gap: 10px;
+      flex-grow: 2;
+    }
+    & button {
+      font-size: 0.9rem;
+      padding: 15px 15px;
+      flex-grow: 1;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    & button {
+      font-size: 0.9rem;
+      padding: 15px 10px;
+    }
+  }
 `;
 
-const Sidebar = styled.div`
+const Sidebar = styled.div<any>`
   width: 300px;
   height: 600px;
   border-radius: 10px;
@@ -253,6 +282,16 @@ const Sidebar = styled.div`
   align-items: center;
   gap: 25px;
   overflow-y: scroll;
+
+  @media screen and (max-width: 768px) {
+    position: fixed;
+    min-width: 300px;
+    transition: transform 0.3s ease-in-out;
+    transform: ${(props) =>
+      props.isOpen
+        ? "translateX(0) translateY(10%)"
+        : "translateX(-130%) translateY(10%)"};
+  }
 `;
 
 const BigCategory = styled.div`
@@ -303,6 +342,20 @@ const CategoryContainer = styled.div`
 
 const Category = styled(CategorySpan)`
   margin-right: 5px;
+`;
+
+const HamburgerMenu = styled.div`
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 10px;
+
+  @media (max-width: 768px) {
+    display: block;
+    position: fixed;
+    top: 131px;
+    z-index: 10;
+  }
 `;
 
 export default Community;

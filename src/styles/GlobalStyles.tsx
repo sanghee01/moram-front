@@ -6,6 +6,7 @@ const GlobalStyles = createGlobalStyle`
     *::after {
     box-sizing: border-box;
     font-family : "Noto Sans KR";
+    color:black;
     }
 
     body,

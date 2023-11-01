@@ -32,7 +32,9 @@ function Posting() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`
       );
-      setPosting(response.data); //포스팅 데이터 받기
+      const postData = response.data;
+      postData.content = postData.content.split("<br/>").join("\n");
+      setPosting(postData); //포스팅 데이터 받기
     } catch (error: any) {
       alert(error.response.data);
     }
@@ -69,7 +71,12 @@ function Posting() {
       const response = await axios.post(`${api}`, {
         content: commentContent,
       });
-      alert(response.data); //포스팅 데이터 받기
+      alert(response.data.message); //포스팅 데이터 받기
+      setCommentContent("");
+      getComments();
+      setReplyId(null);
+      setReplyNickname(null);
+      setReplyComment(null);
     } catch (error: any) {
       alert(error.response.data);
     }
@@ -107,7 +114,7 @@ function Posting() {
             {posting.nickname} | {date(posting.writeTime)}
           </h4>
           <hr />
-          <p>{posting.content}</p>
+          <ContentText>{posting.content}</ContentText>
           <img src={posting.img1Url} />
           <img src={posting.img2Url} />
           <img src={posting.img3Url} />
@@ -125,7 +132,7 @@ function Posting() {
                 setReplyComment(null);
               }}
             >
-              [@{replyNickname} {replyComment}] 에게 답글을 남기는 중...
+              [@{replyNickname} : {replyComment}] 에게 답글을 남기는 중...
               &nbsp;&nbsp;x
             </ReplyText>
           )}
@@ -154,9 +161,16 @@ function Posting() {
               }}
             >
               <>
-                {comment.nickname} : {comment.content}
+                <Comment>
+                  <span style={{ color: "#5a59ff" }}>{comment.nickname}</span> :{" "}
+                  {comment.content}
+                </Comment>
                 {reply(comment.id).map((reply: any) => (
-                  <div key={reply.id}>&nbsp;&nbsp;&nbsp;ㄴ{reply.content}</div>
+                  <Comment key={reply.id}>
+                    &nbsp;&nbsp;&nbsp;ㄴ{" "}
+                    <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
+                    {reply.content}
+                  </Comment>
                 ))}
               </>
             </CommentContainer>
@@ -200,7 +214,7 @@ const Btn = styled(SmallBtn)`
 const CommentContainer = styled.div`
   transition: 0.5s all;
   border-radius: 15px;
-  padding: 10px;
+  padding: 10px 13px;
 
   &:hover {
     cursor: pointer;
@@ -235,5 +249,16 @@ const LikeBtn = styled(SmallBtn)`
   &:hover {
     background-color: #ff7c7c;
   }
+`;
+
+const ContentText = styled.div`
+  display: flex;
+  white-space: pre-wrap;
+  margin-top: 10px;
+`;
+const Comment = styled.div`
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 5px 0;
 `;
 export default Posting;

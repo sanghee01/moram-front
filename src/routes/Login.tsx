@@ -41,7 +41,7 @@ function Login() {
       setUser(user);
       console.log(user);
       alert(response?.data.message);
-      navigate("/");
+      navigate(-1);
     } catch (error: any) {
       alert(error.response?.data || "알 수 없는 에러 발생");
     }
