@@ -4,7 +4,7 @@ import { PiListBold } from "react-icons/pi";
 import { AiOutlinePicture } from "react-icons/ai";
 import { BiText } from "react-icons/bi";
 import React, { useState } from "react";
-import { StringLiteral } from "typescript";
+import { useNavigate } from "react-router-dom";
 
 interface ChooseContentProps {
   src: string;
@@ -13,6 +13,7 @@ interface ChooseContentProps {
   date: string;
   content: string;
 }
+
 function ChooseContent({
   src,
   category,
@@ -44,16 +45,19 @@ function Profile() {
   const onClickIcon = (iconType: "all" | "picture" | "letter") => {
     setSelectIcon(iconType);
   };
+
+  const navigate = useNavigate();
+
   return (
-    <>
+    <Container>
       <ProfileMain>
         <img src="./assets/profileimage.jpg" />
         <ProfileInpromation>
-          <SettingIcon>
+          <SettingIcon onClick={() => navigate("/profile-edit")}>
             <IoSettingsOutline size="20" />
           </SettingIcon>
-          <h1>닉네임</h1>
-          <h4>이메일</h4>
+          <h1>쿼카맹구</h1>
+          <h4>dlrhdns0000@naver.com</h4>
         </ProfileInpromation>
         <ProfileWrite>
           <Write>작성한 글</Write>
@@ -123,26 +127,60 @@ function Profile() {
 로젝트도 할 예정입니다."
         />
       </ChooseContentBox>
-    </>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  width: 60%;
+  height: 100vh;
+  margin: auto;
+`;
 
 const ProfileMain = styled.div`
   display: flex;
   height: 10rem;
-  justify-content: center;
-  margin: 1.5rem 17rem;
+
+  align-items: center;
+
+  margin: 1.5rem 0;
   & img {
     border-radius: 100%;
+    width: 165px;
+    height: 165px;
+  }
+
+  @media screen and (max-width: 1000px) {
+    & img {
+      width: 150px;
+      height: 150px;
+    }
+    & div {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    & img {
+      width: 125px;
+      height: 125px;
+    }
   }
 `;
 
 const ProfileInpromation = styled.div`
-  padding-left: 1rem;
-  margin-right: 6rem;
+  padding: 0 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media screen and (max-width: 800px) {
+    & h1 {
+      font-size: 28px;
+    }
+    & h4 {
+      font-size: 13px;
+    }
+  }
 `;
 
 const SettingIcon = styled.button`
@@ -152,12 +190,16 @@ const SettingIcon = styled.button`
   width: 20px;
   height: 20px;
   padding: 0;
+  @media screen and (max-width: 800px) {
+    size: 10px;
+  }
 `;
 
 const ProfileWrite = styled.div`
   display: flex;
-  padding: 3rem;
+  justify-content: space-between;
   justify-content: center;
+  align-items: center;
   gap: 0.5rem;
 `;
 
@@ -166,9 +208,20 @@ const Write = styled.button`
   outline: 0;
   border: 0;
   background-color: #e6e6e6d6;
-  width: 255px;
+  min-width: 200px;
+  width: 50%;
+
   height: 35px;
   border-radius: 8px;
+  @media screen and (max-width: 1000px) {
+    margin-bottom: 10px;
+    width: 200px;
+  }
+  @media screen and (max-width: 800px) {
+    margin-bottom: 10px;
+    width: 170px;
+    font-size: 15px;
+  }
 `;
 
 const Comment = styled.button`
@@ -176,16 +229,23 @@ const Comment = styled.button`
   outline: 0;
   border: 0;
   background-color: #e6e6e6d6;
-  width: 255px;
+  min-width: 200px;
+  width: 50%;
   height: 35px;
   border-radius: 8px;
+  @media screen and (max-width: 1000px) {
+    width: 200px;
+  }
+  @media screen and (max-width: 800px) {
+    width: 170px;
+    font-size: 15px;
+  }
 `;
 
 const ChooseIcon = styled.div`
   grid: 0;
   display: flex;
   justify-content: center;
-  margin: 0 15rem;
   padding: 0;
   border-top: 1px solid gray;
   border-bottom: 1px solid gray;
@@ -252,7 +312,6 @@ const Content = styled.div`
 const ChooseContentBox = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 1.5rem 15rem;
 `;
 
 export default Profile;
