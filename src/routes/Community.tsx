@@ -1,15 +1,18 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { CategorySpan } from "../styles/CommunityStyles";
 import { categoryList } from "../tagList";
+import CategoryBtn from "../components/CategoryBtn";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { lastIdState, postingState } from "../state";
 
 function Community() {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const categoryQuery: any = queryParams.get("category");
+  const categoryQuery = queryParams.get("category");
   const tagQuery = queryParams.get("tag");
   /**좌측 계열 패널 확장 */
   const categoryKeys = Object.keys(categoryList);
@@ -18,24 +21,18 @@ function Community() {
     return acc;
   }, {}); //계열(bigcategory) 구하기
 
-  /**좌측 패널 확장 기록 불러오기 */
-  let foundCategory: any = null;
-  for (const key in categoryList) {
-    if (categoryList[key].includes(categoryQuery)) {
-      foundCategory = key;
-      break;
-    }
-  }
-  initialIsExpandedState[foundCategory] = true;
-  console.log(initialIsExpandedState);
-
   const [isExpanded, setIsExpanded] = useState(initialIsExpandedState);
-  const [postings, setPostings] = useState<any>(null); // 게시물들 데이터
-  const [categoryFilter, setCategoryFilter] = useState<string>(
+  const [postings, setPostings] = useRecoilState<any>(postingState); // 게시물들 데이터
+  const [categoryFilter, setCategoryFilter] = useState<any>(
     categoryQuery || ""
   ); // 과 필터
-  const [tagFilter, setTagFilter] = useState<string>(tagQuery || ""); // 태그('자유','질문'...) 필터
+  const [tagFilter, setTagFilter] = useState<any>(tagQuery || ""); // 태그('자유','질문'...) 필터
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [lastId, setLastId] = useState<any>(99999);
+  const [endPostId, setEndPostId] = useState(0);
+
+  let loading = false;
+  const scrollContainerRef = useRef<any>(null);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -49,30 +46,75 @@ function Community() {
     }));
   };
 
-  //커뮤니티 접속 시 게시물 받아오기 */
   useEffect(() => {
-    getPostings(categoryFilter, tagFilter);
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
+  useEffect(() => {
+    console.log(lastId, "lastlast");
+  }, [lastId]);
+  //커뮤니티 접속 시 게시물 받아오기 */
   //학과, 태그 필터 변경 시 필터해서 게시물 다시 받아오기
   useEffect(() => {
+    setLastId(9999);
     getPostings(categoryFilter, tagFilter);
+    loadSidebar();
   }, [categoryFilter, tagFilter]);
 
+  useEffect(() => {
+    setCategoryFilter(queryParams.get("category") || "");
+    setTagFilter(queryParams.get("tag") || "");
+    loadSidebar();
+  }, [location]); // location 객체가 변경될 때마다 실행됩니다.
+
+  const loadSidebar = () => {
+    /**좌측 패널 확장 기록 불러오기 */
+    let foundCategory: any;
+    for (const key in categoryList) {
+      if (categoryList[key].includes(categoryQuery)) {
+        foundCategory = key;
+        break;
+      }
+    }
+    initialIsExpandedState[foundCategory] = true;
+    setIsExpanded(initialIsExpandedState);
+  };
+
   /**게시물 정보 받아오는 함수 */
-  const getPostings = async (category = "", tag = "") => {
+  const getPostings = async (category: any, tag: any) => {
+    console.log("getposting 실행");
+    if (loading) return;
+    if (lastId === endPostId) return;
+    const apitext = `${process.env.REACT_APP_APIADDRESS}/posting?category=${category}&tag=${tag}&lastd=${lastId}`;
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/posting?category=${category}&tag=${tag}`
-      );
-      setPostings(response.data);
-      console.log(response.data);
+      const response = await axios.get(apitext);
+
+      const { content, endId } = response.data;
+
+      if (!loading && !postings) {
+        setPostings(content);
+      } else {
+        if (content.length > 0)
+          setPostings((prevPostings: any): any => [
+            ...prevPostings,
+            ...content,
+          ]);
+      }
+      setLastId(response.data.lastId);
+      setEndPostId(endId);
+      loading = false;
     } catch (error: any) {
-      alert(error?.response?.data || "알 수 없는 오류 발생.");
+      alert(error || "알 수 없는 오류 발생.");
     }
   };
 
-  const changeQuery = (newCategory: any, newTag: any) => {
+  const changeQuery = (
+    newCategory: any = categoryFilter,
+    newTag: any = tagFilter
+  ) => {
     // 변경된 쿼리 매개변수를 포함한 새 URL을 생성합니다.
     const newSearchParams = new URLSearchParams();
     if (newCategory) {
@@ -87,6 +129,25 @@ function Community() {
       search: `?${newSearchParams.toString()}`,
     });
   };
+
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const fullHeight = document.documentElement.scrollHeight;
+    const scrollPosition = window.scrollY;
+
+    //console.log(windowHeight + scrollPosition + 2, fullHeight);
+    if (!loading && windowHeight + scrollPosition + 2 >= fullHeight) {
+      //스크롤이 맨 밑일 경우
+      if (lastId) getPostings(categoryFilter, tagFilter);
+      loading = true;
+      setTimeout(() => {
+        loading = false;
+      }, 300);
+      console.log("맨밑");
+    }
+    //console.log(document.documentElement.scrollHeight, scrollPosition);
+  };
+
   /** 날짜 형식 변환 함수 */
   const date = (dateStr: string) => {
     const dateObj = new Date(dateStr);
@@ -98,10 +159,12 @@ function Community() {
     ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
   };
   return (
-    <Container>
-      <HamburgerMenu onClick={toggleSidebar}>☰</HamburgerMenu>
+    <Container ref={scrollContainerRef}>
+      <HamburgerMenu onClick={toggleSidebar} open={isSidebarOpen}>
+        {isSidebarOpen ? "❎" : "☰"}
+      </HamburgerMenu>
       {/* 좌측에 있는 과 선택 버튼 */}
-      <Sidebar isOpen={isSidebarOpen}>
+      <Sidebar open={isSidebarOpen}>
         {Object.keys(categoryList).map((bigCategory: any) => (
           <BigCategory key={bigCategory}>
             <button
@@ -121,6 +184,7 @@ function Community() {
                   <button
                     key={category}
                     onClick={() => {
+                      setIsSidebarOpen(false); //사이드바 닫기
                       setCategoryFilter(category);
                       changeQuery(category, tagFilter);
                       if (category === categoryFilter) {
@@ -142,7 +206,6 @@ function Community() {
           </BigCategory>
         ))}
       </Sidebar>
-
       <Article>
         {/* 태그 필터 버튼 모임 */}
         <TagContainer>
@@ -165,25 +228,59 @@ function Community() {
             ))}
           </div>
           <button
+            onClick={() => {
+              setLastId((prev: any) => prev + 1);
+            }}
+          >
+            테스트
+          </button>
+          <button
             onClick={() => navigate("/write")}
             style={{ background: "#b0b0fc" }}
           >
-            글 작성
+            글 작성{lastId.toString()}
           </button>
         </TagContainer>
+        {(categoryFilter || tagFilter) && (
+          <FilterContainer>
+            현재 게시물 필터{" "}
+            <CategorySpan
+              onClick={() => {
+                setCategoryFilter("");
+                changeQuery("", tagQuery);
+              }}
+            >
+              <div>
+                {(categoryFilter && categoryFilter + " -") || "전체 학과"}
+              </div>
+            </CategorySpan>
+            <CategorySpan
+              onClick={() => {
+                setTagFilter("");
+                changeQuery(categoryQuery, "");
+              }}
+            >
+              <div>{(tagFilter && tagFilter + " -") || "전체 태그"}</div>
+            </CategorySpan>
+          </FilterContainer>
+        )}
         {/* 포스팅 목록 */}
-        {postings?.map((posting: any) => (
-          <Content key={posting.id}>
-            <div>
-              <Category>[{posting.category}]</Category>{" "}
-              <Category>[{posting.tag}]</Category>&nbsp;
-              <Link to={`/community/${posting.id}`}> {posting.title}</Link>
-            </div>
-            <div>
-              {posting.nickname} | {date(posting.writeTime)}
-            </div>
-          </Content>
-        ))}
+        {postings &&
+          postings?.map((posting: any) => (
+            <Content key={posting.id + Math.random()}>
+              <div>
+                <CategoryBtn category={posting.category} marginR={10} />{" "}
+                <Category onClick={() => setTagFilter(posting.tag)}>
+                  {posting.tag}
+                </Category>
+                &nbsp;
+                <Link to={`/community/${posting.id}`}> {posting.title}</Link>
+              </div>
+              <div>
+                {posting.nickname} | {date(posting.writeTime)}
+              </div>
+            </Content>
+          ))}
       </Article>
     </Container>
   );
@@ -233,7 +330,6 @@ const TagContainer = styled.div`
     display: flex;
     gap: 10px;
   }
-
   & button {
     transition: 0.5s all;
     background-color: white;
@@ -269,6 +365,15 @@ const TagContainer = styled.div`
     }
   }
 `;
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  background-color: #cbcbff;
+  border-radius: 20px;
+  padding: 15px;
+  gap: 10px;
+`;
 
 const Sidebar = styled.div<any>`
   width: 300px;
@@ -284,13 +389,13 @@ const Sidebar = styled.div<any>`
   overflow-y: scroll;
 
   @media screen and (max-width: 768px) {
+    height: calc(100dvh - 140px);
     position: fixed;
-    min-width: 300px;
     transition: transform 0.3s ease-in-out;
     transform: ${(props) =>
-      props.isOpen
-        ? "translateX(0) translateY(10%)"
-        : "translateX(-130%) translateY(10%)"};
+      props.open
+        ? "translateX(-12px) translateY(-15px)"
+        : "translateX(-130%) translateY(-15px)"};
   }
 `;
 
@@ -344,17 +449,26 @@ const Category = styled(CategorySpan)`
   margin-right: 5px;
 `;
 
-const HamburgerMenu = styled.div`
+const HamburgerMenu = styled.div<any>`
+  width: 70px;
+  height: 70px;
   display: none;
   font-size: 2rem;
   cursor: pointer;
-  padding: 10px;
+  box-shadow: 0px 0px 20px black;
+  border-radius: 50px;
+  color: white;
 
   @media (max-width: 768px) {
-    display: block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
-    top: 131px;
+    left: 30px;
+    bottom: 30px;
     z-index: 10;
+
+    background-color: ${(props) => (props.open ? "#7979f7" : "#5a59ff")};
   }
 `;
 

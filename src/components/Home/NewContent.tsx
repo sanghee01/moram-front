@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { CategorySpan } from "../../styles/CommunityStyles";
+import CategoryBtn from "../CategoryBtn";
 
 interface NewContentProps {
   img: string;
@@ -27,7 +28,7 @@ function NewContent({
             <span>
               [{tag}] {title}
             </span>
-            <Category>{category}</Category>
+            <CategoryBtn category={category} marginL={5} />
           </div>
           <Time> {date}</Time>
         </Title>
@@ -97,10 +98,6 @@ const Time = styled.span`
   opacity: 0.5;
   font-weight: 500;
   font-size: 0.9rem;
-`;
-
-const Category = styled(CategorySpan)`
-  margin-left: 10px;
 `;
 
 export default NewContent;

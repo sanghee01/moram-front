@@ -20,6 +20,16 @@ export const userState = atom<any | null>({
   default: null,
 });
 
+export const postingState = atom<any | null>({
+  key: "postingState",
+  default: null,
+});
+
+export const lastIdState = atom<number>({
+  key: "lastIdState",
+  default: 99999,
+});
+
 export const postAtom = atom<IPost[]>({
   key: "postAtom",
   default: [

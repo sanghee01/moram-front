@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import CategoryBtn from "../CategoryBtn";
 
 interface PopularContentProps {
   img: string;
@@ -15,7 +16,7 @@ function PopularContent({ img, category, title, tag }: PopularContentProps) {
         <span>
           [{tag}] {title}
         </span>
-        <Category>{category}</Category>
+        <CategoryBtn category={category} />
       </Title>
     </Container>
   );
