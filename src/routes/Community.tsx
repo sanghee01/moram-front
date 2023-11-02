@@ -6,10 +6,7 @@ import { CategorySpan } from "../styles/CommunityStyles";
 import { categoryList } from "../tagList";
 import CategoryBtn from "../components/CategoryBtn";
 import { useRecoilState } from "recoil";
-import { postingState } from "../state";
-
-let lastId = 9999;
-let endPostId = 0;
+import { idsState, postingState } from "../state";
 
 function Community() {
   const location = useLocation();
@@ -31,6 +28,9 @@ function Community() {
   ); // 과 필터
   const [tagFilter, setTagFilter] = useState<any>(tagQuery || ""); // 태그('자유','질문'...) 필터
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [ids, setIds] = useRecoilState(idsState);
+  const [isbottom, setIsBottom] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   //const [lastId, setLastId] = useState<any>(99999);
   //const [endPostId, setEndPostId] = useState(0);
 
@@ -49,30 +49,36 @@ function Community() {
     }));
   };
 
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => {
-  //     window.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, []);
-
   useEffect(() => {
-    console.log(lastId, "lastlast");
-  }, [lastId]);
-  //커뮤니티 접속 시 게시물 받아오기 */
-  //학과, 태그 필터 변경 시 필터해서 게시물 다시 받아오기
-  useEffect(() => {
-    console.log("category, tagfilter useffect  실행");
-    lastId = 9999;
-    setPostings("");
-    getPostings();
-    loadSidebar();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [categoryFilter, tagFilter]);
+  }, []);
 
+  //커뮤니티 접속 시 게시물 받아오기 */
+  //학과, 태그 필터 변경 시 필터해서 게시물 다시 받아오기
+  useEffect(() => {
+    console.log("category, tagfilter useffect  실행");
+    if (isOpen) {
+      setIds([9999, 0]);
+      setPostings("");
+    }
+
+    //getPostings();
+    loadSidebar();
+    // window.addEventListener("scroll", handleScroll);
+    // return () => {
+    //   window.removeEventListener("scroll", handleScroll);
+    // };
+    setIsOpen(true);
+  }, [categoryFilter, tagFilter]);
+  useEffect(() => {
+    if (!postings) getPostings();
+  }, [postings]);
+  useEffect(() => {
+    if (isbottom) getPostings();
+  }, [isbottom]);
   useEffect(() => {
     setCategoryFilter(queryParams.get("category") || "");
     setTagFilter(queryParams.get("tag") || "");
@@ -95,10 +101,10 @@ function Community() {
   /**게시물 정보 받아오는 함수 */
   const getPostings = async () => {
     if (loading) return;
-    if (lastId === endPostId) return;
+    if (ids[0] === ids[1]) return;
 
-    console.log("getposting 실행 last,end", lastId, endPostId);
-    const apitext = `${process.env.REACT_APP_APIADDRESS}/posting?category=${categoryFilter}&tag=${tagFilter}&lastId=${lastId}`;
+    console.log("getposting 실행 last,end", ids[0], ids[1]);
+    const apitext = `${process.env.REACT_APP_APIADDRESS}/posting?category=${categoryFilter}&tag=${tagFilter}&lastId=${ids[0]}`;
     try {
       const response = await axios.get(apitext);
 
@@ -113,8 +119,7 @@ function Community() {
             ...content,
           ]);
       }
-      lastId = response.data.lastId;
-      endPostId = endId;
+      setIds([response.data.lastId, endId]);
       loading = false;
     } catch (error: any) {
       alert(error || "알 수 없는 오류 발생.");
@@ -148,13 +153,14 @@ function Community() {
     //console.log(windowHeight + scrollPosition + 2, fullHeight);
     if (!loading && windowHeight + scrollPosition + 2 >= fullHeight) {
       //스크롤이 맨 밑일 경우
-      getPostings();
+      setIsBottom(true);
+      //getPostings();
       loading = true;
       setTimeout(() => {
         loading = false;
       }, 300);
       console.log("맨밑");
-    }
+    } else setIsBottom(false);
     //console.log(document.documentElement.scrollHeight, scrollPosition);
   };
 
@@ -241,7 +247,7 @@ function Community() {
           </div>
           <button
             onClick={() => {
-              console.log(lastId, endPostId);
+              console.log(ids[0], ids[1]);
             }}
           >
             테스트
@@ -250,7 +256,7 @@ function Community() {
             onClick={() => navigate("/write")}
             style={{ background: "#b0b0fc" }}
           >
-            글 작성{lastId?.toString()}
+            글 작성{ids[0]?.toString()}
           </button>
         </TagContainer>
         {(categoryFilter || tagFilter) && (

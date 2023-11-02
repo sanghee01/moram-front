@@ -22,12 +22,12 @@ export const userState = atom<any | null>({
 
 export const postingState = atom<any | null>({
   key: "postingState",
-  default: null,
+  default: "",
 });
 
-export const lastIdState = atom<number>({
-  key: "lastIdState",
-  default: 99999,
+export const idsState = atom<any>({
+  key: "idsState",
+  default: [99999, 0],
 });
 
 export const postAtom = atom<IPost[]>({
