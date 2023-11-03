@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { CategorySpan } from "../styles/CommunityStyles";
 import { categoryList } from "../tagList";
 import CategoryBtn from "../components/CategoryBtn";
 import { useRecoilState } from "recoil";
@@ -14,6 +13,7 @@ function Community() {
   const queryParams = new URLSearchParams(location.search);
   const categoryQuery = queryParams.get("category");
   const tagQuery = queryParams.get("tag");
+  const reloadQuery = queryParams.get("reload");
   /**좌측 계열 패널 확장 */
   const categoryKeys = Object.keys(categoryList);
   let initialIsExpandedState = categoryKeys.reduce((acc: any, category) => {
@@ -50,6 +50,10 @@ function Community() {
   };
 
   useEffect(() => {
+    if (reloadQuery === "true") {
+      setPostings("");
+      setIds([99999, 0]);
+    }
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -246,40 +250,39 @@ function Community() {
             ))}
           </div>
           <button
-            onClick={() => {
-              console.log(ids[0], ids[1]);
-            }}
-          >
-            테스트
-          </button>
-          <button
             onClick={() => navigate("/write")}
             style={{ background: "#b0b0fc" }}
           >
-            글 작성{ids[0]?.toString()}
+            글 작성
           </button>
         </TagContainer>
         {(categoryFilter || tagFilter) && (
           <FilterContainer>
             현재 게시물 필터{" "}
-            <CategorySpan
-              onClick={() => {
-                setCategoryFilter("");
-                changeQuery("", tagQuery);
-              }}
-            >
-              <div>
-                {(categoryFilter && categoryFilter + " -") || "전체 학과"}
-              </div>
-            </CategorySpan>
-            <CategorySpan
-              onClick={() => {
-                setTagFilter("");
-                changeQuery(categoryQuery, "");
-              }}
-            >
-              <div>{(tagFilter && tagFilter + " -") || "전체 태그"}</div>
-            </CategorySpan>
+            {categoryFilter && (
+              <TagBtn
+                $background={"#f77676"}
+                $color={"white"}
+                onClick={() => {
+                  setCategoryFilter("");
+                  changeQuery("", tagQuery);
+                }}
+              >
+                <div>{categoryFilter} x</div>
+              </TagBtn>
+            )}
+            {tagFilter && (
+              <TagBtn
+                $background={"#f77676"}
+                $color={"white"}
+                onClick={() => {
+                  setTagFilter("");
+                  changeQuery(categoryQuery, "");
+                }}
+              >
+                <div>{tagFilter} x</div>
+              </TagBtn>
+            )}
           </FilterContainer>
         )}
         {/* 포스팅 목록 */}
@@ -287,10 +290,14 @@ function Community() {
           postings?.map((posting: any) => (
             <Content key={posting.id}>
               <div>
-                <CategoryBtn category={posting.category} marginR={10} />{" "}
-                <Category onClick={() => setTagFilter(posting.tag)}>
+                <CategoryBtn
+                  category={posting.category}
+                  tag={posting.tag}
+                  marginR={10}
+                />{" "}
+                <TagBtn onClick={() => setTagFilter(posting.tag)}>
                   {posting.tag}
-                </Category>
+                </TagBtn>
                 &nbsp;
                 <Link to={`/community/${posting.id}`}> {posting.title}</Link>
               </div>
@@ -330,6 +337,7 @@ const Content = styled.div`
 
   & div {
     display: flex;
+    align-items: center;
   }
   & a {
     color: black;
@@ -385,9 +393,10 @@ const TagContainer = styled.div`
 `;
 const FilterContainer = styled.div`
   display: flex;
+  align-items: center;
   flex-direction: row;
   width: 100%;
-  background-color: #cbcbff;
+  background-color: #c2ddf7;
   border-radius: 20px;
   padding: 15px;
   gap: 10px;
@@ -415,8 +424,8 @@ const Sidebar = styled.div<any>`
     transition: transform 0.3s ease-in-out;
     transform: ${(props) =>
       props.open
-        ? "translateX(-12px) translateY(-15px)"
-        : "translateX(-130%) translateY(-15px)"};
+        ? "translateX(-12px) translateY(-17px)"
+        : "translateX(-130%) translateY(-17px)"};
   }
 `;
 
@@ -466,8 +475,20 @@ const CategoryContainer = styled.div`
   }
 `;
 
-const Category = styled(CategorySpan)`
+const TagBtn = styled.button<any>`
+  background-color: ${(props) => props.$background || "#ced3ff"};
+  padding: 5px 5px;
+  border-radius: 5px;
+  transition: 0.5s all;
+  border: 0;
   margin-right: 5px;
+  & div {
+    color: ${(props) => props.$color || "black"};
+  }
+  &:hover {
+    filter: contrast(130%);
+    cursor: pointer;
+  }
 `;
 
 const HamburgerMenu = styled.div<any>`

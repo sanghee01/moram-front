@@ -41,7 +41,7 @@ function Write() {
         }
       );
       alert(response.data.message);
-      navigate("/community");
+      navigate("/community?reload=true");
     } catch (error: any) {
       alert(error?.response?.data || "알 수 없는 오류 발생.");
     }

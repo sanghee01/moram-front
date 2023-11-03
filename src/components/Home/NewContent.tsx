@@ -1,5 +1,4 @@
 import { styled } from "styled-components";
-import { CategorySpan } from "../../styles/CommunityStyles";
 import CategoryBtn from "../CategoryBtn";
 
 interface NewContentProps {

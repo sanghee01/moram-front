@@ -18,7 +18,7 @@ function App() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/user/check`
       );
-      setUser(response.data.user[0]);
+      setUser(response.data);
       console.log("user check : ", response);
     } catch (error: any) {
       //alert(error.response.data || "알 수 없는 오류 발생");

@@ -1,20 +1,27 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { idsState, postingState } from "../state";
 
-function CategoryBtn({ category, marginL, marginR }: any) {
+function CategoryBtn({ category, tag, marginL, marginR }: any) {
+  const location = useLocation();
   const navigate = useNavigate();
   const setPostings = useSetRecoilState(postingState);
   const setIds = useSetRecoilState(idsState);
+
   return (
     <Btn
       $marginL={marginL}
       $marginR={marginR}
       onClick={() => {
-        setPostings("");
-        setIds([99999, 0]);
-        navigate(`/community?category=${category}`);
+        if (location.pathname !== "/community") {
+          // setPostings("");
+          // setIds([99999, 0]);
+        }
+
+        navigate(
+          `/community?category=${category}&tag=${tag || ""}&reload=true`
+        );
       }}
     >
       {category}
@@ -23,8 +30,9 @@ function CategoryBtn({ category, marginL, marginR }: any) {
 }
 
 const Btn = styled.button<any>`
-  background-color: #eee6f8;
-  padding: 2px 5px;
+  background-color: #7f8cff;
+  color: white;
+  padding: 5px 5px;
   border-radius: 5px;
   border: 0;
   margin-left: ${(props) => `${props.$marginL}px`};
@@ -32,7 +40,7 @@ const Btn = styled.button<any>`
   transition: 0.5s all;
 
   &:hover {
-    background-color: #dcc0ff;
+    background-color: #606ffc;
   }
 `;
 

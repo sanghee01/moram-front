@@ -37,7 +37,7 @@ function Login() {
           password,
         }
       );
-      const user = response.data.content[0];
+      const user = response.data.content;
       setUser(user);
       console.log(user);
       alert(response?.data.message);

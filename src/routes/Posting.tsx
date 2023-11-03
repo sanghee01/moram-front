@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Input } from "../styles/LoginStyles";
 import { SmallBtn } from "../styles/ButtonStyles";
@@ -9,6 +9,7 @@ import { userState } from "../state";
 
 function Posting() {
   const params = useParams();
+  const navigate = useNavigate();
   const postId = params.id;
   const [posting, setPosting] = useState<null | any>(null); //게시글 정보들
   const [comments, setComments] = useState<null | any>(null); //받아온 댓글들
@@ -35,6 +36,18 @@ function Posting() {
       const postData = response.data;
       postData.content = postData.content.split("<br/>").join("\n");
       setPosting(postData); //포스팅 데이터 받기
+    } catch (error: any) {
+      alert(error.response.data);
+    }
+  };
+
+  const deletePosting = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`
+      );
+      alert(response.data.message);
+      navigate("/community?reload=true");
     } catch (error: any) {
       alert(error.response.data);
     }
@@ -111,7 +124,19 @@ function Posting() {
             {posting.title}
           </h2>
           <h4>
-            {posting.nickname} | {date(posting.writeTime)}
+            {posting.nickname} | {date(posting.writeTime)}{" "}
+            {posting.userId === user.id && (
+              <SmallBtn
+                $padding="4px 10px"
+                $margin="5px"
+                $background="tomato"
+                $backgroundHover="red"
+                $color="white"
+                onClick={() => deletePosting()}
+              >
+                글 삭제
+              </SmallBtn>
+            )}
           </h4>
           <hr />
           <ContentText>{posting.content}</ContentText>
@@ -120,6 +145,7 @@ function Posting() {
           <img src={posting.img3Url} />
           <BtnContainer>
             <LikeBtn>❤️ {posting.likesCount}</LikeBtn>
+            <ReportBtn>🚨</ReportBtn>
           </BtnContainer>
           <hr />
 
@@ -185,6 +211,7 @@ function Posting() {
 
 const Container = styled.div`
   width: calc(100% - 30px);
+  max-width: 800px;
   padding: 15px;
   margin: 15px auto;
   background-color: whitesmoke;
@@ -195,6 +222,7 @@ const CommentInput = styled(Input)`
   width: 50%;
   flex-grow: 3;
   margin: 0;
+  padding: 0 15px;
 `;
 
 const InputContainer = styled.div`
@@ -205,7 +233,7 @@ const InputContainer = styled.div`
   margin: 10px 0;
 `;
 
-const Btn = styled(SmallBtn)`
+const Btn = styled(SmallBtn)<any>`
   background-color: skyblue;
   height: 100%;
   padding: 0 20px;
@@ -214,7 +242,7 @@ const Btn = styled(SmallBtn)`
 const CommentContainer = styled.div`
   transition: 0.5s all;
   border-radius: 15px;
-  padding: 10px 13px;
+  padding: 10px;
 
   &:hover {
     cursor: pointer;
@@ -227,18 +255,20 @@ const ReplyText = styled.div`
   width: auto;
   flex-shrink: 1;
   color: white;
-  background-color: #ff8383;
+  background-color: #6d6dff;
   padding: 5px 15px;
   border-radius: 10px;
   transition: 0.5s all;
 
   &:hover {
     cursor: pointer;
-    background-color: #ff4848;
+    background-color: #4949fd;
   }
 `;
 
 const BtnContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
   gap: 10px;
   margin: 10px 0;
@@ -246,8 +276,22 @@ const BtnContainer = styled.div`
 
 const LikeBtn = styled(SmallBtn)`
   background-color: #ff9d9d;
+  width: 80px;
+  height: 45px;
+  padding: 0;
   &:hover {
     background-color: #ff7c7c;
+  }
+`;
+
+const ReportBtn = styled(SmallBtn)`
+  font-size: 1.5rem;
+  width: 80px;
+  height: 45px;
+  padding: 0;
+  background-color: #9c9c9c;
+  &:hover {
+    background-color: #fa9363;
   }
 `;
 

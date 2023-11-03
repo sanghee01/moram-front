@@ -14,14 +14,15 @@ function LoginSuccess() {
       try {
         // 문자열을 객체로 변환
         const parsedUser = JSON.parse(getUser);
+        console.log("paresedUser", parsedUser);
         // Recoil 상태 설정
         setUser(parsedUser);
-        navigate("/");
+        //navigate("/");
       } catch (error) {
         console.error("사용자 정보 파싱 중 오류 발생:", error);
       }
     }
-  }, []);
+  }, [getUser]);
 
   return (
     <div>
