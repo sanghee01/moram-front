@@ -126,16 +126,28 @@ function Posting() {
           <h4>
             {posting.nickname} | {date(posting.writeTime)}{" "}
             {posting.userId === user.id && (
-              <SmallBtn
-                $padding="4px 10px"
-                $margin="5px"
-                $background="tomato"
-                $backgroundHover="red"
-                $color="white"
-                onClick={() => deletePosting()}
-              >
-                글 삭제
-              </SmallBtn>
+              <>
+                <SmallBtn
+                  $padding="4px 10px"
+                  $margin="5px"
+                  $background="tomato"
+                  $backgroundHover="red"
+                  $color="white"
+                  onClick={() => deletePosting()}
+                >
+                  글 삭제
+                </SmallBtn>
+                <SmallBtn
+                  $padding="4px 10px"
+                  $margin="5px"
+                  $background="skyblue"
+                  $backgroundHover="lightblue"
+                  $color="white"
+                  //onClick={() => } 수정함수
+                >
+                  글 수정
+                </SmallBtn>
+              </>
             )}
           </h4>
           <hr />
