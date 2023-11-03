@@ -1,13 +1,21 @@
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { idsState, postingState } from "../state";
 
 function CategoryBtn({ category, marginL, marginR }: any) {
   const navigate = useNavigate();
+  const setPostings = useSetRecoilState(postingState);
+  const setIds = useSetRecoilState(idsState);
   return (
     <Btn
       $marginL={marginL}
       $marginR={marginR}
-      onClick={() => navigate(`/community?category=${category}`)}
+      onClick={() => {
+        setPostings("");
+        setIds([99999, 0]);
+        navigate(`/community?category=${category}`);
+      }}
     >
       {category}
     </Btn>
