@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Input } from "../styles/LoginStyles";
 import { SmallBtn } from "../styles/ButtonStyles";
@@ -113,6 +113,9 @@ function Posting() {
           <img src={posting.img3Url} />
           <BtnContainer>
             <LikeBtn>❤️ {posting.likesCount}</LikeBtn>
+            <Link to={`/write/${posting.id}`} state={posting}>
+              글 수정
+            </Link>
           </BtnContainer>
           <hr />
 
