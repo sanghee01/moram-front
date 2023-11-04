@@ -33,6 +33,7 @@ function Home() {
               .map((item) => {
                 return (
                   <PopularContent
+                    key={item.id}
                     img={item.imgUrl[0]}
                     category={item.category}
                     title={item.title}
@@ -62,6 +63,7 @@ function Home() {
               .map((item) => {
                 return (
                   <NewContent
+                    key={item.id}
                     img={item.imgUrl[0]}
                     category={item.category}
                     title={item.title}
