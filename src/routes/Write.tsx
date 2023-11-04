@@ -16,9 +16,10 @@ function Write() {
     img3Url: "",
   });
   const navigate = useNavigate();
-  const postId = useParams();
+  const params = useParams();
+  const postId: any = params?.id || "";
   const location = useLocation();
-  const isEdit = postId.id;
+  const isEdit = postId;
   // console.log("ref:", postId);
   // console.log("loc:", location);
   // console.log("string:", JSON.stringify(postId));
@@ -27,6 +28,15 @@ function Write() {
   // 글 수정 페이지로 들어갈 시 처음에 input value값 설정하기
   useEffect(() => {
     if (isEdit) {
+      //대분류 값을 얻기 위한 함수
+      let foundCategory: any;
+      for (const key in categoryList) {
+        if (categoryList[key].includes(location.state.category)) {
+          foundCategory = key;
+          break;
+        }
+      }
+      setBigCategory(foundCategory);
       setCategory(location.state.category);
       setTag(location.state.tag);
       setTitle(location.state.title);
@@ -55,7 +65,7 @@ function Write() {
         `${process.env.REACT_APP_APIADDRESS}/posting`,
         {
           title: title,
-          content: content.replace(/\n/g, "<br/>"),
+          content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
           img1Url: imageUrl.img1Url,
@@ -66,17 +76,17 @@ function Write() {
       alert(response.data.message);
       navigate("/community?reload=true");
     } catch (error: any) {
-      alert(error?.response?.data || "알 수 없는 오류 발생.");
+      alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
   const editPosting = async (e: any) => {
     e.preventDefault();
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_APIADDRESS}/posting`,
+        `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`,
         {
           title: title,
-          content: content,
+          content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
           img1Url: imageUrl.img1Url,
@@ -84,10 +94,10 @@ function Write() {
           img3Url: imageUrl.img3Url,
         }
       );
-      alert(response.data);
+      alert(response.data.message);
       navigate("/community");
     } catch (error: any) {
-      alert(error?.response?.data || "알 수 없는 오류 발생.");
+      alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
   return (
@@ -99,6 +109,7 @@ function Write() {
           <select
             id="category"
             onChange={(e: any) => setBigCategory(e.target.value)}
+            value={bigCategory}
           >
             <option>대분류 선택</option>
             {Object.keys(categoryList).map((item: any) => {

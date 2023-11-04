@@ -143,7 +143,11 @@ function Posting() {
                   $background="skyblue"
                   $backgroundHover="lightblue"
                   $color="white"
-                  //onClick={() => } 수정함수
+                  onClick={() =>
+                    navigate(`/write/${posting.id}`, {
+                      state: posting,
+                    })
+                  }
                 >
                   글 수정
                 </SmallBtn>
