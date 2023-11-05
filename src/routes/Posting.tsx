@@ -17,6 +17,7 @@ function Posting() {
   const [replyId, setReplyId] = useState<null | Number>(null); //답글할 id
   const [replyNickname, setReplyNickname] = useState<null | String>(null); //답글할 닉네임
   const [replyComment, setReplyComment] = useState<null | String>(null); //답글할 댓글 내용
+  const [isLiked, setIsLiked] = useState(false);
   const user = useRecoilValue(userState);
 
   useEffect(() => {
@@ -24,6 +25,9 @@ function Posting() {
     getComments();
   }, []);
 
+  useEffect(() => {
+    if (user) getLike();
+  }, [user]);
   const onChange = (e: any) => {
     setCommentContent(e.target.value);
   };
@@ -64,18 +68,34 @@ function Posting() {
     }
   };
 
-  const like = async () => {
+  const getLike = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/like/${postId}`
       );
-      setComments(response.data.message); //포스팅 데이터 받기
+      setIsLiked(response.data.isLiked); //좋아요 여부
     } catch (error: any) {
-      alert(error.response.data);
+      console.error(error.response.data.message);
+    }
+  };
+
+  const postLike = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/like/${postId}`
+      );
+      setIsLiked(response.data.isLiked);
+      setPosting((prev: any) => ({
+        ...prev,
+        likesCount: response.data.likesCount,
+      }));
+    } catch (error: any) {
+      console.error(error.response.data.message);
     }
   };
 
   const postComment = async () => {
+    if (!user) return;
     try {
       let api;
       !replyId
@@ -125,7 +145,7 @@ function Posting() {
           </h2>
           <h4>
             {posting.nickname} | {date(posting.writeTime)}{" "}
-            {posting.userId === user.id && (
+            {posting.userId === user?.id && (
               <>
                 <SmallBtn
                   $padding="4px 10px"
@@ -160,7 +180,9 @@ function Posting() {
           <img src={posting.img2Url} />
           <img src={posting.img3Url} />
           <BtnContainer>
-            <LikeBtn>❤️ {posting.likesCount}</LikeBtn>
+            <LikeBtn $isLiked={isLiked} onClick={() => postLike()}>
+              ❤️ {posting.likesCount}
+            </LikeBtn>
             <ReportBtn>🚨</ReportBtn>
           </BtnContainer>
           <hr />
@@ -179,9 +201,15 @@ function Posting() {
             </ReplyText>
           )}
           <InputContainer>
-            <CommentInput onChange={onChange} value={commentContent} />
+            <CommentInput
+              onChange={onChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") postComment();
+              }}
+              value={commentContent}
+            />
             <Btn
-              onClick={() => user && postComment()}
+              onClick={() => postComment()}
               style={user || { background: "gray" }}
             >
               {user ? "작성" : "로그인 필요"}
@@ -290,8 +318,9 @@ const BtnContainer = styled.div`
   margin: 10px 0;
 `;
 
-const LikeBtn = styled(SmallBtn)`
-  background-color: #ff9d9d;
+const LikeBtn = styled(SmallBtn)<any>`
+  background-color: ${(props) => (props.$isLiked ? "#fc8989" : "#fcd8d8")};
+  color: ${(props) => (props.$isLiked ? "white" : "black")};
   width: 80px;
   height: 45px;
   padding: 0;

@@ -13,6 +13,7 @@ import LoginSuccess from "./routes/LoginSuccess";
 import Posting from "./routes/Posting";
 import ProfileEdit from "./routes/ProfileEdit";
 import Write from "./routes/Write";
+import SelfIntroDuction from "./routes/SelfIntroduction";
 
 function AppRouter() {
   return (
@@ -33,6 +34,7 @@ function AppRouter() {
           <Route path="/login-success" element={<LoginSuccess />} />
           <Route path="/write" element={<Write />} />
           <Route path="/write/:id" element={<Write />} />
+          <Route path="/gpt" element={<SelfIntroDuction />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
         </Routes>
         <Footer />

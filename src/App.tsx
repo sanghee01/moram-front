@@ -22,7 +22,7 @@ function App() {
       console.log("user check : ", response);
     } catch (error: any) {
       //alert(error.response.data || "알 수 없는 오류 발생");
-      console.error(error);
+      console.error(error.response.data.message);
     }
   };
   return (

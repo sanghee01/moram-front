@@ -146,7 +146,7 @@ function Community() {
         return prevList;
       });
     } catch (error: any) {
-      alert(error.response.data);
+      console.log(error.response.data.message);
     }
   };
 
@@ -279,7 +279,6 @@ function Community() {
                     changeQuery(categoryFilter, "");
                   } else {
                     setTagFilter(tag);
-                    console.log("tt", tag);
                     changeQuery(categoryFilter, tag);
                   }
                 }}
@@ -331,10 +330,15 @@ function Community() {
               <div>
                 <CategoryBtn
                   category={posting.category}
-                  tag={posting.tag}
+                  tag={tagFilter}
                   marginR={10}
                 />{" "}
-                <TagBtn onClick={() => setTagFilter(posting.tag)}>
+                <TagBtn
+                  onClick={() => {
+                    setTagFilter(posting.tag);
+                    changeQuery(categoryFilter, posting.tag);
+                  }}
+                >
                   {posting.tag}
                 </TagBtn>
                 &nbsp;
@@ -354,6 +358,8 @@ const tagList = ["자유", "정보", "질문", "스터디", "취업"];
 
 const Container = styled.div`
   display: flex;
+  max-width: 1500px;
+  margin: auto;
   padding: 10px;
   gap: 10px;
 `;
@@ -448,7 +454,7 @@ const Sidebar = styled.div<any>`
   background-color: #0e2b49;
   display: flex;
   position: sticky;
-  top: 150px;
+  top: 143px;
   flex-direction: column;
   padding: 15px;
   justify-content: flex-start;
@@ -463,8 +469,8 @@ const Sidebar = styled.div<any>`
     transition: transform 0.3s ease-in-out;
     transform: ${(props) =>
       props.open
-        ? "translateX(-12px) translateY(-17px)"
-        : "translateX(-130%) translateY(-17px)"};
+        ? "translateX(-12px) translateY(-10px)"
+        : "translateX(-130%) translateY(-10px)"};
   }
 `;
 
