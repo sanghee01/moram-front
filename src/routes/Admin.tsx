@@ -24,38 +24,42 @@ function Admin() {
   return (
     <Container>
       <Title>회원정보</Title>
-      <span>회원 수 : {users.length}</span>
       {loading ? (
         <div>loading...</div>
       ) : (
-        <UserTable>
-          <thead>
-            <th>ID</th>
-            <th>닉네임</th>
-            <th>사용자권한</th>
-            <th>소속학교명</th>
-            <th>이메일</th>
-            <th>가입플랫폼</th>
-            <th>가입날짜</th>
-            <th>GptCount</th>
-          </thead>
-          <tbody>
-            {users.map((user: any) => {
-              return (
-                <UserBox key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.nickname}</td>
-                  <td>{user.role}</td>
-                  <td>{user.univName}</td>
-                  <td>{user.email}</td>
-                  <td>{user.platformType}</td>
-                  <td>{user.regDate}</td>
-                  <td>{user.gptcount}</td>
-                </UserBox>
-              );
-            })}
-          </tbody>
-        </UserTable>
+        <>
+          <span>회원 수 : {users.length}</span>
+          <UserTable>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>닉네임</th>
+                <th>사용자권한</th>
+                <th>소속학교명</th>
+                <th>이메일</th>
+                <th>가입플랫폼</th>
+                <th>가입날짜</th>
+                <th>GptCount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user: any) => {
+                return (
+                  <UserBox key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.nickname}</td>
+                    <td>{user.role}</td>
+                    <td>{user.univName}</td>
+                    <td>{user.email}</td>
+                    <td>{user.platformType}</td>
+                    <td>{user.regDate}</td>
+                    <td>{user.gptcount}</td>
+                  </UserBox>
+                );
+              })}
+            </tbody>
+          </UserTable>
+        </>
       )}
     </Container>
   );
