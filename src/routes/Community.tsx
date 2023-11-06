@@ -2,10 +2,10 @@ import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { categoryList } from "../tagList";
+import { categoryList as loadedCategory } from "../tagList";
 import CategoryBtn from "../components/CategoryBtn";
-import { useRecoilState } from "recoil";
-import { idsState, postingState } from "../state";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { idsState, postingState, userState } from "../state";
 
 function Community() {
   const location = useLocation();
@@ -15,7 +15,7 @@ function Community() {
   const tagQuery = queryParams.get("tag");
   const reloadQuery = queryParams.get("reload");
   /**좌측 계열 패널 확장 */
-  const categoryKeys = Object.keys(categoryList);
+  const categoryKeys = Object.keys(loadedCategory);
   let initialIsExpandedState = categoryKeys.reduce((acc: any, category) => {
     acc[category] = false;
     return acc;
@@ -31,6 +31,8 @@ function Community() {
   const [ids, setIds] = useRecoilState(idsState);
   const [isbottom, setIsBottom] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [categoryList, setCategoryList] = useState(loadedCategory);
+  const user = useRecoilValue(userState);
   //const [lastId, setLastId] = useState<any>(99999);
   //const [endPostId, setEndPostId] = useState(0);
 
@@ -81,6 +83,9 @@ function Community() {
     if (!postings) getPostings();
   }, [postings]);
   useEffect(() => {
+    if (user) getBookmark();
+  }, [user]);
+  useEffect(() => {
     if (isbottom) getPostings();
   }, [isbottom]);
   useEffect(() => {
@@ -127,6 +132,35 @@ function Community() {
       loading = false;
     } catch (error: any) {
       alert(error || "알 수 없는 오류 발생.");
+    }
+  };
+
+  const getBookmark = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/bookmark/category`
+      );
+      setCategoryList((prev: any) => {
+        const prevList = { ...prev }; // 이전 상태를 복사
+        prevList["즐겨찾는 학과"] = response.data.content;
+        return prevList;
+      });
+    } catch (error: any) {
+      console.log(error.response.data.message);
+    }
+  };
+
+  const postBookmark = async (e: any, category: any) => {
+    e.stopPropagation();
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/bookmark/category`,
+        { category }
+      );
+      getBookmark();
+      alert(response.data.message); //포스팅 데이터 받기
+    } catch (error: any) {
+      alert(error.response.data);
     }
   };
 
@@ -219,6 +253,11 @@ function Community() {
                     }
                   >
                     {category}
+                    <Star onClick={(e) => postBookmark(e, category)}>
+                      {categoryList["즐겨찾는 학과"].includes(category)
+                        ? "★"
+                        : "☆"}
+                    </Star>
                   </button>
                 ))}
               </CategoryContainer>
@@ -240,7 +279,6 @@ function Community() {
                     changeQuery(categoryFilter, "");
                   } else {
                     setTagFilter(tag);
-                    console.log("tt", tag);
                     changeQuery(categoryFilter, tag);
                   }
                 }}
@@ -292,10 +330,15 @@ function Community() {
               <div>
                 <CategoryBtn
                   category={posting.category}
-                  tag={posting.tag}
+                  tag={tagFilter}
                   marginR={10}
                 />{" "}
-                <TagBtn onClick={() => setTagFilter(posting.tag)}>
+                <TagBtn
+                  onClick={() => {
+                    setTagFilter(posting.tag);
+                    changeQuery(categoryFilter, posting.tag);
+                  }}
+                >
                   {posting.tag}
                 </TagBtn>
                 &nbsp;
@@ -315,6 +358,8 @@ const tagList = ["자유", "정보", "질문", "스터디", "취업"];
 
 const Container = styled.div`
   display: flex;
+  max-width: 1500px;
+  margin: auto;
   padding: 10px;
   gap: 10px;
 `;
@@ -409,7 +454,7 @@ const Sidebar = styled.div<any>`
   background-color: #0e2b49;
   display: flex;
   position: sticky;
-  top: 150px;
+  top: 143px;
   flex-direction: column;
   padding: 15px;
   justify-content: flex-start;
@@ -424,8 +469,8 @@ const Sidebar = styled.div<any>`
     transition: transform 0.3s ease-in-out;
     transform: ${(props) =>
       props.open
-        ? "translateX(-12px) translateY(-17px)"
-        : "translateX(-130%) translateY(-17px)"};
+        ? "translateX(-12px) translateY(-10px)"
+        : "translateX(-130%) translateY(-10px)"};
   }
 `;
 
@@ -467,6 +512,7 @@ const CategoryContainer = styled.div`
     font-size: 1.1rem;
     font-weight: 600;
     color: black;
+    padding: 0 23px;
   }
 
   & button:hover {
@@ -514,4 +560,13 @@ const HamburgerMenu = styled.div<any>`
   }
 `;
 
+const Star = styled.div`
+  margin-left: auto;
+  color: tomato;
+  font-size: 1.5rem;
+
+  &:hover {
+    color: #f7917f;
+  }
+`;
 export default Community;
