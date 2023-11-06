@@ -145,9 +145,6 @@ const BtnContainer = styled.div`
       width: 70px;
       font-size: 0.9rem;
     }
-    & button:nth-child(2) {
-      display: none;
-    }
   }
 `;
 
