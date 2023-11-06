@@ -15,16 +15,17 @@ import ProfileEdit from "./routes/ProfileEdit";
 import Write from "./routes/Write";
 import SelfIntroDuction from "./routes/SelfIntroduction";
 import Admin from "./routes/Admin";
+import { useRecoilValue } from "recoil";
+import { userState } from "./state";
 
 function AppRouter() {
+  const user = useRecoilValue(userState);
   return (
     <>
       <Router>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
           <Route path="/community" element={<Community />} />
           <Route path="/community/:id" element={<Posting />} />
           <Route path="/notice" element={<Notice />} />
@@ -33,11 +34,27 @@ function AppRouter() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile-edit" element={<ProfileEdit />} />
           <Route path="/login-success" element={<LoginSuccess />} />
-          <Route path="/write" element={<Write />} />
-          <Route path="/write/:id" element={<Write />} />
-          <Route path="/gpt" element={<SelfIntroDuction />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
+          {user ? (
+            <>
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/gpt" element={<SelfIntroDuction />} />
+              <Route path="/write" element={<Write />} />
+              <Route path="/write/:id" element={<Write />} />
+            </>
+          ) : (
+            <>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route
+                path="*"
+                element={
+                  <h2>페이지가 없거나 로그인이 필요한 페이지 입니다.</h2>
+                }
+              />
+            </>
+          )}
+
+          <Route path="*" element={<h2>404 NOT FOUND PAGE</h2>} />
         </Routes>
         <Footer />
       </Router>

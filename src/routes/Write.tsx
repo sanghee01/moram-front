@@ -1,8 +1,10 @@
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { categoryList, tagList } from "../tagList";
+import { categoryList as loadedCategory, tagList } from "../tagList";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
 
 function Write() {
   const [bigCategory, setBigCategory] = useState<string>("");
@@ -10,6 +12,8 @@ function Write() {
   const [tag, setTag] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const [categoryList, setCategoryList] = useState(loadedCategory);
+  const user = useRecoilValue(userState);
   const [imageUrl, setImageUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
@@ -48,6 +52,10 @@ function Write() {
       });
     }
   }, [isEdit, location]);
+
+  useEffect(() => {
+    if (user) getBookmark();
+  }, [user]);
 
   console.log(category, tag, title, content);
 
@@ -98,6 +106,21 @@ function Write() {
       navigate("/community");
     } catch (error: any) {
       alert(error?.response?.data.message || "알 수 없는 오류 발생.");
+    }
+  };
+
+  const getBookmark = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/bookmark/category`
+      );
+      setCategoryList((prev: any) => {
+        const prevList = { ...prev }; // 이전 상태를 복사
+        prevList["즐겨찾는 학과"] = response.data.content;
+        return prevList;
+      });
+    } catch (error: any) {
+      console.log(error.response.data.message);
     }
   };
   return (
@@ -181,7 +204,11 @@ function Write() {
             {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
             {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
           </ShowImgBox>
-          <button type="submit">작성완료</button>
+          {user ? (
+            <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
+          ) : (
+            <button style={{ background: "gray" }}>로그인 필요</button>
+          )}
         </FormBox>
       </form>
     </Container>
