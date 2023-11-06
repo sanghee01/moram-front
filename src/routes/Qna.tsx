@@ -14,6 +14,13 @@ function Qna() {
   const [titleValue, setTitle] = useState("");
   const [contentValue, setContent] = useState("");
   const [files, setFiles] = useState<FileInfo[]>([]);
+  const [categoryButton, setCategoryButton] = useState('');
+
+  const CategoryButtonClick = (buttonText: string) => {
+    setCategoryButton(buttonText);
+    const buttonNumber = ['계정 문의', '서비스 문의', '어찌고 문의', '저찌고 문의', '개선 사항'].indexOf(buttonText) + 1;
+    console.log(`버튼 ${buttonNumber}`);
+  };
   const EmailInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
     console.log(event.target.value);
@@ -50,11 +57,11 @@ function Qna() {
       <QnaContainer>
         <QnaMain>
           <QnaCategory>
-            <button>계정 문의</button>
-            <button>서비스 문의</button>
-            <button>어찌고 문의</button>
-            <button>저찌고 문의</button>
-            <button>개선 사항</button>
+          <button className={categoryButton === '계정 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('계정 문의')}>계정 문의</button>
+          <button className={categoryButton === '서비스 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('서비스 문의')}>서비스 문의</button>
+          <button className={categoryButton === '어찌고 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('어찌고 문의')}>어찌고 문의</button>
+          <button className={categoryButton === '저찌고 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('저찌고 문의')}>저찌고 문의</button>
+          <button className={categoryButton === '개선 사항' ? 'active' : ''}  onClick={() => CategoryButtonClick('개선 사항')}>개선 사항</button>
           </QnaCategory>
           <EmailDiv>
             <h4>email</h4>
@@ -133,22 +140,32 @@ const QnaContainer = styled.div`
   width: 100%;
   margin: 1rem 4rem;
   padding: 3rem 12%;
-  border: solid 1px gray;
-  border-radius: 15px;
+  background-color: #f6f6f6;
+  border-radius: 25px;
 `;
 const QnaCategory = styled.div`
   display: flex;
   gap: 1%;
-  padding: 0 5%;
+  padding: 0 2%;
   justify-content: space-between;
   & button {
-    width: 110px;
+    width: 115px;
     height: 40px;
-    font-size: 14px;
-    background-color: transparent;
+    font-size: 15px;
+    font-weight: 470;
+    weight: 500;
+    background-color: white;
     outline: 0;
-    border: solid 1px gray;
+    border: transparent;
     border-radius: 15px;
+  }
+  & button:hover{
+    cursor: pointer;
+    background-color: #d6d6ff;
+  }
+  & button.active {
+    background-color: #6c6ce3;
+    color: white;
   }
   @media screen and (max-width: 1000px) {
     & button {
@@ -167,8 +184,8 @@ const QnaTtilePosition = styled.div`
 const QnaTitle = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 1rem;
-  margin-bottom: 2rem;
+  margin-top: 2.6rem;
+  margin-bottom: 0.1rem;
   font-size: 1.5rem;
 `;
 const QnaMain = styled.div`
@@ -208,6 +225,7 @@ const ContentTextarea = styled.textarea`
   width: 100%;
   height: 300px;
   text-align: left;
+  border-radious: 10px;
 `;
 
 const AttachFile = styled.div`
@@ -217,21 +235,30 @@ const AttachFile = styled.div`
 const FileContainer = styled.div`
   display: flex;
   width: 100%;
+  gap:1.8rem;
+  justify-content: space-between;
 `;
 const AttachFileDiv = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center
 `;
 const FileBox = styled.div`
   display: flex;
   flex-direction: column;
   border: 1px solid gray;
-  border-radius: 4px;
-  width: 100%;
+  border-radius: 10px;
+  background-color: white;
+  width: 505px;
+  padding: 0.2rem 0.5rem
 `;
 const FileName = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 const FileDelet = styled.button`
   margin-left: 10px;
@@ -240,12 +267,16 @@ const FileDelet = styled.button`
   border: 0;
 `;
 const FileLabel = styled.label`
-  display: inline-block;
-  padding: 3px 2px;
-  margin-right: 2.2rem;
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 50px;
+  font-weight: 530;
+  font-size: 14px;
+  background-color: #dbdbdb;
+  border-radious: 10px;
+  border-radius: 15px;
   cursor: pointer;
 `;
 const QnaCharacterPosition = styled.div`

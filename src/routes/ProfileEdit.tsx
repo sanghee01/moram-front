@@ -69,8 +69,7 @@ function ProfileEdit() {
                 value={pwValue2}
                 onChange={ChangeUserPw2}
               />
-              <OkButton></OkButton>
-              <button>변경</button>
+              <OkButton><button>변경</button></OkButton>
             </Security2>
           </SecurityChange>
         </SecurityEdit>
@@ -194,7 +193,7 @@ const Security2 = styled.div`
 const OkButton = styled.div`
   display: flex;
   & button {
-    width: 50%;
+    width: 100%;
   }
 `;
 export default ProfileEdit;
