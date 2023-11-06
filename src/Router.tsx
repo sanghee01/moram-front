@@ -14,6 +14,7 @@ import Posting from "./routes/Posting";
 import ProfileEdit from "./routes/ProfileEdit";
 import Write from "./routes/Write";
 import SelfIntroDuction from "./routes/SelfIntroduction";
+import Admin from "./routes/Admin";
 
 function AppRouter() {
   return (
@@ -35,6 +36,7 @@ function AppRouter() {
           <Route path="/write" element={<Write />} />
           <Route path="/write/:id" element={<Write />} />
           <Route path="/gpt" element={<SelfIntroDuction />} />
+          <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<div>404 NOT FOUND PAGE</div>} />
         </Routes>
         <Footer />

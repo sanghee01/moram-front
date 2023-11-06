@@ -159,21 +159,21 @@ function Write() {
               name="img1Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img1Url}
+              value={imageUrl.img1Url && null}
             />
             <input
               type="file"
               name="img2Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img2Url}
+              value={imageUrl.img2Url && null}
             />
             <input
               type="file"
               name="img3Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img3Url}
+              value={imageUrl.img3Url && null}
             />
           </UploadImgBox>
           <ShowImgBox>
