@@ -13,7 +13,7 @@ function Users() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/admin/allusers`
       );
-      const userData = response.data;
+      const userData = response.data.content;
       SetUsers(userData);
       setLoding(false);
       //   console.log("userData:", userData);
@@ -43,7 +43,7 @@ function Users() {
               </tr>
             </thead>
             <tbody>
-              {users.map((user: any) => {
+              {users?.map((user: any) => {
                 return (
                   <Row key={user.id}>
                     <td>{user.id}</td>

@@ -117,7 +117,8 @@ function Community() {
     try {
       const response = await axios.get(apitext);
 
-      const { content, endId } = response.data.content;
+      const content = response.data.content.postings;
+      const endId = response.data.content.endId;
 
       if (!loading && !postings) {
         setPostings(content);

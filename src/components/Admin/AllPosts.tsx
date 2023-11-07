@@ -14,7 +14,7 @@ function AllPosts() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/admin/allposts`
       );
-      const allPostsData = response.data;
+      const allPostsData = response.data.content;
       SetAllPostsData(allPostsData);
       setLoding(false);
       console.log("allposts:", allPostsData);
