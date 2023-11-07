@@ -65,7 +65,7 @@ function AllPosts() {
 export default AllPosts;
 
 const Container = styled.div`
-  width: 100%;
+  width: 70%;
   margin: auto;
   margin-top: 50px;
   height: 100vh;

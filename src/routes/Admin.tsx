@@ -1,26 +1,49 @@
 import { styled } from "styled-components";
-import Users from "../components/Admin/Users";
-import AllPosts from "../components/Admin/AllPosts";
+import { Link, Outlet } from "react-router-dom";
 
 function Admin() {
   return (
-    <Container>
-      {/* 추후 탭으로 분리할 예정 */}
-      <Users />
-      <AllPosts />
-    </Container>
+    <>
+      <Container>
+        <Tabs>
+          <Tab>
+            <Link to="users">Users</Link>
+          </Tab>
+          <Tab>
+            <Link to="allPosts">AllPosts</Link>
+          </Tab>
+        </Tabs>
+        <Outlet />
+      </Container>
+    </>
   );
 }
 
 export default Admin;
 
 const Container = styled.div`
-  width: 70%;
-  margin: auto;
-  margin-top: 50px;
-  height: 100vh;
-  @media screen and (max-width: 800px) {
-    width: 90%;
-    font-size: 0.8rem;
+  display: flex;
+  height: 200vh;
+`;
+
+const Tabs = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: #f3f3f3;
+  width: 20%;
+`;
+
+const Tab = styled.span`
+  & a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-weight: bolder;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  & a:hover {
+    background-color: #ececec;
   }
 `;
