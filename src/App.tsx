@@ -18,11 +18,10 @@ function App() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/user/check`
       );
-      setUser(response.data);
-      console.log("user check : ", response);
+      setUser(response.data.content);
+      console.log("user check : ", response.data.content);
     } catch (error: any) {
-      //alert(error.response.data || "알 수 없는 오류 발생");
-      console.error(error.response.data.message);
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
   return (

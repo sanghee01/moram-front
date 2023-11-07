@@ -1,7 +1,27 @@
 import { styled } from "styled-components";
 import { Link, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function Admin() {
+  const [users, SetUsers] = useState<null | any>(null);
+  const [loading, setLoding] = useState(true);
+  useEffect(() => {
+    getUserInfo();
+  }, []);
+  const getUserInfo = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/admin/allusers`
+      );
+      const userData = response.data.content;
+      SetUsers(userData);
+      setLoding(false);
+      console.log("gi", userData);
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
   return (
     <>
       <Container>

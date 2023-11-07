@@ -16,7 +16,7 @@ function Header() {
       alert("로그아웃 되었습니다.");
       setUser(null);
     } catch (error: any) {
-      alert(error.response?.data || "알 수 없는 에러 발생");
+      alert(error?.response?.data.message || "알 수 없는 에러 발생");
     }
   };
   return (
