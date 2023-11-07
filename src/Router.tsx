@@ -17,6 +17,8 @@ import SelfIntroDuction from "./routes/SelfIntroduction";
 import Admin from "./routes/Admin";
 import { useRecoilValue } from "recoil";
 import { userState } from "./state";
+import Users from "./components/Admin/Users";
+import AllPosts from "./components/Admin/AllPosts";
 
 function AppRouter() {
   const user = useRecoilValue(userState);
@@ -36,7 +38,10 @@ function AppRouter() {
           <Route path="/login-success" element={<LoginSuccess />} />
           {user ? (
             <>
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/admin" element={<Admin />}>
+                <Route path="/admin/users" element={<Users />}></Route>
+                <Route path="/admin/allPosts" element={<AllPosts />}></Route>
+              </Route>
               <Route path="/gpt" element={<SelfIntroDuction />} />
               <Route path="/write" element={<Write />} />
               <Route path="/write/:id" element={<Write />} />
