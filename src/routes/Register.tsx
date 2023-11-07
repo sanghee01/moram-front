@@ -42,7 +42,7 @@ function Register() {
     }
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/user/register`,
+        `${process.env.REACT_APP_APIADDRESS}/register`,
         {
           nickname,
           email,
@@ -52,7 +52,7 @@ function Register() {
       alert(response?.data + "\n로그인을 해주세요.");
       navigate("/login");
     } catch (error: any) {
-      alert(error.response?.data || "알 수 없는 에러 발생");
+      alert(error.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
@@ -65,11 +65,10 @@ function Register() {
 
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/user/mailsend`,
+        `${process.env.REACT_APP_APIADDRESS}/register/mailsend`,
         {
           email: email,
-        },
-        { withCredentials: true }
+        }
       );
       if (response.data) {
         //alert(response.data); 메일 발신 성공
@@ -77,7 +76,7 @@ function Register() {
         timer = setInterval(() => setCount((prev) => prev - 1), 1000);
       }
     } catch (error: any) {
-      alert(error.response?.data || "알 수 없는 에러 발생");
+      alert(error.response?.data?.message || "알 수 없는 에러 발생");
     }
     setIsLoading(false);
   };
@@ -86,15 +85,15 @@ function Register() {
   const checkVerify = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/user/mailverify`,
+        `${process.env.REACT_APP_APIADDRESS}/register/mailverify`,
         { email, authcode: verifyCode }
       );
-      if (response.data) {
-        alert(response.data); //인증 완료
+      if (response.data.message) {
+        alert(response.data.message); //인증 완료
         setVerified(true);
       }
     } catch (error: any) {
-      alert(error.response?.data || "알 수 없는 에러 발생");
+      alert(error.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 

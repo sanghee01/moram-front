@@ -76,7 +76,6 @@ const Nav = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: aliceblue;
-
   @media screen and (max-width: 900px) {
     padding: 0 5%;
   }

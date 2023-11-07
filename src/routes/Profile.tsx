@@ -23,6 +23,7 @@ function ChooseContent({
 }: ChooseContentProps) {
   return (
     <Content>
+      {}
       <img src={src} alt="이미지" />
       <section>
         <div>
@@ -51,14 +52,16 @@ function Profile() {
   return (
     <Container>
       <ProfileMain>
-        <img src="./assets/profileimage.jpg" />
-        <ProfileInpromation>
-          <SettingIcon onClick={() => navigate("/profile-edit")}>
-            <IoSettingsOutline size="20" />
-          </SettingIcon>
-          <h1>쿼카맹구</h1>
-          <h4>dlrhdns0000@naver.com</h4>
-        </ProfileInpromation>
+        <section>
+          <img src="./assets/profileimage.jpg" />
+          <ProfileInpromation>
+            <SettingIcon onClick={() => navigate("/profile-edit")}>
+              <IoSettingsOutline size="20" />
+            </SettingIcon>
+            <h1>쿼카맹구</h1>
+            <h4>dlrhdns0000@naver.com</h4>
+          </ProfileInpromation>
+        </section>
         <ProfileWrite>
           <Write>작성한 글</Write>
           <Comment>댓글 단 글</Comment>
@@ -140,10 +143,12 @@ const Container = styled.div`
 const ProfileMain = styled.div`
   display: flex;
   height: 10rem;
-
   align-items: center;
-
+  justify-content: space-between;
   margin: 1.5rem 0;
+  & section {
+    display: flex;
+  }
   & img {
     border-radius: 100%;
     width: 165px;

@@ -57,6 +57,10 @@ function Write() {
     if (user) getBookmark();
   }, [user]);
 
+  useEffect(() => {
+    console.log("image url -> ", imageUrl);
+  }, [imageUrl]);
+
   console.log(category, tag, title, content);
 
   const handleUploadImage = (e: any) => {
@@ -66,8 +70,7 @@ function Write() {
     });
   };
 
-  const postPosting = async (e: any) => {
-    e.preventDefault();
+  const postPosting = async () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/posting`,
@@ -87,8 +90,7 @@ function Write() {
       alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
-  const editPosting = async (e: any) => {
-    e.preventDefault();
+  const editPosting = async () => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`,
@@ -123,10 +125,60 @@ function Write() {
       console.log(error.response.data.message);
     }
   };
+
+  const uploadImage = async () => {
+    let imgCount = 0;
+    if (imageUrl.img1url) imgCount++;
+    if (imageUrl.img2url) imgCount++;
+    if (imageUrl.img3url) imgCount++;
+    if (imgCount === 0) {
+      postPosting();
+      return;
+    }
+    try {
+      //const { presignedUrl, imageUrl } = await generatePresignedUrl();
+      const urlArray = await generatePresignedUrl();
+      const response = await axios.put(
+        urlArray[0].presignedUrl,
+        imageUrl.img1url,
+        {
+          headers: {
+            "Content-Type": imageUrl.img1url.type as any,
+          },
+        }
+      );
+      console.log("Image uploaded:", response.status);
+    } catch (error: any) {
+      console.error(error.response);
+    }
+  };
+
+  const generatePresignedUrl = async () => {
+    let imgCount = 0;
+    if (imageUrl.img1url) imgCount++;
+    if (imageUrl.img2url) imgCount++;
+    if (imageUrl.img3url) imgCount++;
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`,
+        { imgCount }
+      );
+      return response.data.content;
+    } catch (error) {
+      console.error("Error generating presigned URL:", error);
+      throw error;
+    }
+  };
+
   return (
     <Container>
       {isEdit ? <Title>글 수정</Title> : <Title>글 작성</Title>}
-      <form onSubmit={isEdit ? editPosting : postPosting}>
+      <form
+        onSubmit={(e: any) => {
+          e.preventDefault();
+          isEdit ? editPosting() : postPosting();
+        }}
+      >
         <FormBox>
           <label htmlFor="category">학과</label>
           <select
@@ -182,21 +234,18 @@ function Write() {
               name="img1Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img1Url && null}
             />
             <input
               type="file"
               name="img2Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img2Url && null}
             />
             <input
               type="file"
               name="img3Url"
               accept="image/*"
               onChange={handleUploadImage}
-              value={imageUrl.img3Url && null}
             />
           </UploadImgBox>
           <ShowImgBox>
