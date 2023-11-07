@@ -16,7 +16,7 @@ function Users() {
       const userData = response.data;
       SetUsers(userData);
       setLoding(false);
-      console.log("gi", userData);
+      //   console.log("userData:", userData);
     } catch (error: any) {
       alert(error.response.data);
     }

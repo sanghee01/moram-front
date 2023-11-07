@@ -1,10 +1,13 @@
 import { styled } from "styled-components";
 import Users from "../components/Admin/Users";
+import AllPosts from "../components/Admin/AllPosts";
 
 function Admin() {
   return (
     <Container>
+      {/* 추후 탭으로 분리할 예정 */}
       <Users />
+      <AllPosts />
     </Container>
   );
 }
