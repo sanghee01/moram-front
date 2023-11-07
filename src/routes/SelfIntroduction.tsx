@@ -34,7 +34,7 @@ function SelfIntroDuction() {
       );
       setGptCount(response.data.content); //포스팅 데이터 받기
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
@@ -48,11 +48,11 @@ function SelfIntroDuction() {
         `${process.env.REACT_APP_APIADDRESS}/gpt`,
         { content: text }
       );
-      setResult(response.data); //포스팅 데이터 받기
+      setResult(response.data.content); //포스팅 데이터 받기
       setIsLoading(false);
       getGptCount();
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 

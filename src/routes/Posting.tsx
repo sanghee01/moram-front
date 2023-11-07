@@ -37,11 +37,11 @@ function Posting() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`
       );
-      const postData = response.data;
+      const postData = response.data.content;
       postData.content = postData.content.split("<br/>").join("\n");
       setPosting(postData); //포스팅 데이터 받기
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -53,7 +53,7 @@ function Posting() {
       alert(response.data.message);
       navigate("/community?reload=true");
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -62,9 +62,9 @@ function Posting() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/comment/${postId}`
       );
-      setComments(response.data); //포스팅 데이터 받기
+      setComments(response.data.content); //포스팅 데이터 받기
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -73,9 +73,9 @@ function Posting() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/like/${postId}`
       );
-      setIsLiked(response.data.isLiked); //좋아요 여부
+      setIsLiked(response.data.content.isLiked); //좋아요 여부
     } catch (error: any) {
-      console.error(error.response.data.message);
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -84,13 +84,13 @@ function Posting() {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/like/${postId}`
       );
-      setIsLiked(response.data.isLiked);
+      setIsLiked(response.data.content.isLiked);
       setPosting((prev: any) => ({
         ...prev,
-        likesCount: response.data.likesCount,
+        likesCount: response.data.content.likesCount,
       }));
     } catch (error: any) {
-      console.error(error.response.data.message);
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -111,7 +111,7 @@ function Posting() {
       setReplyNickname(null);
       setReplyComment(null);
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 

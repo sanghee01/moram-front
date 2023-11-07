@@ -52,7 +52,7 @@ function Register() {
       alert(response?.data + "\n로그인을 해주세요.");
       navigate("/login");
     } catch (error: any) {
-      alert(error.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -71,12 +71,12 @@ function Register() {
         }
       );
       if (response.data) {
-        //alert(response.data); 메일 발신 성공
+        alert(response.data.message); //메일 발신 성공
         setCount(300);
         timer = setInterval(() => setCount((prev) => prev - 1), 1000);
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
     setIsLoading(false);
   };
@@ -93,7 +93,7 @@ function Register() {
         setVerified(true);
       }
     } catch (error: any) {
-      alert(error.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 

@@ -117,7 +117,7 @@ function Community() {
     try {
       const response = await axios.get(apitext);
 
-      const { content, endId } = response.data;
+      const { content, endId } = response.data.content;
 
       if (!loading && !postings) {
         setPostings(content);
@@ -128,10 +128,10 @@ function Community() {
             ...content,
           ]);
       }
-      setIds([response.data.lastId, endId]);
+      setIds([response.data.content.lastId, endId]);
       loading = false;
     } catch (error: any) {
-      alert(error || "알 수 없는 오류 발생.");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -146,7 +146,7 @@ function Community() {
         return prevList;
       });
     } catch (error: any) {
-      console.log(error.response.data.message);
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 
@@ -160,7 +160,7 @@ function Community() {
       getBookmark();
       alert(response.data.message); //포스팅 데이터 받기
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
 

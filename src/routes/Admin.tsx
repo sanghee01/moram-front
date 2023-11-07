@@ -13,12 +13,12 @@ function Admin() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/admin/allusers`
       );
-      const userData = response.data;
+      const userData = response.data.content;
       SetUsers(userData);
       setLoding(false);
       console.log("gi", userData);
     } catch (error: any) {
-      alert(error.response.data);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
   return (

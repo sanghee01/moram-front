@@ -122,7 +122,7 @@ function Write() {
         return prevList;
       });
     } catch (error: any) {
-      console.log(error.response.data.message);
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
@@ -149,7 +149,7 @@ function Write() {
       );
       console.log("Image uploaded:", response.status);
     } catch (error: any) {
-      console.error(error.response);
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
