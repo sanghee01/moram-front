@@ -52,20 +52,22 @@ function Profile() {
   return (
     <Container>
       <ProfileMain>
-        <section>
           <img src="./assets/profileimage.jpg" />
           <ProfileInpromation>
-            <SettingIcon onClick={() => navigate("/profile-edit")}>
-              <IoSettingsOutline size="20" />
-            </SettingIcon>
-            <h1>쿼카맹구</h1>
-            <h4>dlrhdns0000@naver.com</h4>
+          <InformationBox>
+           <ProfileContent>
+             <SettingIcon onClick={() => navigate("/profile-edit")}>
+               <IoSettingsOutline size="20" />
+             </SettingIcon>
+             <h1>쿼카맹구</h1>
+             <h4>dlrhdns0000@naver.com</h4>
+           </ProfileContent>
+           <ProfileWrite>
+             <button>작성한 글</button>
+             <button>댓글 단 글</button>
+           </ProfileWrite>
+           </InformationBox>
           </ProfileInpromation>
-        </section>
-        <ProfileWrite>
-          <Write>작성한 글</Write>
-          <Comment>댓글 단 글</Comment>
-        </ProfileWrite>
       </ProfileMain>
       <ChooseIcon>
         <ChooseAllIcon
@@ -136,33 +138,30 @@ function Profile() {
 
 const Container = styled.div`
   width: 60%;
+  justify-content: center;
   height: 100vh;
   margin: auto;
-`;
+`; 
 
 const ProfileMain = styled.div`
   display: flex;
-  height: 10rem;
+  width: 100%;
   align-items: center;
   justify-content: space-between;
   margin: 1.5rem 0;
   & section {
     display: flex;
+    width: 100%;
   }
   & img {
     border-radius: 100%;
     width: 165px;
     height: 165px;
   }
-
   @media screen and (max-width: 1000px) {
     & img {
       width: 150px;
       height: 150px;
-    }
-    & div {
-      flex-direction: column;
-      gap: 0;
     }
   }
   @media screen and (max-width: 800px) {
@@ -175,8 +174,8 @@ const ProfileMain = styled.div`
 
 const ProfileInpromation = styled.div`
   padding: 0 1rem;
+  width: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   @media screen and (max-width: 800px) {
     & h1 {
@@ -187,7 +186,21 @@ const ProfileInpromation = styled.div`
     }
   }
 `;
+const ProfileContent = styled.div`
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+`;
 
+const InformationBox = styled.div`
+display: flex;
+  justify-content: space-between; 
+  width: 100%; 
+  gap: 0.8rem;
+  @media screen and (max-width: 1400px) {
+    flex-direction: column;
+  }
+`;
 const SettingIcon = styled.button`
   background-color: transparent;
   outline: 0;
@@ -202,34 +215,10 @@ const SettingIcon = styled.button`
 
 const ProfileWrite = styled.div`
   display: flex;
-  justify-content: space-between;
-  justify-content: center;
+  width: 70%;
   align-items: center;
   gap: 0.5rem;
-`;
-
-const Write = styled.button`
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  background-color: #e6e6e6d6;
-  min-width: 200px;
-  width: 50%;
-
-  height: 35px;
-  border-radius: 8px;
-  @media screen and (max-width: 1000px) {
-    margin-bottom: 10px;
-    width: 200px;
-  }
-  @media screen and (max-width: 800px) {
-    margin-bottom: 10px;
-    width: 170px;
-    font-size: 15px;
-  }
-`;
-
-const Comment = styled.button`
+  & button {
   background-color: transparent;
   outline: 0;
   border: 0;
@@ -238,12 +227,7 @@ const Comment = styled.button`
   width: 50%;
   height: 35px;
   border-radius: 8px;
-  @media screen and (max-width: 1000px) {
-    width: 200px;
-  }
-  @media screen and (max-width: 800px) {
-    width: 170px;
-    font-size: 15px;
+  gap: 0.2rem;
   }
 `;
 
@@ -285,20 +269,6 @@ const Content = styled.div`
     height: 200px;
     object-fit: cover;
     border-radius: 8px;
-  }
-  & section {
-    display: flex;
-    flex-direction: column;
-    & div {
-      display: flex;
-      gap: 10px;
-    }
-    @media screen and (max-width: 1000px) {
-      & div {
-        flex-direction: column;
-        gap: 0;
-      }
-    }
   }
   @media screen and (max-width: 1000px) {
     & img {
