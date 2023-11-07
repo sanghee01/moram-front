@@ -26,7 +26,7 @@ function ProfileEdit() {
       <ProfileEditMain>
         <ProfileImageEdit>
           <h2>프로필 수정</h2>
-          <p>나의 프로필을 수정 하실 수 있습니다.</p>
+          <p>나의 프로필을 수정 하실 수 있습니다..</p>
           <ProfileImageChange>
             <ProfileImage1>
               <h4>프로필 이미지</h4>
@@ -69,6 +69,7 @@ function ProfileEdit() {
                 value={pwValue2}
                 onChange={ChangeUserPw2}
               />
+              <OkButton><button>변경</button></OkButton>
             </Security2>
           </SecurityChange>
         </SecurityEdit>
@@ -187,6 +188,12 @@ const Security2 = styled.div`
     margin: 0;
     font-size: 12px;
     color: gray;
+  }
+`;
+const OkButton = styled.div`
+  display: flex;
+  & button {
+    width: 100%;
   }
 `;
 export default ProfileEdit;
