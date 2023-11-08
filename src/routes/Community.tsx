@@ -6,6 +6,8 @@ import { categoryList as loadedCategory } from "../tagList";
 import CategoryBtn from "../components/CategoryBtn";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { idsState, postingState, userState } from "../state";
+import { AiOutlineSearch } from "react-icons/ai";
+import { LuDelete } from "react-icons/lu";
 
 function Community() {
   const location = useLocation();
@@ -13,6 +15,7 @@ function Community() {
   const queryParams = new URLSearchParams(location.search);
   const categoryQuery = queryParams.get("category");
   const tagQuery = queryParams.get("tag");
+  const searchQuery = queryParams.get("search");
   const reloadQuery = queryParams.get("reload");
   /**좌측 계열 패널 확장 */
   const categoryKeys = Object.keys(loadedCategory);
@@ -27,11 +30,13 @@ function Community() {
     categoryQuery || ""
   ); // 과 필터
   const [tagFilter, setTagFilter] = useState<any>(tagQuery || ""); // 태그('자유','질문'...) 필터
+  const [searchFilter, setSearchFilter] = useState<any>(searchQuery || ""); // 태그('자유','질문'...) 필터
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [ids, setIds] = useRecoilState(idsState);
   const [isbottom, setIsBottom] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [categoryList, setCategoryList] = useState(loadedCategory);
+  const [search, setSearch] = useState(searchQuery || "");
   const user = useRecoilValue(userState);
   //const [lastId, setLastId] = useState<any>(99999);
   //const [endPostId, setEndPostId] = useState(0);
@@ -78,7 +83,7 @@ function Community() {
     //   window.removeEventListener("scroll", handleScroll);
     // };
     setIsOpen(true);
-  }, [categoryFilter, tagFilter]);
+  }, [categoryFilter, tagFilter, searchFilter]);
   useEffect(() => {
     if (!postings) getPostings();
   }, [postings]);
@@ -91,6 +96,7 @@ function Community() {
   useEffect(() => {
     setCategoryFilter(queryParams.get("category") || "");
     setTagFilter(queryParams.get("tag") || "");
+    setSearchFilter(queryParams.get("search") || "");
     loadSidebar();
   }, [location.search]); // location 객체가 변경될 때마다 실행됩니다.
 
@@ -98,11 +104,15 @@ function Community() {
     /**좌측 패널 확장 기록 불러오기 */
     let foundCategory: any;
     for (const key in categoryList) {
-      if (categoryList[key].includes(categoryQuery)) {
+      if (
+        categoryList[key].includes(categoryQuery) &&
+        key !== "즐겨찾는 학과"
+      ) {
         foundCategory = key;
         break;
       }
     }
+    initialIsExpandedState["즐겨찾는 학과"] = true;
     initialIsExpandedState[foundCategory] = true;
     setIsExpanded(initialIsExpandedState);
   };
@@ -113,7 +123,7 @@ function Community() {
     if (ids[0] === ids[1]) return;
 
     console.log("getposting 실행 last,end", ids[0], ids[1]);
-    const apitext = `${process.env.REACT_APP_APIADDRESS}/posting?category=${categoryFilter}&tag=${tagFilter}&lastId=${ids[0]}`;
+    const apitext = `${process.env.REACT_APP_APIADDRESS}/posting?category=${categoryFilter}&tag=${tagFilter}&lastId=${ids[0]}&search=${search}`;
     try {
       const response = await axios.get(apitext);
 
@@ -167,7 +177,8 @@ function Community() {
 
   const changeQuery = (
     newCategory: any = categoryFilter,
-    newTag: any = tagFilter
+    newTag: any = tagFilter,
+    newSearch: any = search
   ) => {
     // 변경된 쿼리 매개변수를 포함한 새 URL을 생성합니다.
     const newSearchParams = new URLSearchParams();
@@ -176,6 +187,9 @@ function Community() {
     }
     if (newTag) {
       newSearchParams.set("tag", newTag);
+    }
+    if (newSearch) {
+      newSearchParams.set("search", newSearch);
     }
 
     navigate({
@@ -203,6 +217,9 @@ function Community() {
     //console.log(document.documentElement.scrollHeight, scrollPosition);
   };
 
+  const onChange = (e: any) => {
+    setSearch(e.target.value);
+  };
   /** 날짜 형식 변환 함수 */
   const date = (dateStr: string) => {
     const dateObj = new Date(dateStr);
@@ -288,6 +305,20 @@ function Community() {
               </button>
             ))}
           </div>
+          <SearchContainer>
+            <input
+              onChange={onChange}
+              value={search}
+              placeholder="제목+내용"
+              onKeyDown={(e) => {
+                if (e.key === "Enter")
+                  changeQuery(categoryFilter, tagFilter, search);
+              }}
+            ></input>
+            <div onClick={() => changeQuery(categoryFilter, tagFilter, search)}>
+              <AiOutlineSearch size="30" />
+            </div>
+          </SearchContainer>
           <button
             onClick={() => navigate("/write")}
             style={{ background: "#b0b0fc" }}
@@ -295,7 +326,7 @@ function Community() {
             글 작성
           </button>
         </TagContainer>
-        {(categoryFilter || tagFilter) && (
+        {(categoryFilter || tagFilter || searchFilter) && (
           <FilterContainer>
             현재 게시물 필터{" "}
             {categoryFilter && (
@@ -307,7 +338,9 @@ function Community() {
                   changeQuery("", tagQuery);
                 }}
               >
-                <div>{categoryFilter} x</div>
+                <div>
+                  학과 : {categoryFilter} <LuDelete size="23" />
+                </div>
               </TagBtn>
             )}
             {tagFilter && (
@@ -319,7 +352,23 @@ function Community() {
                   changeQuery(categoryQuery, "");
                 }}
               >
-                <div>{tagFilter} x</div>
+                <div>
+                  태그 : {tagFilter} <LuDelete size="23" />
+                </div>
+              </TagBtn>
+            )}
+            {searchFilter && (
+              <TagBtn
+                $background={"#f77676"}
+                $color={"white"}
+                onClick={() => {
+                  setSearch("");
+                  changeQuery(categoryQuery, tagQuery, "");
+                }}
+              >
+                <div>
+                  검색어 : {searchFilter} <LuDelete size="23" />
+                </div>
               </TagBtn>
             )}
           </FilterContainer>
@@ -415,7 +464,7 @@ const TagContainer = styled.div`
     background-color: #d6d6ff;
   }
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 1200px) {
     flex-wrap: wrap;
     gap: 10px;
 
@@ -529,8 +578,14 @@ const TagBtn = styled.button<any>`
   transition: 0.5s all;
   border: 0;
   margin-right: 5px;
-  & div {
+  & * {
     color: ${(props) => props.$color || "black"};
+  }
+  & div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
   }
   &:hover {
     filter: contrast(130%);
@@ -558,6 +613,42 @@ const HamburgerMenu = styled.div<any>`
     z-index: 10;
 
     background-color: ${(props) => (props.open ? "#7979f7" : "#5a59ff")};
+  }
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  width: 300px;
+  margin-left: auto;
+  margin-right: 10px;
+  gap: 10px;
+  & input {
+    width: calc(100% - 40px);
+    background-color: whitesmoke;
+    border-radius: 15px;
+    border: 3px solid #9f9ff8;
+    padding: 0 10px;
+  }
+  & input:focus {
+    border: 3px solid #5a59ff;
+    outline: none;
+  }
+  & div {
+    width: 30px;
+    color: #5a59ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  & div:hover {
+    cursor: pointer;
+  }
+
+  & * {
+    color: #5a59ff;
+  }
+  & *:hover {
+    color: #3939f7;
   }
 `;
 
