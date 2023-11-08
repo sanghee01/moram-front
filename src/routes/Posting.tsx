@@ -1,11 +1,13 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Input } from "../styles/LoginStyles";
 import { SmallBtn } from "../styles/ButtonStyles";
 import { useRecoilValue } from "recoil";
 import { userState } from "../state";
+import { BsReplyFill } from "react-icons/bs";
+import { LuDelete } from "react-icons/lu";
 
 function Posting() {
   const params = useParams();
@@ -19,6 +21,7 @@ function Posting() {
   const [replyComment, setReplyComment] = useState<null | String>(null); //답글할 댓글 내용
   const [isLiked, setIsLiked] = useState(false);
   const user = useRecoilValue(userState);
+  const inputRef = useRef<any>(null);
 
   useEffect(() => {
     getPosting();
@@ -144,7 +147,8 @@ function Posting() {
             {posting.title}
           </h2>
           <h4>
-            {posting.nickname} | {date(posting.writeTime)}{" "}
+            {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} |{" "}
+            {date(posting.writeTime)}{" "}
             {posting.userId === user?.id && (
               <>
                 <SmallBtn
@@ -175,7 +179,7 @@ function Posting() {
             )}
           </h4>
           <hr />
-          <p>{posting.content}</p>
+          <ContentText>{posting.content}</ContentText>
           <img src={posting.img1Url} />
           <img src={posting.img2Url} />
           <img src={posting.img3Url} />
@@ -196,12 +200,16 @@ function Posting() {
                 setReplyComment(null);
               }}
             >
-              [@{replyNickname} : {replyComment}] 에게 답글을 남기는 중...
-              &nbsp;&nbsp;x
+              <div>
+                <BsReplyFill fill="white" /> &nbsp;[@{replyNickname} :{" "}
+                {replyComment}] 에게 답글을 남기는 중... &nbsp;&nbsp;
+                <LuDelete stroke="white" size="20" />
+              </div>
             </ReplyText>
           )}
           <InputContainer>
             <CommentInput
+              ref={inputRef}
               onChange={onChange}
               onKeyDown={(e) => {
                 if (e.key === "Enter") postComment();
@@ -228,6 +236,7 @@ function Posting() {
                 setReplyId(comment.id);
                 setReplyNickname(comment.nickname);
                 setReplyComment(comment.content);
+                inputRef.current.focus();
               }}
             >
               <>
@@ -296,15 +305,21 @@ const CommentContainer = styled.div`
 
 const ReplyText = styled.div`
   display: inline-block;
-  width: auto;
-  flex-shrink: 1;
-  color: white;
-  background-color: #6d6dff;
-  padding: 5px 15px;
-  border-radius: 10px;
-  transition: 0.5s all;
+  margin-top: 3px;
+  & div {
+    width: auto;
+    flex-shrink: 1;
+    color: white;
+    background-color: #6d6dff;
+    padding: 5px 15px;
+    border-radius: 10px;
+    transition: 0.5s all;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
-  &:hover {
+  & div:hover {
     cursor: pointer;
     background-color: #4949fd;
   }

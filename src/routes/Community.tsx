@@ -392,10 +392,15 @@ function Community() {
                   {posting.tag}
                 </TagBtn>
                 &nbsp;
-                <Link to={`/community/${posting.id}`}> {posting.title}</Link>
+                <Link to={`/community/${posting.id}`}>
+                  {" "}
+                  {posting.title}{" "}
+                  {posting?.commentCount > 0 && [posting.commentCount]}
+                </Link>
               </div>
               <div>
-                {posting.nickname} | {date(posting.writeTime)}
+                {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
+                | {date(posting.writeTime)}
               </div>
             </Content>
           ))}
@@ -619,6 +624,7 @@ const HamburgerMenu = styled.div<any>`
 const SearchContainer = styled.div`
   display: flex;
   width: 300px;
+  min-height: 40px;
   margin-left: auto;
   margin-right: 10px;
   gap: 10px;
