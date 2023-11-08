@@ -7,7 +7,7 @@ function Admin() {
       <Container>
         <Tabs>
           <Tab>
-            <Link to="users">Users</Link>
+            <Link to="">Users</Link>
           </Tab>
           <Tab>
             <Link to="allPosts">AllPosts</Link>

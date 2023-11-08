@@ -39,7 +39,7 @@ function AppRouter() {
           {user ? (
             <>
               <Route path="/admin" element={<Admin />}>
-                <Route path="/admin/users" element={<Users />}></Route>
+                <Route path="/admin" element={<Users />}></Route>
                 <Route path="/admin/allPosts" element={<AllPosts />}></Route>
               </Route>
               <Route path="/gpt" element={<SelfIntroDuction />} />
