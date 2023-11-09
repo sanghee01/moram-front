@@ -62,10 +62,10 @@ function Home() {
         </PopularContentBox>
         <h1>최신 게시글</h1>
         <NewContentBox>
-          {lastPosts.length < 1 ? (
+          {lastPosts?.length < 1 ? (
             <span>게시글이 없습니다.</span>
           ) : (
-            lastPosts.map((item) => {
+            lastPosts?.map((item) => {
               return (
                 <NewContent
                   key={item.id}
