@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../state";
 import { BsReplyFill } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
+import { handleDateChange } from "../dateChange";
 
 function Posting() {
   const params = useParams();
@@ -118,17 +119,6 @@ function Posting() {
     }
   };
 
-  /** 날짜 형식 변환 함수 */
-  const date = (dateStr: string) => {
-    const dateObj = new Date(dateStr);
-    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(dateObj.getDate()).padStart(2, "0")} ${String(
-      dateObj.getHours()
-    ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
-  };
-
   const reply = (commentId: any) => {
     const replies = comments.filter(
       (comments: any) => comments.parentId === commentId
@@ -148,7 +138,7 @@ function Posting() {
           </h2>
           <h4>
             {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} |{" "}
-            {date(posting.writeTime)}{" "}
+            {handleDateChange(posting.writeTime)}{" "}
             {posting.userId === user?.id && (
               <>
                 <SmallBtn

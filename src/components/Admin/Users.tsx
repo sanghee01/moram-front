@@ -2,6 +2,8 @@ import axios from "axios";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { Title, Table, Row } from "../../styles/TableStyles";
+import { handleDateChange } from "../../dateChange";
+
 function Users() {
   const [users, SetUsers] = useState<null | any>(null);
   const [loading, setLoding] = useState(true);
@@ -52,7 +54,7 @@ function Users() {
                     <td>{user.univName}</td>
                     <td>{user.email}</td>
                     <td>{user.platformType}</td>
-                    <td>{user.regDate}</td>
+                    <td>{handleDateChange(user.regDate)}</td>
                     <td>{user.gptcount}</td>
                   </Row>
                 );

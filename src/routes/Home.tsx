@@ -5,21 +5,12 @@ import { postAtom } from "../state";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { handleDateChange } from "../dateChange";
 
 function Home() {
   const postAtomItem = useRecoilValue(postAtom);
   const postItem = [...postAtomItem];
   const [lastPosts, SetLastPosts] = useState<any[]>([]);
-
-  const postDate = (dateStr: string) => {
-    const dateObj = new Date(dateStr);
-    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(dateObj.getDate()).padStart(2, "0")} ${String(
-      dateObj.getHours()
-    ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
-  };
 
   useEffect(() => {
     getLastPosting();
@@ -73,7 +64,7 @@ function Home() {
                   img={item.img1Url}
                   category={item.category}
                   title={item.title}
-                  date={postDate(item.writeTime)}
+                  date={handleDateChange(item.writeTime)}
                   content={item.content}
                   tag={item.tag}
                 />
