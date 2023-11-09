@@ -3,10 +3,13 @@ import PopularContent from "../components/Home/PopularContent";
 import NewContent from "../components/Home/NewContent";
 import { postAtom } from "../state";
 import { useRecoilValue } from "recoil";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function Home() {
   const postAtomItem = useRecoilValue(postAtom);
   const postItem = [...postAtomItem];
+  const [lastPosts, SetLastPosts] = useState<any[]>([]);
 
   const postDate = (dateStr: string) => {
     const dateObj = new Date(dateStr);
@@ -18,6 +21,19 @@ function Home() {
     ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
   };
 
+  useEffect(() => {
+    getLastPosting();
+  }, []);
+  const getLastPosting = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/posting?lastId=99999`
+      );
+      SetLastPosts(response.data.content.postings);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
+  };
   return (
     <>
       <img src="https://moram.b1nd.com/static/media/DefaultBanner.36c8f1c1.jpg" />
@@ -45,34 +61,22 @@ function Home() {
         </PopularContentBox>
         <h1>최신 게시글</h1>
         <NewContentBox>
-          {postItem.length < 1 ? (
+          {lastPosts.length < 1 ? (
             <span>게시글이 없습니다.</span>
           ) : (
-            postItem
-              .sort((a, b) => {
-                const aTime = new Date(postDate(a.writeTime)).getTime();
-                const bTime = new Date(postDate(b.writeTime)).getTime();
-                if (aTime < bTime) {
-                  return 1;
-                } else if (aTime > bTime) {
-                  return -1;
-                }
-                return 0;
-              })
-              .slice(0, 5)
-              .map((item) => {
-                return (
-                  <NewContent
-                    key={item.id}
-                    img={item.imgUrl[0]}
-                    category={item.category}
-                    title={item.title}
-                    date={postDate(item.writeTime)}
-                    content={item.content}
-                    tag={item.tag}
-                  />
-                );
-              })
+            lastPosts.map((item) => {
+              return (
+                <NewContent
+                  key={item.id}
+                  img={item.img1Url}
+                  category={item.category}
+                  title={item.title}
+                  date={postDate(item.writeTime)}
+                  content={item.content}
+                  tag={item.tag}
+                />
+              );
+            })
           )}
         </NewContentBox>
       </Container>
