@@ -14,12 +14,19 @@ function Qna() {
   const [titleValue, setTitle] = useState("");
   const [contentValue, setContent] = useState("");
   const [files, setFiles] = useState<FileInfo[]>([]);
-  const [categoryButton, setCategoryButton] = useState('');
+  const [categoryButton, setCategoryButton] = useState("");
 
   const CategoryButtonClick = (buttonText: string) => {
     setCategoryButton(buttonText);
-    const buttonNumber = ['계정 문의', '서비스 문의', '어찌고 문의', '저찌고 문의', '개선 사항'].indexOf(buttonText) + 1;
-    console.log(`버튼 ${buttonNumber}`);
+    const buttonNumber =
+      [
+        "계정 문의",
+        "서비스 문의",
+        "어찌고 문의",
+        "저찌고 문의",
+        "개선 사항",
+      ].indexOf(buttonText) + 1;
+    console.log(`${buttonText}`);
   };
   const EmailInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -36,11 +43,17 @@ function Qna() {
   const fileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const selectedFiles = Array.from(event.target.files);
-      const newFiles: FileInfo[] = selectedFiles.map((file) => ({
-        id: generateId(),
-        file: file,
-      }));
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+      const imageFiles: FileInfo[] = selectedFiles
+        .filter((file) => file.type.startsWith("image"))
+        .map((file) => ({
+          id: generateId(),
+          file: file,
+        }));
+      if (imageFiles.length > 0) {
+        setFiles([imageFiles[0]]);
+      } else {
+        alert("이미지 파일만 업로드 가능합니다.");
+      }
     }
   };
   const RemoveFile = (id: string) => {
@@ -57,11 +70,36 @@ function Qna() {
       <QnaContainer>
         <QnaMain>
           <QnaCategory>
-          <button className={categoryButton === '계정 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('계정 문의')}>계정 문의</button>
-          <button className={categoryButton === '서비스 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('서비스 문의')}>서비스 문의</button>
-          <button className={categoryButton === '어찌고 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('어찌고 문의')}>어찌고 문의</button>
-          <button className={categoryButton === '저찌고 문의' ? 'active' : ''} onClick={() => CategoryButtonClick('저찌고 문의')}>저찌고 문의</button>
-          <button className={categoryButton === '개선 사항' ? 'active' : ''}  onClick={() => CategoryButtonClick('개선 사항')}>개선 사항</button>
+            <button
+              className={categoryButton === "계정 문의" ? "active" : ""}
+              onClick={() => CategoryButtonClick("계정 문의")}
+            >
+              계정 문의
+            </button>
+            <button
+              className={categoryButton === "서비스 문의" ? "active" : ""}
+              onClick={() => CategoryButtonClick("서비스 문의")}
+            >
+              서비스 문의
+            </button>
+            <button
+              className={categoryButton === "어찌고 문의" ? "active" : ""}
+              onClick={() => CategoryButtonClick("어찌고 문의")}
+            >
+              어찌고 문의
+            </button>
+            <button
+              className={categoryButton === "저찌고 문의" ? "active" : ""}
+              onClick={() => CategoryButtonClick("저찌고 문의")}
+            >
+              저찌고 문의
+            </button>
+            <button
+              className={categoryButton === "개선 사항" ? "active" : ""}
+              onClick={() => CategoryButtonClick("개선 사항")}
+            >
+              개선 사항
+            </button>
           </QnaCategory>
           <EmailDiv>
             <h4>email</h4>
@@ -116,13 +154,6 @@ function Qna() {
           </ContentDiv>
         </QnaMain>
       </QnaContainer>
-      <div>말풍선 만들 거</div>
-      <QnaCharacterPosition>
-        <QnaCharacter>
-          모람이가 말하고 있는것처럼 말풍선으로 만들 예정
-          <img src="./assets/profileimage.jpg" />
-        </QnaCharacter>
-      </QnaCharacterPosition>
     </Container>
   );
 }
@@ -150,7 +181,7 @@ const QnaCategory = styled.div`
   justify-content: space-between;
   & button {
     width: 115px;
-    height: 40px;
+    height: 45px;
     font-size: 15px;
     font-weight: 470;
     weight: 500;
@@ -159,7 +190,7 @@ const QnaCategory = styled.div`
     border: transparent;
     border-radius: 15px;
   }
-  & button:hover{
+  & button:hover {
     cursor: pointer;
     background-color: #d6d6ff;
   }
@@ -225,32 +256,38 @@ const ContentTextarea = styled.textarea`
   width: 100%;
   height: 300px;
   text-align: left;
-  border-radious: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 15px;
+  resize: none;
 `;
 
 const AttachFile = styled.div`
   display: flex;
   flex-direction: columns;
+  height: 40px;
 `;
 const FileContainer = styled.div`
   display: flex;
   width: 100%;
-  gap:1.8rem;
+  gap: 1.8rem;
   justify-content: space-between;
 `;
 const AttachFileDiv = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center
+  justify-content: center;
 `;
 const FileBox = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   border: 1px solid gray;
   border-radius: 10px;
   background-color: white;
-  width: 505px;
-  padding: 0.2rem 0.5rem
+  width: 507px;
+  padding: 0.2rem 0.6rem;
 `;
 const FileName = styled.div`
   display: flex;
@@ -265,6 +302,8 @@ const FileDelet = styled.button`
   background-color: transparent;
   outline: 0;
   border: 0;
+  font-size: 15px;
+  color: gray;
 `;
 const FileLabel = styled.label`
   display: inline-flex;
@@ -278,17 +317,5 @@ const FileLabel = styled.label`
   border-radious: 10px;
   border-radius: 15px;
   cursor: pointer;
-`;
-const QnaCharacterPosition = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-`;
-const QnaCharacter = styled.div`
-  display: flex;
-  width: 100%;
-  justify-content: flex-end;
-  & img {
-  }
 `;
 export default Qna;
