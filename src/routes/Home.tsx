@@ -34,6 +34,7 @@ function Home() {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
+
   return (
     <>
       <img src="https://moram.b1nd.com/static/media/DefaultBanner.36c8f1c1.jpg" />
@@ -68,6 +69,7 @@ function Home() {
               return (
                 <NewContent
                   key={item.id}
+                  id={item.id}
                   img={item.img1Url}
                   category={item.category}
                   title={item.title}

@@ -1,8 +1,9 @@
 import { styled } from "styled-components";
 import CategoryBtn from "../CategoryBtn";
+import { useNavigate } from "react-router-dom";
 
 interface NewContentProps {
-  key: number;
+  id: number;
   img?: string;
   category: string;
   title: string;
@@ -12,6 +13,7 @@ interface NewContentProps {
 }
 
 function NewContent({
+  id,
   img,
   category,
   title,
@@ -19,8 +21,14 @@ function NewContent({
   content,
   tag,
 }: NewContentProps) {
+  const navigate = useNavigate();
+
   return (
-    <Container>
+    <Container
+      onClick={() => {
+        navigate(`/community/${id}`);
+      }}
+    >
       {img ? (
         <img src={img} alt="이미지" />
       ) : (
