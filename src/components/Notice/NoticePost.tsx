@@ -1,19 +1,25 @@
 import { styled } from "styled-components";
 import { handleDateChange } from "../../dateChange";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 interface NoticePostProps {
-  // id: number;
+  id: number;
   title: string;
   writeTime: string;
   nickname: string;
 }
 
-function NoticePost({ title, nickname, writeTime }: NoticePostProps) {
+function NoticePost({ id, title, nickname, writeTime }: NoticePostProps) {
+  const location = useLocation();
+  const navigate = useNavigate();
   return (
     <Container>
-      <div>{title}</div>
-      <div>{nickname}</div>
-      <div>{handleDateChange(writeTime)}</div>
+      <Link to={`/notice/${id}`}>
+        <div>{title}</div>
+        <div>
+          {nickname} | {handleDateChange(writeTime)}
+        </div>
+      </Link>
     </Container>
   );
 }
@@ -21,5 +27,13 @@ function NoticePost({ title, nickname, writeTime }: NoticePostProps) {
 export default NoticePost;
 
 const Container = styled.div`
-  display: flex;
+  & a {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    padding: 15px;
+    margin: 15px auto;
+    background-color: whitesmoke;
+    border-radius: 15px;
+  }
 `;

@@ -40,6 +40,11 @@ const GlobalStyles = createGlobalStyle`
     a:not([class]) {
     text-decoration-skip-ink: auto;
     }
+    
+    a {
+    color: inherit;
+    text-decoration: none;
+    }
 
     img,
     picture {

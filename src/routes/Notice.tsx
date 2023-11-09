@@ -24,7 +24,6 @@ function Notice() {
   };
   return (
     <Container>
-      <h2>공지사항</h2>
       {loading ? (
         <div>loading...</div>
       ) : (
@@ -32,6 +31,7 @@ function Notice() {
           return (
             <NoticePost
               key={item.id}
+              id={item.id}
               title={item.title}
               nickname={item.nickname}
               writeTime={item.writeTime}
