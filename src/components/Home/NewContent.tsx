@@ -1,8 +1,10 @@
 import { styled } from "styled-components";
 import CategoryBtn from "../CategoryBtn";
+import { useNavigate } from "react-router-dom";
 
 interface NewContentProps {
-  img: string;
+  id: number;
+  img?: string;
   category: string;
   title: string;
   date: string;
@@ -11,6 +13,7 @@ interface NewContentProps {
 }
 
 function NewContent({
+  id,
   img,
   category,
   title,
@@ -18,9 +21,19 @@ function NewContent({
   content,
   tag,
 }: NewContentProps) {
+  const navigate = useNavigate();
+
   return (
-    <Container>
-      <img src={img} alt="이미지" />
+    <Container
+      onClick={() => {
+        navigate(`/community/${id}`);
+      }}
+    >
+      {img ? (
+        <img src={img} alt="이미지" />
+      ) : (
+        <img src="https://i.ibb.co/2Y3sQX2/noImage.png" alt="기본이미지" />
+      )}
       <div>
         <Title>
           <div>
@@ -40,7 +53,8 @@ function NewContent({
 const Container = styled.div`
   display: flex;
   gap: 20px;
-  margin-top: 13px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  padding: 15px 0;
 
   &:hover {
     cursor: pointer;
@@ -49,6 +63,7 @@ const Container = styled.div`
     width: 100px;
     height: 100px;
     object-fit: cover;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     border-radius: 8px;
   }
 

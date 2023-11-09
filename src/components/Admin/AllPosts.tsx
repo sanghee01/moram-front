@@ -34,9 +34,9 @@ function AllPosts() {
             <thead>
               <tr>
                 <th>ID</th>
-                {/* <th>닉네임</th> */}
-                <th>제목</th>
                 <th>작성시간</th>
+                <th>제목</th>
+                <th>작성자</th>
                 <th>태그</th>
                 <th>카테고리</th>
               </tr>
@@ -46,9 +46,9 @@ function AllPosts() {
                 return (
                   <Row key={post.id}>
                     <td>{post.id}</td>
-                    {/* <td>{post.nickname}</td> */}
-                    <td>{post.title}</td>
                     <td>{post.writeTime}</td>
+                    <td>{post.title}</td>
+                    <td>{post.nickname}</td>
                     <td>{post.tag}</td>
                     <td>{post.category}</td>
                   </Row>
