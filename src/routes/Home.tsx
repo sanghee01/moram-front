@@ -89,6 +89,7 @@ function Home() {
 const Container = styled.div`
   width: 65%;
   margin: 0 auto;
+  margin-bottom: 70px;
   & h1 {
     margin-top: 6ch;
     margin-bottom: 1ch;
