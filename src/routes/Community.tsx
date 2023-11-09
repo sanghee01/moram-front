@@ -410,6 +410,7 @@ function Community() {
 }
 
 const tagList = ["자유", "정보", "질문", "스터디", "취업"];
+//수정
 
 const Container = styled.div`
   display: flex;
