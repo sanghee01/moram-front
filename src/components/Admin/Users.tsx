@@ -55,7 +55,7 @@ function Users() {
                     <td>{user.email}</td>
                     <td>{user.platformType}</td>
                     <td>{handleDateChange(user.regDate)}</td>
-                    <td>{user.gptcount}</td>
+                    <td>{user.gptCount}</td>
                   </Row>
                 );
               })}
