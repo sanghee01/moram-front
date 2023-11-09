@@ -6,7 +6,6 @@ import { BiText } from "react-icons/bi";
 import React, { useState ,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 interface ChooseContentProps {
   src: string;
   category: string;
@@ -66,8 +65,9 @@ function Profile() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
     axios
-      .get("http://your-backend-url/posts")
+      .get(`${process.env.REACT_APP_APIADDRESS}/profile`)
       .then((response) => {
+        console.log(response.data);
         setPosts(response.data); // 받아온 데이터를 state에 저장
       })
       .catch((error) => {
@@ -351,13 +351,18 @@ const ProfileWrite = styled.div`
   & button {
   background-color: transparent;
   font-size: 15px;
+  font-weight: 600;
   outline: 0;
   border: 0;
   background-color: #e6e6e6d6;
   width: 100%;
   height: 35px;
-  border-radius: 8px;
+  border-radius: 10px;
   gap: 0.2rem;
+  transition: background-color 0.5s ease
+  }
+  & button:hover{
+    background-color: #d6d3fb;
   }
   @media screen and (max-width: 1000px) {
     & button {
