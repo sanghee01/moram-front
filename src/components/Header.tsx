@@ -3,6 +3,8 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "../state";
 import axios from "axios";
+import { GrNotification } from "react-icons/gr";
+import Notification from "./Notification";
 
 function Header() {
   const navigate = useNavigate();
@@ -16,7 +18,7 @@ function Header() {
       alert("로그아웃 되었습니다.");
       setUser(null);
     } catch (error: any) {
-      alert(error?.response?.data.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
   return (
@@ -24,11 +26,11 @@ function Header() {
       <Nav>
         <LogoImg onClick={() => navigate("/")} src="assets/logo.png" />
         <RightContainer>
-          <SearchInput placeholder="통합 검색" />
           <BtnContainer>
             {user ? (
               <>
                 {/* 로그인 상태일 시 컴포넌트 */}
+                <Notification />
                 <button onClick={() => navigate("/profile")}>
                   {user.nickname}
                 </button>
@@ -123,9 +125,13 @@ const SearchInput = styled.input`
 `;
 const BtnContainer = styled.div`
   display: flex;
+  align-items: center;
+  height: 40px;
   gap: 10px;
   & button {
-    width: 80px;
+    width: auto;
+    height: 100%;
+    padding: 0 10px;
     background-color: rgb(75, 75, 75);
     color: white;
     border: 0;
@@ -141,8 +147,13 @@ const BtnContainer = styled.div`
 
   @media screen and (max-width: 900px) {
     & button {
-      width: 70px;
       font-size: 0.9rem;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    & button {
+      font-size: 0.75rem;
     }
   }
 `;
