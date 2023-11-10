@@ -1,109 +1,42 @@
 import  styled  from "styled-components";
 import { IoSettingsOutline } from "react-icons/io5";
-import { PiListBold } from "react-icons/pi";
-import { AiOutlinePicture } from "react-icons/ai";
-import { BiText } from "react-icons/bi";
-import React, { useState ,useEffect } from "react";
+import MyPost from "../components/Profile/MyPost";
+import { useState ,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-interface ChooseContentProps {
-  src: string;
-  category: string;
-  title: string;
-  date: string;
-  content: string;
-  selectIcon: "all" | "picture" | "letter";
-}
-
-function ChooseContent({
-  src,
-  category,
-  title,
-  date,
-  content,
-  selectIcon
-}: ChooseContentProps) {
-  return (
-    <Content>
-      {selectIcon === "all" && (
-        <>
-          <img src={src} alt="이미지" />
-          <section>
-            <div>
-              <span>
-                [{category}] {title}
-              </span>
-              <span>2023-11-08 15:30:53</span>
-            </div>
-            <p>{content}</p>
-          </section>
-        </>
-      )}
-      {selectIcon === "picture" && <img src={src} alt="이미지" />}
-      {selectIcon === "letter" && (
-        <section>
-          <div>
-            <span>
-              [{category}] {title}
-            </span>
-            <span>2023-11-08 15:30:53</span>
-          </div>
-          <p>{content}</p>
-        </section>
-      )}
-    </Content>
-  );
-}
+import MyComment from "../components/Profile/MyComment";
 
 function Profile() {
-  const [selectIcon, setSelectIcon] = useState<"all" | "picture" | "letter">(
-    "all"
-  );
-  const [selectedTab, setSelectedTab] = useState<"posts" | "comments">("posts");
+  const [posts, setPosts] = useState<any[]>([]);
+  const [comments, setComments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [nickname, setNickname] = useState("");
+  const [email, setEmail] = useState("");
+  const [showPosts, setShowPosts] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
-  //백엔드에서 불러올때
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_APIADDRESS}/profile`)
-      .then((response) => {
-        console.log(response.data);
-        setPosts(response.data); // 받아온 데이터를 state에 저장
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }, []);
+  useEffect(()=>{
+    getMyData();
+  },[])
 
-  //백엔드 아직 불러오지x
-  const onClickIcon = (iconType: "all" | "picture" | "letter") => {
-    setSelectIcon(iconType);
+  const getMyData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/profile`
+      );
+      setNickname(response.data.nickname);
+      console.log(response.data.nickname);
+      setEmail(response.data.email);
+      setPosts(response.data.posting);
+      setComments(response.data.comment);
+      console.log(response.data.comment);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
   };
 
   const navigate = useNavigate();
-
-  const onClickWritePost = () => {
-    setSelectedTab("posts");
-    console.log("작성한 글 버튼이 클릭되었습니다.");
-  };
-  const onClickWriteComment = () => {
-    setSelectedTab("comments");
-    console.log("댓글 단 글 버튼이 클릭되었습니다.");
-  };
-
-  const onClickAllIcon = () => {
-    setSelectIcon("all");
-  };
-
-  const onClickPictureIcon = () => {
-    setSelectIcon("picture");
-  };
-
-  const onClickLetterIcon = () => {
-    setSelectIcon("letter");
-  };
-
-
   return (
     <MainContainer>
       <ProfileMain>
@@ -116,115 +49,63 @@ function Profile() {
                   <SettingIcon onClick={() => navigate("/profile-edit")}>
                     <IoSettingsOutline size="20" />
                   </SettingIcon>
-                  <h1>쿼카맹구</h1>
-                  <h4>dlrhdns0000@naver.com</h4>
+                  <h1>{nickname}</h1>
+                  <h4>{email}</h4>
                 </ProfileContent>
                 <ProfileWrite>
-                  <button onClick={onClickWritePost}>작성한 글</button>
-                  <button onClick={onClickWriteComment}>댓글 단 글</button>
+                <button onClick={() => { getMyData(); setShowPosts(true); setShowComments(false); }}>작성한 글</button>
+                <button onClick={() => { getMyData(); setShowPosts(false); setShowComments(true); }}>작성한 댓글</button>
                 </ProfileWrite>
               </InformationBox>
             </ProfileInpromation>
           </Container>
         </ProfileContainer>
+        <Box>
+        {showPosts &&
+  <PostContentBox>
+    {posts?.length < 1 ? (
+      <span>게시글이 없습니다.</span>
+    ) : (
+      posts?.map((item) => {
+        return (
+          <MyPost
+            key={item.id}
+            id={item.id}
+            img={item.img1Url}
+            category={item.category}
+            title={item.title}
+            date={item.writeTime}
+            content={item.content}
+            tag={item.tag}
+          />
+        );
+      })
+    )}
+  </PostContentBox>
+}
+{showComments &&
+        <CommentBox>
+          {comments?.length < 1 ? (
+            <span>게시글이 없습니다.</span>
+          ) : (
+            comments?.map((item) => {
+              return (
+                <MyComment
+                  userid={item.userid}
+                  id={item.id}
+                  date={item.writeTime}
+                  content={item.content}
+                  tag={item.tag}
+                  postid={item.postid}
+                  nickname={item.nickname}
+                />
+              );
+            })
+          )}
+        </CommentBox>
+        }
+        </Box>
       </ProfileMain>
-      <ChooseIcon>
-        <ChooseAllIcon
-          onClick={onClickAllIcon}
-          style={
-            selectIcon === "all" ? { borderBottom: "2px solid #343434" } : {}
-          }
-        >
-          <PiListBold
-            size="30"
-            color={selectIcon === "all" ? "black" : "#787878"}
-          />
-        </ChooseAllIcon>
-        <ChoosePictureIcon
-          onClick={onClickPictureIcon}
-          style={
-            selectIcon === "picture"
-              ? { borderBottom: "2px solid #343434" }
-              : {}
-          }
-        >
-          <AiOutlinePicture
-            size="30"
-            color={selectIcon === "picture" ? "black" : "#787878"}
-          />
-        </ChoosePictureIcon>
-        <ChooseLetterIcon
-          onClick={onClickLetterIcon}
-          style={
-            selectIcon === "letter" ? { borderBottom: "2px solid #343434" } : {}
-          }
-        >
-          <BiText
-            size="30"
-            color={selectIcon === "letter" ? "black" : "#787878"}
-          />
-        </ChooseLetterIcon>
-      </ChooseIcon>
-      
-      {selectedTab === "posts" && (
-<ChooseContentBox selectIcon={selectIcon}>
-       {/*  백엔드에서 데이터 불러올때
-      {posts.map((post, index) => (
-      <ChooseContent
-        key={index}
-        src={post.imageSrc}
-        category={post.category}
-        title={post.title}
-        date={post.date}
-        content={post.content}
-        selectIcon={selectIcon}
-      />
-    ))} */}
-        <ChooseContent
-          src="https://react.dev/images/home/conf2021/cover.svg"
-          category="스터디"
-          title="React 스터디 구합니다"
-          date="2023.10.10."
-          content="React 기초부터 같이 학습하실 분 구합니다. 어느정 프로젝트도 할 예정입니다."
-          selectIcon={selectIcon}
-        />
-        <ChooseContent
-          src="https://react.dev/images/home/conf2021/cover.svg"
-          category="스터디"
-          title="React 스터디 구합니다"
-          date="2023.10.10."
-          content="React 기초부터 같이 학습하실 분 구합니다. 어느정 로젝트도 할 예정입니다."
-          selectIcon={selectIcon}
-        />
-        <ChooseContent
-          src="https://react.dev/images/home/conf2021/cover.svg"
-          category="스터디"
-          title="React 스터디 구합니다"
-          date="2023.10.10."
-          content="React 기초부터 같이 학습하실 분 구합니다. 어느정 로젝트도 할 예정입니다."
-          selectIcon={selectIcon}
-        />
-        <ChooseContent
-          src="https://react.dev/images/home/conf2021/cover.svg"
-          category="스터디"
-          title="React 스터디 구합니다"
-          date="2023.10.10."
-          content="React 기초부터 같이 학습하실 분 구합니다. 어느정 로젝트도 할 예정입니다."
-          selectIcon={selectIcon}
-        />
-        <ChooseContent
-          src="https://react.dev/images/home/conf2021/cover.svg"
-          category="스터디"
-          title="React 스터디 구합니다"
-          date="2023.10.10."
-          content="React 기초부터 같이 학습하실 분 구합니다. 어느정 로젝트도 할 예정입니다."
-          selectIcon={selectIcon}
-        />
-        
-      </ChooseContentBox>
-      )}
-      
-      {selectedTab === "comments" && <p>여기는 내가 댓글 단 글이 보여요요용</p>}
     </MainContainer>
   );
 }
@@ -233,16 +114,17 @@ function Profile() {
 const MainContainer = styled.div`
 display: flex;
 flex-direction: column;
-width: 58%;
+width: 80%;
 justify-content: center;
+  align-items: center;
 margin: auto;
 margin-top: 1.5rem;
 `; 
 
 const ProfileMain = styled.div`
   display: flex;
-  width: 100%;
-  justify-content: center;
+  width: 65%;
+  flex-direction: column;
   margin: 1.5rem 0;
   & section {
     display: flex;
@@ -309,7 +191,6 @@ const ProfileContent = styled.div`
 display: flex;
 flex-direction: column;
 justify-content: center;
-align-items: flex-start;
 width: 300px;
  @media screen and (max-width: 600px) {
     & h1 {
@@ -378,78 +259,20 @@ const ProfileWrite = styled.div`
     }
   }
 `;
+const CommentBox = styled.div`
+display:flex;
+`;
 
-const ChooseIcon = styled.div`
-  grid: 0;
+
+const PostContentBox = styled.div`
   display: flex;
-  justify-content: center;
-  padding: 0;
-  border-top: 1px solid gray;
-  border-bottom: 1px solid gray;
+  flex-wrap: wrap;
+  gap: 25px;
 `;
 
-const ChooseAllIcon = styled.button`
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  width: 346px;
-`;
-
-const ChoosePictureIcon = styled.button`
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  width: 346px;
-
-`;
-const ChooseLetterIcon = styled.button`
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  width: 346px;
-`;
-
-const Content = styled.div`
+const Box = styled.div`
   display: flex;
-  gap: 20px;
-  margin-top: 10px;
-  & img {
-    width: 217px;
-    height: 217px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
-  @media screen and (max-width: 1150px) {
-    & img {
-      width: 125px;
-      height: 125px;
-    }
-  }
-  @media screen and (max-width: 800px) {
-    & img {
-      width: 100px;
-      height: 100px;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    & img {
-      width: 60px;
-      height: 60px;
-    }
-  }
+  margin-top: 1rem;
+  gap: 25px;
 `;
-type BoxProps = {
-  selectIcon: "all" | "picture" | "letter";
-};
-
-const ChooseContentBox = styled.div<BoxProps>`
-  display: flex;
-  flex-direction: ${props => (props.selectIcon === "picture" ? "row" : "column")};
-  flex-wrap: ${props => (props.selectIcon === "picture" ? "wrap" : "nowrap")};
-  justify-content: start;
-  gap:0.2rem;
-`;
-
-
-
 export default Profile;

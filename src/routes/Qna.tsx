@@ -73,10 +73,7 @@ function Qna() {
     })
     console.log(response.data)
     //백엔드에서 전송해준 문구를 띄울때 작성해야함
-    if(response.data.code === 1){
-      alert("이메일을 입력해세요")
-    }
-    alert("dsad")
+    alert(response?.data.message);
     
   }
   return (
@@ -384,7 +381,7 @@ height: 40px;
   color: white;
   border-radius: 12px;
   width: 50%;
-  height: 40px; 
+  height: 50px; 
   font-weight: 600;
   font-size: 18px;
   transition: background-color 0.5s ease
