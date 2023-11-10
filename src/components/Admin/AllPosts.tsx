@@ -2,6 +2,7 @@ import axios from "axios";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { Title, Table, Row } from "../../styles/TableStyles";
+import { handleDateChange } from "../../dateChange";
 
 function AllPosts() {
   const [allPostsData, SetAllPostsData] = useState<null | any>(null);
@@ -46,7 +47,7 @@ function AllPosts() {
                 return (
                   <Row key={post.id}>
                     <td>{post.id}</td>
-                    <td>{post.writeTime}</td>
+                    <td>{handleDateChange(post.writeTime)}</td>
                     <td>{post.title}</td>
                     <td>{post.nickname}</td>
                     <td>{post.tag}</td>
