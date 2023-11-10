@@ -4,11 +4,14 @@ import { styled } from "styled-components";
 import NoticePost from "../components/Notice/NoticePost";
 import { useNavigate } from "react-router-dom";
 import { handleDateChange } from "../dateChange";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
 
 function Notice() {
   const [loading, setLoading] = useState(true);
   const [noticePosting, SetNoticePosting] = useState<any[]>([]);
   const navigate = useNavigate();
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     getNotice();
@@ -18,7 +21,6 @@ function Notice() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/notice`
       );
-      console.log(response.data.content);
       SetNoticePosting(response.data.content);
       setLoading(false);
     } catch (error: any) {
@@ -27,14 +29,17 @@ function Notice() {
   };
   return (
     <Container>
-      <WriteBtn>
-        <button
-          onClick={() => navigate("/write-notice")}
-          style={{ background: "#b0b0fc" }}
-        >
-          글 작성
-        </button>
-      </WriteBtn>
+      {user?.role === "admin" && (
+        <WriteBtn>
+          <button
+            onClick={() => navigate("/write-notice")}
+            style={{ background: "#b0b0fc" }}
+          >
+            글 작성
+          </button>
+        </WriteBtn>
+      )}
+
       {loading ? (
         <div>loading...</div>
       ) : (

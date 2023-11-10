@@ -49,6 +49,7 @@ function AppRouter() {
               <Route path="/write" element={<Write />} />
               <Route path="/write/:id" element={<Write />} />
               <Route path="/write-notice" element={<WriteNotice />} />
+              <Route path="/write-notice/:id" element={<WriteNotice />} />
             </>
           ) : (
             <>

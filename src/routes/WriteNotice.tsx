@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
 import { userState } from "../state";
@@ -10,6 +10,17 @@ function WriteNotice() {
   const [content, setContent] = useState<string>("");
   const navigate = useNavigate();
   const user = useRecoilValue(userState);
+  const params = useParams();
+  const noticeId: string = params?.id || "";
+  const isEdit = noticeId;
+  const location = useLocation();
+
+  useEffect(() => {
+    if (isEdit) {
+      setTitle(location.state.title);
+      setContent(location.state.content);
+    }
+  }, [isEdit, location]);
 
   const postNotice = async () => {
     try {
@@ -26,12 +37,30 @@ function WriteNotice() {
       alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
+
+  const editNotice = async () => {
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_APIADDRESS}/notice/${noticeId}`,
+        {
+          title: title,
+          content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
+        }
+      );
+      alert(response.data.message);
+      navigate("/notice");
+    } catch (error: any) {
+      alert(error?.response?.data.message || "알 수 없는 오류 발생.");
+    }
+  };
+
   return (
     <Container>
+      {isEdit ? <Title>글 수정</Title> : <Title>글 작성</Title>}
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          postNotice();
+          isEdit ? editNotice() : postNotice();
         }}
       >
         <FormBox>
@@ -50,7 +79,7 @@ function WriteNotice() {
             value={content}
           />
           {user ? (
-            <button type="submit">작성완료</button>
+            <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
           ) : (
             <button style={{ background: "gray" }}>로그인 필요</button>
           )}
@@ -66,6 +95,14 @@ const Container = styled.div`
   width: 50%;
   margin: auto;
   margin-top: 50px;
+`;
+
+const Title = styled.h3`
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  font-size: 1.3rem;
+  font-weight: 500;
+  border-bottom: 1px solid gray;
 `;
 
 const FormBox = styled.section`
