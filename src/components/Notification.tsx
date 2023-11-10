@@ -67,7 +67,7 @@ const Container = styled.div<any>`
 `;
 
 const AlertContainer = styled.div`
-  animation: ${fadein} 1s ease-out;
+  animation: ${fadein} 0.5s ease-out;
   width: 80%;
   max-width: 500px;
   height: 500px;
