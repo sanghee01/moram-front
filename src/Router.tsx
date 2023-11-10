@@ -20,6 +20,7 @@ import { userState } from "./state";
 import Users from "./components/Admin/Users";
 import AllPosts from "./components/Admin/AllPosts";
 import NoticeDetail from "./routes/NoticeDetail";
+import WriteNotice from "./routes/WriteNotice";
 
 function AppRouter() {
   const user = useRecoilValue(userState);
@@ -47,6 +48,7 @@ function AppRouter() {
               <Route path="/gpt" element={<SelfIntroDuction />} />
               <Route path="/write" element={<Write />} />
               <Route path="/write/:id" element={<Write />} />
+              <Route path="/write-notice" element={<WriteNotice />} />
             </>
           ) : (
             <>
