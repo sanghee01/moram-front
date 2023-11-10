@@ -80,7 +80,7 @@ const Container = styled.div`
 const WriteBtn = styled.div`
   display: flex;
   justify-content: right;
-  width: 800px;
+  max-width: 800px;
   margin: auto;
   & button {
     transition: 0.5s all;

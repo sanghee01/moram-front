@@ -72,6 +72,18 @@ function Posting() {
     }
   };
 
+  const deleteComment = async (commentId: any) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/comment/${commentId}`
+      );
+      alert(response.data.message);
+      getComments();
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
+
   const getLike = async () => {
     try {
       const response = await axios.get(
@@ -201,7 +213,7 @@ function Posting() {
             <CommentInput
               ref={inputRef}
               onChange={onChange}
-              onKeyDown={(e) => {
+              onKeyUp={(e) => {
                 if (e.key === "Enter") postComment();
               }}
               value={commentContent}
@@ -232,13 +244,44 @@ function Posting() {
               <>
                 <Comment>
                   <span style={{ color: "#5a59ff" }}>{comment.nickname}</span> :{" "}
-                  {comment.content}
+                  {comment.content}{" "}
+                  {(user?.id === comment.userId || user?.role === "admin") && (
+                    <SmallBtn
+                      $padding="4px 10px"
+                      $margin="0 8px"
+                      $background="tomato"
+                      $backgroundHover="red"
+                      $color="white"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        deleteComment(comment.id);
+                      }}
+                    >
+                      삭제
+                    </SmallBtn>
+                  )}
                 </Comment>
                 {reply(comment.id).map((reply: any) => (
                   <Comment key={reply.id}>
                     &nbsp;&nbsp;&nbsp;ㄴ{" "}
                     <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
                     {reply.content}
+                    {(user?.id === comment.userId ||
+                      user?.role === "admin") && (
+                      <SmallBtn
+                        $padding="4px 10px"
+                        $margin="0 8px"
+                        $background="tomato"
+                        $backgroundHover="red"
+                        $color="white"
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          deleteComment(comment.id);
+                        }}
+                      >
+                        삭제
+                      </SmallBtn>
+                    )}
                   </Comment>
                 ))}
               </>
