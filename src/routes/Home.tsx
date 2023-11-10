@@ -10,17 +10,32 @@ import { handleDateChange } from "../dateChange";
 function Home() {
   const postAtomItem = useRecoilValue(postAtom);
   const postItem = [...postAtomItem];
-  const [lastPosts, SetLastPosts] = useState<any[]>([]);
+  const [popularPosts, setPopularPosts] = useState<any[]>([]);
+  const [lastPosts, setLastPosts] = useState<any[]>([]);
 
   useEffect(() => {
+    getPopularPosting();
     getLastPosting();
   }, []);
+
+  const getPopularPosting = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/posting/popular`
+      );
+      console.log("pop", response.data.content);
+      // setPopularPosts(response.data.content);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
+  };
+
   const getLastPosting = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting?lastId=99999`
       );
-      SetLastPosts(response.data.content.postings);
+      setLastPosts(response.data.content.postings);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
