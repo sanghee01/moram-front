@@ -74,26 +74,23 @@ function Community() {
   useEffect(() => {
     console.log("category, tagfilter useffect  실행");
     if (isOpen) {
-      setIds([9999, 0]);
+      setIds([99999, 0]);
       setPostings("");
     }
-
-    //getPostings();
     loadSidebar();
-    // window.addEventListener("scroll", handleScroll);
-    // return () => {
-    //   window.removeEventListener("scroll", handleScroll);
-    // };
     setIsOpen(true);
   }, [categoryFilter, tagFilter, searchFilter]);
   useEffect(() => {
-    if (!postings) getPostings();
+    if (!postings) {
+      console.log("useEffect Posting -> ");
+      getPostings();
+    }
   }, [postings]);
   useEffect(() => {
     if (user) getBookmark();
   }, [user]);
   useEffect(() => {
-    if (isbottom) getPostings();
+    if (isbottom && postings) getPostings();
   }, [isbottom]);
   useEffect(() => {
     setCategoryFilter(queryParams.get("category") || "");
@@ -102,7 +99,7 @@ function Community() {
     loadSidebar();
     /**커뮤니티 버튼을 다시 눌렀을 경우 새로고침 */
     if (queryParams.get("reload") === "true") {
-      setIds([9999, 0]);
+      setIds([99999, 0]);
       setPostings("");
       changeQuery(); //reload 쿼리 초기화
     }
@@ -185,7 +182,7 @@ function Community() {
 
   const deletePosting = async (postId: any) => {
     let endPoint = "";
-    if (user.role === "user") endPoint = `/posting/${postId}`;
+    if (user.role === "user") endPoint = `posting/${postId}`;
     else if (user.role === "admin") endPoint = `admin/posting/${postId}`;
     try {
       const response = await axios.delete(
@@ -194,7 +191,8 @@ function Community() {
       if (user.role === "user") alert(response.data.message);
       else if (user.role === "admin")
         alert(`[어드민] ${response.data.message}`);
-      navigate("/community?reload=true");
+      setPostings("");
+      setIds([99999, 0]);
     } catch (error: any) {
       if (user.role === "user")
         alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
@@ -233,6 +231,7 @@ function Community() {
     const windowHeight = window.innerHeight;
     const fullHeight = document.documentElement.scrollHeight;
     const scrollPosition = window.scrollY;
+    console.log(windowHeight);
 
     //console.log(windowHeight + scrollPosition + 2, fullHeight);
     if (!loading && windowHeight + scrollPosition + 2 >= fullHeight) {
