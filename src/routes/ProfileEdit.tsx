@@ -18,6 +18,7 @@ function ProfileEdit() {
           nickname: nickname
         }
       );
+      console.log(`response.data : ${response.data}`);
       alert(response.data.message);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
@@ -58,6 +59,8 @@ function ProfileEdit() {
           pw2:pwValue2
         }
       );
+
+      console.log(`response.data : ${response.data}`);
       alert(response.data.message);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
