@@ -12,13 +12,14 @@ function Write() {
   const [tag, setTag] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [categoryList, setCategoryList] = useState(loadedCategory);
-  const user = useRecoilValue(userState);
+  const [categoryList, setCategoryList] = useState<any>(loadedCategory);
+  const [presignedUrl, setPresignedUrl] = useState<any>();
   const [imageUrl, setImageUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
     img3Url: "",
   });
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const params = useParams();
   const postId: any = params?.id || "";
@@ -126,47 +127,37 @@ function Write() {
     }
   };
 
-  const uploadImage = async () => {
-    let imgCount = 0;
-    if (imageUrl.img1url) imgCount++;
-    if (imageUrl.img2url) imgCount++;
-    if (imageUrl.img3url) imgCount++;
-    if (imgCount === 0) {
-      postPosting();
-      return;
-    }
+  // TODO: 이미지 올리기 구현
+  // 백엔드에서 PresignedUrl, imageUrl 받아옴
+  useEffect(() => {
+    getPresignedUrl();
+  }, []);
+
+  const getPresignedUrl = async () => {
     try {
-      //const { presignedUrl, imageUrl } = await generatePresignedUrl();
-      const urlArray = await generatePresignedUrl();
-      const response = await axios.put(
-        urlArray[0].presignedUrl,
-        imageUrl.img1url,
-        {
-          headers: {
-            "Content-Type": imageUrl.img1url.type as any,
-          },
-        }
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`
       );
+
+      setPresignedUrl(response.data.content.presignedUrl);
+      console.log("pre", response.data.content.presignedUrl);
+    } catch (error: any) {
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
+  };
+  console.log("hi", presignedUrl);
+
+  // 작성완료 버튼 누를 시 업로드 로직
+  const uploadImage = async () => {
+    try {
+      const response = await axios.put(presignedUrl, imageUrl.img1url, {
+        headers: {
+          "Content-Type": imageUrl.img1url.type as any,
+        },
+      });
       console.log("Image uploaded:", response.status);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-    }
-  };
-
-  const generatePresignedUrl = async () => {
-    let imgCount = 0;
-    if (imageUrl.img1url) imgCount++;
-    if (imageUrl.img2url) imgCount++;
-    if (imageUrl.img3url) imgCount++;
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`,
-        { imgCount }
-      );
-      return response.data.content;
-    } catch (error) {
-      console.error("Error generating presigned URL:", error);
-      throw error;
     }
   };
 
@@ -176,6 +167,7 @@ function Write() {
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
+          uploadImage();
           isEdit ? editPosting() : postPosting();
         }}
       >
