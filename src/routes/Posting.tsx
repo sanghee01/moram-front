@@ -23,15 +23,17 @@ function Posting() {
   const [isLiked, setIsLiked] = useState(false);
   const user = useRecoilValue(userState);
   const inputRef = useRef<any>(null);
+  const location = useLocation();
 
   useEffect(() => {
     getPosting();
     getComments();
-  }, []);
+    console.log("location ->", location);
+  }, [location]);
 
   useEffect(() => {
     if (user) getLike();
-  }, [user]);
+  }, [user, location]);
   const onChange = (e: any) => {
     setCommentContent(e.target.value);
   };

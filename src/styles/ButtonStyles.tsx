@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const SmallBtn = styled.button<any>`
   transition: 0.5s all;
+  width: ${(props) => props.$width || "auto"};
+  height: ${(props) => props.$height || "auto"};
   background-color: ${(props) => props.$background || "white"};
   padding: ${(props) => props.$padding || "10px 20px"};
   margin: ${(props) => props.$margin || "0"};

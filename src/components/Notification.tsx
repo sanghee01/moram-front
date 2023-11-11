@@ -4,15 +4,19 @@ import styled, { keyframes } from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { userState } from "../state";
+import { useLocation, useNavigate } from "react-router";
+import { SmallBtn } from "../styles/ButtonStyles";
 
 function Notification() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notification, setNotification] = useState("");
+  const [notification, setNotification] = useState<any>(null);
   const user = useRecoilValue(userState);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    if (user?.id) getNotification();
-  }, [user]);
+    getNotification();
+  }, [isOpen, location]);
 
   const getNotification = async () => {
     try {
@@ -24,6 +28,16 @@ function Notification() {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
+
+  const readNotification = async (notiId: any) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/notification/read/${notiId}`
+      );
+    } catch (error: any) {
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
   return (
     <>
       <Container $isOpen={isOpen}>
@@ -31,8 +45,50 @@ function Notification() {
           id="notification"
           onClick={() => setIsOpen((prev: any) => !prev)}
         />
+        {
+          notification?.filter(
+            (notification: any) => notification.readType === 0
+          ).length
+        }
       </Container>
-      {isOpen && <AlertContainer></AlertContainer>}
+      {isOpen && (
+        <AlertContainer>
+          {notification?.map((noti: any, index: any) => (
+            <NotiContainer
+              key={noti.id}
+              $isRead={noti.readType}
+              onClick={() => {
+                navigate(`community/${noti.postId}`);
+                readNotification(noti.id);
+                setIsOpen(false);
+                setNotification((prev: any) =>
+                  prev.map((item: any) =>
+                    item.id === noti.id ? { ...item, readType: 1 } : item
+                  )
+                );
+              }}
+            >
+              [{noti.title}] 글에{" "}
+              {noti.notifyType === 0
+                ? "댓글이 달렸습니다."
+                : "답글이 달렸습니다."}
+              <div>{noti.notifyTime}</div>
+              <SmallBtn
+                $padding="30px 10px"
+                $margin="0 8px"
+                $background="tomato"
+                $backgroundHover="red"
+                $color="white"
+                onClick={(e: any) => {
+                  e.stopPropagation();
+                }}
+              >
+                삭제
+              </SmallBtn>
+            </NotiContainer>
+          ))}
+        </AlertContainer>
+      )}
     </>
   );
 }
@@ -67,23 +123,43 @@ const Container = styled.div<any>`
 `;
 
 const AlertContainer = styled.div`
-  animation: ${fadein} 0.5s ease-out;
+  animation: ${fadein} 0.3s ease-out;
   width: 80%;
   max-width: 500px;
   height: 500px;
+  overflow-y: scroll;
   background: transparent;
   -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
-  background-color: rgba(187, 187, 255, 0.5);
+  background-color: rgba(187, 187, 255, 0.7);
   border-radius: 15px;
   display: flex;
+  flex-direction: column;
   position: fixed;
   z-index: 15;
   top: 70px;
   right: 200px;
+  padding: 15px;
+  gap: 15px;
 
   @media screen and (max-width: 900px) {
     right: 15px;
+  }
+`;
+
+const NotiContainer = styled.div<any>`
+  width: 100%;
+  background-color: ${(props) =>
+    props.$isRead ? "rgba(182, 182, 182, 0.5)" : "rgba(255, 255, 255, 0.7)"};
+  border-radius: 10px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  transition: 0.5s all;
+
+  &:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 1);
   }
 `;
 
