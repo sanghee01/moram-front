@@ -177,7 +177,7 @@ const NotiContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
   transition: 0.5s all;
-
+  box-shadow: 3px 3px 7px black;
   &:hover {
     cursor: pointer;
     transform: scale(1.03);

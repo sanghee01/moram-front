@@ -222,7 +222,7 @@ function Posting() {
             />
             <Btn
               onClick={() => postComment()}
-              style={user || { background: "gray" }}
+              style={user || { background: "gray !important" }}
             >
               {user ? "작성" : "로그인 필요"}
             </Btn>
@@ -322,7 +322,7 @@ const InputContainer = styled.div`
 `;
 
 const Btn = styled(SmallBtn)<any>`
-  background-color: skyblue;
+  background-color: skyblue !important;
   height: 100%;
   padding: 0 20px;
 `;
@@ -369,13 +369,14 @@ const BtnContainer = styled.div`
 `;
 
 const LikeBtn = styled(SmallBtn)<any>`
-  background-color: ${(props) => (props.$isLiked ? "#fc8989" : "#fcd8d8")};
-  color: ${(props) => (props.$isLiked ? "white" : "black")};
+  background-color: ${(props) =>
+    props.$isLiked ? "#fc8989" : "#fcd8d8"} !important;
+  color: ${(props) => (props.$isLiked ? "white" : "black")} !important;
   width: 80px;
   height: 45px;
   padding: 0;
   &:hover {
-    background-color: #ff7c7c;
+    background-color: #ff7c7c !important;
   }
 `;
 
@@ -384,9 +385,9 @@ const ReportBtn = styled(SmallBtn)`
   width: 80px;
   height: 45px;
   padding: 0;
-  background-color: #9c9c9c;
+  background-color: #9c9c9c !important;
   &:hover {
-    background-color: #fa9363;
+    background-color: #fa9363 !important;
   }
 `;
 
