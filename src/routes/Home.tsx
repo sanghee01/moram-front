@@ -1,17 +1,15 @@
 import { styled } from "styled-components";
 import PopularContent from "../components/Home/PopularContent";
 import NewContent from "../components/Home/NewContent";
-import { postAtom } from "../state";
-import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { handleDateChange } from "../dateChange";
 
 function Home() {
-  const postAtomItem = useRecoilValue(postAtom);
-  const postItem = [...postAtomItem];
   const [popularPosts, setPopularPosts] = useState<any[]>([]);
   const [lastPosts, setLastPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
 
   useEffect(() => {
     getPopularPosting();
@@ -23,8 +21,9 @@ function Home() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting/popular`
       );
-      console.log("pop", response.data.content);
-      // setPopularPosts(response.data.content);
+      const popularData = response.data.content;
+      setPopularPosts(popularData);
+      setLoading(false);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
@@ -35,7 +34,9 @@ function Home() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting?lastId=99999`
       );
-      setLastPosts(response.data.content.postings);
+      const lastData = response.data.content.postings;
+      setLastPosts(lastData);
+      setLoading2(false);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
@@ -47,35 +48,42 @@ function Home() {
       <Container>
         <h1>인기 게시글</h1>
         <PopularContentBox>
-          {postItem.length < 1 ? (
-            <span>게시글이 없습니다.</span>
+          {loading ? (
+            <span>loading...</span>
           ) : (
-            postItem
-              .sort((a, b) => b.likesCount - a.likesCount)
-              .slice(0, 3)
-              .map((item) => {
-                return (
-                  <PopularContent
-                    key={item.id}
-                    img={item.imgUrl[0]}
-                    category={item.category}
-                    title={item.title}
-                    tag={item.tag}
-                  />
-                );
-              })
+            popularPosts.map((item) => {
+              return (
+                <PopularContent
+                  key={item.id}
+                  id={item.id}
+                  nickname={item.nickname}
+                  hitCount={item.hitCount}
+                  likesCount={item.likesCount}
+                  commentCount={item.commentCount}
+                  img={item.img1Url}
+                  category={item.category}
+                  title={item.title}
+                  date={handleDateChange(item.writeTime)}
+                  tag={item.tag}
+                />
+              );
+            })
           )}
         </PopularContentBox>
         <h1>최신 게시글</h1>
         <NewContentBox>
-          {lastPosts?.length < 1 ? (
-            <span>게시글이 없습니다.</span>
+          {loading2 ? (
+            <span>loading...</span>
           ) : (
             lastPosts?.map((item) => {
               return (
                 <NewContent
                   key={item.id}
                   id={item.id}
+                  nickname={item.nickname}
+                  hitCount={item.hitCount}
+                  likesCount={item.likesCount}
+                  commentCount={item.commentCount}
                   img={item.img1Url}
                   category={item.category}
                   title={item.title}
