@@ -1,17 +1,69 @@
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import styled from "styled-components";
-import Select from "react-select";
 import axios from "axios";
+
 
 function ProfileEdit() {
   const [nickname, setNickname] = useState("");
+  const [schoolcertify, setSchoolCertify] = useState("");
+  const [schoolList, setSchoolList] = useState<string[]>([]);
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
-  const [schoolcertify, setSchoolCertify] = useState("");
 
-const [schoolList, setSchoolList] = useState(["학교1", "학교2", "학교3"]); // 학교 목록
-const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const nicknameData = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/changenickname`,{
+          nickname: nickname
+        }
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
+  };
+  useEffect(() => {
+    getSchoolData();
+  }, []);
+  const getSchoolData = async () => {
+    try {
+       const response = await axios.get(`${process.env.REACT_APP_APIADDRESS}/univsearch`);
+       setSchoolList(response.data);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
+  };
+  const schoolData = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/univcert`,{
+          schoolname: schoolcertify
+        }
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
+  };
+  const passwordData = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/changepw`,{
+          prepw:prePwValue,
+          pw1:pwValue1,
+          pw2:pwValue2
+        }
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
+  };
 
 const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
   setNickname(event.target.value);
@@ -33,18 +85,21 @@ const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
   };
 
-  const filteredSchoolList = schoolList.filter((school) =>
-  school.includes(searchTerm)
+  const filteredSchools = schoolList.filter(school =>
+  school.toLowerCase().includes(schoolcertify.toLowerCase())
 );
 
 const OkClick1 = () => {
   console.log("닉네임변경");
+  nicknameData();
 };
 const OkClick2 = () => {
   console.log("학교 인증");
+  schoolData();
 };
 const OkClick3 = () => {
   console.log("보안설정");
+  passwordData();
 };
   return (
     <Container1>
@@ -108,9 +163,9 @@ const OkClick3 = () => {
   onChange={(event) => setSchoolCertify(event.target.value)}
 >
 <option value="">학교 찾기</option>
-  <option value="학교1">학교1</option>
-  <option value="학교2">학교2</option>
-  <option value="학교3">학교3</option>
+        {filteredSchools.map(school => (
+          <option key={school} value={school}>{school}</option>
+        ))}
 </select>
               <OkButton>
                 <button onClick={OkClick2}>확인</button>
@@ -449,12 +504,3 @@ const OkButton = styled.div`
   }
 `;
 export default ProfileEdit;
-
-// const response = axios.post(`${process.env.REACT_APP_APIADDRESS}/user/changepw`,{
-//   prepw: "현재비밀번호",
-//   newpw: "변경할비밀번호"
-// })
-
-// const response1 = axios.post(`${process.env.REACT_APP_APIADDRESS}/user/changenickname`,{
-//   newnickname: "변경할닉네임"
-// })

@@ -27,7 +27,7 @@ interface CommentProps {
             navigate(`/community/${id}`);
         }}
       >
-        <div>
+        <ContainerBox>
           <ContentBox>
             <ContentContainer>
                 <span>[{postid}]</span>
@@ -36,7 +36,7 @@ interface CommentProps {
             <Time> {date}</Time>
           </ContentBox>
           <Content><span>[{id}]</span><p>{content}</p></Content>
-        </div>
+        </ContainerBox>
       </Container>
     );
   }
@@ -50,7 +50,10 @@ interface CommentProps {
     cursor: pointer;
   }
   `;
-
+ const ContainerBox = styled.div`
+ display: flex;
+ 
+ `;
   const ContentBox = styled.div`
   `;
     const ContentContainer = styled.div`
