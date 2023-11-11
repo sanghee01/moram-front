@@ -6,17 +6,28 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../state";
 import { useLocation, useNavigate } from "react-router";
 import { SmallBtn } from "../styles/ButtonStyles";
+import { handleDateChange } from "../dateChange";
 
 function Notification() {
   const [isOpen, setIsOpen] = useState(false);
   const [notification, setNotification] = useState<any>(null);
+  const [notiCount, setNotiCount] = useState(0);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    getNotification();
+    setTimeout(() => {
+      getNotification();
+    }, 100);
   }, [isOpen, location]);
+
+  useEffect(() => {
+    setNotiCount(
+      notification?.filter((notification: any) => notification.readType === 0)
+        .length
+    );
+  }, [notification]);
 
   const getNotification = async () => {
     try {
@@ -38,6 +49,17 @@ function Notification() {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
+
+  const deleteNotification = async (notiId: any) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/notification/${notiId}`
+      );
+      if (response.data) getNotification();
+    } catch (error: any) {
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
   return (
     <>
       <Container $isOpen={isOpen}>
@@ -45,11 +67,7 @@ function Notification() {
           id="notification"
           onClick={() => setIsOpen((prev: any) => !prev)}
         />
-        {
-          notification?.filter(
-            (notification: any) => notification.readType === 0
-          ).length
-        }
+        {notiCount}
       </Container>
       {isOpen && (
         <AlertContainer>
@@ -68,19 +86,22 @@ function Notification() {
                 );
               }}
             >
-              [{noti.title}] 글에{" "}
-              {noti.notifyType === 0
-                ? "댓글이 달렸습니다."
-                : "답글이 달렸습니다."}
-              <div>{noti.notifyTime}</div>
+              <span>
+                [{noti.title}] 글에{" "}
+                {noti.notifyType === 0
+                  ? "댓글이 달렸습니다."
+                  : "답글이 달렸습니다."}
+              </span>
+              <div>{handleDateChange(noti.notifyTime)}</div>
               <SmallBtn
-                $padding="30px 10px"
-                $margin="0 8px"
-                $background="tomato"
-                $backgroundHover="red"
+                $padding="3px 10px"
+                $margin="0 0px"
+                $background="gray"
+                $backgroundHover="tomato"
                 $color="white"
                 onClick={(e: any) => {
                   e.stopPropagation();
+                  deleteNotification(noti.id);
                 }}
               >
                 삭제
@@ -150,7 +171,7 @@ const AlertContainer = styled.div`
 const NotiContainer = styled.div<any>`
   width: 100%;
   background-color: ${(props) =>
-    props.$isRead ? "rgba(182, 182, 182, 0.5)" : "rgba(255, 255, 255, 0.7)"};
+    props.$isRead ? "rgba(221, 221, 221, 0.6)" : "rgba(176, 255, 190, 0.8)"};
   border-radius: 10px;
   padding: 10px;
   display: flex;
@@ -159,7 +180,7 @@ const NotiContainer = styled.div<any>`
 
   &:hover {
     cursor: pointer;
-    background-color: rgba(255, 255, 255, 1);
+    transform: scale(1.03);
   }
 `;
 
