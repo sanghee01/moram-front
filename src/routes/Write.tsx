@@ -13,7 +13,6 @@ function Write() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [categoryList, setCategoryList] = useState<any>(loadedCategory);
-  const [presignedUrl, setPresignedUrl] = useState<any>();
   const [imageUrl, setImageUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
@@ -67,16 +66,16 @@ function Write() {
   const handleUploadImage = (e: any) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-
       // 상태 업데이트를 위해 파일 객체 자체를 저장합니다.
       setImageUrl({
         ...imageUrl,
-        img1Url: file,
+        [e.target.name]: file,
       });
     }
   };
 
   const postPosting = async (imageurl: any = "") => {
+    console.log("받아와지나", imageurl);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/posting`,
@@ -85,9 +84,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageurl,
-          img2Url: imageUrl.img2Url,
-          img3Url: imageUrl.img3Url,
+          img1Url: imageurl[0]?.imageUrl,
+          img2Url: imageurl[1]?.imageUrl,
+          img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);
@@ -96,7 +95,7 @@ function Write() {
       alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
-  const editPosting = async () => {
+  const editPosting = async (imageurl: any = "") => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`,
@@ -105,7 +104,7 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageUrl.img1Url,
+          img1Url: imageurl.img1Url,
           img2Url: imageUrl.img2Url,
           img3Url: imageUrl.img3Url,
         }
@@ -135,15 +134,19 @@ function Write() {
   // TODO: 이미지 올리기 구현
   // 백엔드에서 PresignedUrl, imageUrl 받아옴
   const getPresignedUrl = async () => {
+    let imgCount = 0;
+    if (imageUrl.img1Url) imgCount++;
+    if (imageUrl.img2Url) imgCount++;
+    if (imageUrl.img3Url) imgCount++;
+
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`
+        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl?imgCount=${imgCount}`
       );
-      setPresignedUrl(response.data.content.presignedUrl);
-      console.log("pre", response.data.content.presignedUrl);
+      console.log("pre", response.data.content);
       return {
-        presignedUrl: response.data.content.presignedUrl,
-        imgUrl: response.data.content.imageUrl,
+        urlContents: response.data.content,
+        imgCount: imgCount,
       };
     } catch (error: any) {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
@@ -154,12 +157,22 @@ function Write() {
   const uploadImage = async () => {
     if (!imageUrl.img1Url) return isEdit ? editPosting() : postPosting();
     const urls: any = await getPresignedUrl();
-    console.log("이미지 업로드 s3 url:", urls?.presignedUrl);
-
+    console.log("urls가 뭔데:", urls);
     try {
-      const response = await axios.put(urls.presignedUrl, imageUrl.img1Url);
-      if (response) postPosting(urls?.imgUrl);
-      console.log("Image uploaded:", response.status);
+      let response;
+      for (let i = 0; i < urls.imgCount; i++) {
+        response = await axios.put(
+          urls.urlContents[i].presignedUrl,
+          imageUrl[`img${i + 1}Url`]
+        );
+      }
+      console.log("Image uploaded:", response);
+
+      if (response) {
+        isEdit
+          ? editPosting(urls?.urlContents)
+          : postPosting(urls?.urlContents);
+      }
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
