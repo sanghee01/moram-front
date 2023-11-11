@@ -12,18 +12,20 @@ function ProfileEdit() {
   const [pwValue2, setPw2] = useState("");
 
   const nicknameData = async () => {
+    const confirmed = window.confirm(`닉네임을 ${nickname}로 변경하시겠습니까?`);
+    if (confirmed) {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,{
           nickname: nickname
         }
       );
-      console.log(`response.data : ${response.data}`);
       alert(response.data.message);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
     }
+  }
   };
   useEffect(() => {
     getSchoolData();
@@ -38,6 +40,8 @@ function ProfileEdit() {
     }
   };
   const schoolData = async () => {
+    const confirmed = window.confirm(`학교를 인증하시겠습니까?`);
+    if (confirmed) {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/univcert`,{
@@ -49,8 +53,10 @@ function ProfileEdit() {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
     }
+  }
   };
-  const passwordData = async () => {
+  const passwordData = async () => {const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
+  if (confirmed) {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,{
@@ -66,6 +72,7 @@ function ProfileEdit() {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
     }
+  }
   };
 
 const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +129,7 @@ const OkClick3 = () => {
               <img src="./assets/profileimage.jpg" />
               <ChangeDelete>
                 <button>사진 변경</button>
-                <button>삭제</button>
+                <button>기본 이미지</button>
               </ChangeDelete>
             </ProfileImage2>
           </ProfileImageChange>
@@ -142,7 +149,7 @@ const OkClick3 = () => {
                 onChange={ChangeNickname}
               />
               <OkButton>
-                <button onClick={OkClick1}>변경</button>
+                <button onClick={OkClick1}>변경</button><button onClick={() => window.location.reload()}>취소</button>
               </OkButton>
             </Nickname2>
           </NicknameChange>
@@ -171,7 +178,7 @@ const OkClick3 = () => {
         ))}
 </select>
               <OkButton>
-                <button onClick={OkClick2}>확인</button>
+                <button onClick={OkClick2}>확인</button><button onClick={() => window.location.reload()}>취소</button>
               </OkButton>
             </SchoolSelect>
           </SchoolCertifyBox>
@@ -206,7 +213,7 @@ const OkClick3 = () => {
                 onChange={ChangeUserPw2}
               />
               <OkButton>
-                <button onClick={OkClick3}>변경</button>
+                <button onClick={OkClick3}>변경</button><button onClick={() => window.location.reload()}>취소</button>
               </OkButton>
             </Security2>
           </SecurityChange>
@@ -457,24 +464,11 @@ const Security2 = styled.div`
   & input {
     width: 290px;
   }
-  @media screen and (max-width: 800px) {
-    & input {
-      width: 250px;
-    }
-  }
-  @media screen and (max-width: 700px) {
-    & input {
-      width: 220px;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    & input {
-      width: 200px;
-    }
-  }
+ 
 `;
 const OkButton = styled.div`
   display: flex;
+  justify-content: space-between;
   & button {
     background-color: transparent;
     outline: 0;
@@ -482,28 +476,13 @@ const OkButton = styled.div`
     background-color: #e6e6e6d6;
     border-radius: 10px;
     height: 31px;
-    width: 100%;
+    width: 48%;
     font-weight: 500;
     transition: background-color 0.5s ease
   }
   & button:hover {
     cursor: pointer;
     background-color: #d6d3fb;
-  }
-  @media screen and (max-width: 800px) {
-    & button {
-      width: 250px;
-    }
-  }
-  @media screen and (max-width: 700px) {
-    & button {
-      width: 220px;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    & button {
-      width: 200px;
-    }
   }
 `;
 export default ProfileEdit;

@@ -22,10 +22,10 @@ function Qna() {
     const buttonNumber =
       [
         "계정 문의",
-        "서비스 문의",
-        "어찌고 문의",
-        "저찌고 문의",
         "개선 사항",
+        "궁금한 점",
+        "오류 신고",
+        "기타",
       ].indexOf(buttonText) + 1;
     console.log(`${buttonText}`);
   };
@@ -93,28 +93,28 @@ function Qna() {
               계정 문의
             </button>
             <button
-              className={categoryButton === "서비스 문의" ? "active" : ""}
-              onClick={() => CategoryButtonClick("서비스 문의")}
-            >
-              서비스 문의
-            </button>
-            <button
-              className={categoryButton === "어찌고 문의" ? "active" : ""}
-              onClick={() => CategoryButtonClick("어찌고 문의")}
-            >
-              어찌고 문의
-            </button>
-            <button
-              className={categoryButton === "저찌고 문의" ? "active" : ""}
-              onClick={() => CategoryButtonClick("저찌고 문의")}
-            >
-              저찌고 문의
-            </button>
-            <button
               className={categoryButton === "개선 사항" ? "active" : ""}
               onClick={() => CategoryButtonClick("개선 사항")}
             >
               개선 사항
+            </button>
+            <button
+              className={categoryButton === "궁금한 점" ? "active" : ""}
+              onClick={() => CategoryButtonClick("궁금한 점")}
+            >
+              궁금한 점
+            </button>
+            <button
+              className={categoryButton === "요류 신고" ? "active" : ""}
+              onClick={() => CategoryButtonClick("오류 신고")}
+            >
+              오류 신고
+            </button>
+            <button
+              className={categoryButton === "기타" ? "active" : ""}
+              onClick={() => CategoryButtonClick("기타")}
+            >
+              기타
             </button>
           </QnaCategory>
           <EmailDiv>
@@ -169,7 +169,8 @@ function Qna() {
             />
           </ContentDiv>
           <SendButton>
-        <button onClick={handleSubmit}>전송</button>
+            <div></div>
+        <button onClick={handleSubmit}>전송</button><button onClick={() => window.location.reload()}>취소</button>
         </SendButton>
         </QnaMain>
       </QnaContainer>
@@ -369,19 +370,19 @@ const FileLabel = styled.label`
 `;
 const SendButton = styled.div`
 display: flex;
-flex-direction: column;
 justify-content: center;
 align-items: center;
 width: 100%;
 height: 40px;
+gap: 0.6rem;
 & button {
   outline: 0;
   border: transparent;
   background-color: #8080ee;
   color: white;
   border-radius: 12px;
-  width: 50%;
-  height: 50px; 
+  width: 30%;
+  height: 40px; 
   font-weight: 600;
   font-size: 18px;
   transition: background-color 0.5s ease
