@@ -14,7 +14,7 @@ function ProfileEdit() {
   const nicknameData = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/changenickname`,{
+        `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,{
           nickname: nickname
         }
       );
@@ -52,7 +52,7 @@ function ProfileEdit() {
   const passwordData = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/changepw`,{
+        `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,{
           prepw:prePwValue,
           pw1:pwValue1,
           pw2:pwValue2
