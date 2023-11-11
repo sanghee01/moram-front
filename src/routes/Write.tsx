@@ -18,6 +18,11 @@ function Write() {
     img2Url: "",
     img3Url: "",
   });
+  const [localImageUrl, setLocalImageUrl] = useState<any>({
+    img1Url: "",
+    img2Url: "",
+    img3Url: "",
+  });
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const params = useParams();
@@ -70,6 +75,10 @@ function Write() {
       setImageUrl({
         ...imageUrl,
         [e.target.name]: file,
+      });
+      setLocalImageUrl({
+        ...localImageUrl,
+        [e.target.name]: URL.createObjectURL(e.target.files[0]),
       });
     }
   };
@@ -256,11 +265,19 @@ function Write() {
               onChange={handleUploadImage}
             />
           </UploadImgBox>
-          <ShowImgBox>
-            {imageUrl.img1Url && <ShowImg src={imageUrl.img1Url} />}
-            {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
-            {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
-          </ShowImgBox>
+          {isEdit ? (
+            <ShowImgBox>
+              {imageUrl.img1Url && <ShowImg src={imageUrl.img1Url} />}
+              {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
+              {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
+            </ShowImgBox>
+          ) : (
+            <ShowImgBox>
+              {imageUrl.img1Url && <ShowImg src={localImageUrl.img1Url} />}
+              {imageUrl.img2Url && <ShowImg src={localImageUrl.img2Url} />}
+              {imageUrl.img3Url && <ShowImg src={localImageUrl.img3Url} />}
+            </ShowImgBox>
+          )}
           {user ? (
             <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
           ) : (
