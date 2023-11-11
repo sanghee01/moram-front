@@ -65,13 +65,18 @@ function Write() {
   console.log(category, tag, title, content);
 
   const handleUploadImage = (e: any) => {
-    setImageUrl({
-      ...imageUrl,
-      [e.target.name]: URL.createObjectURL(e.target.files[0]),
-    });
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+
+      // 상태 업데이트를 위해 파일 객체 자체를 저장합니다.
+      setImageUrl({
+        ...imageUrl,
+        img1Url: file,
+      });
+    }
   };
 
-  const postPosting = async () => {
+  const postPosting = async (imageurl: any = "") => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/posting`,
@@ -80,7 +85,7 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageUrl.img1Url,
+          img1Url: imageurl,
           img2Url: imageUrl.img2Url,
           img3Url: imageUrl.img3Url,
         }
@@ -136,6 +141,10 @@ function Write() {
       );
       setPresignedUrl(response.data.content.presignedUrl);
       console.log("pre", response.data.content.presignedUrl);
+      return {
+        presignedUrl: response.data.content.presignedUrl,
+        imgUrl: response.data.content.imageUrl,
+      };
     } catch (error: any) {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
@@ -143,15 +152,13 @@ function Write() {
 
   // 작성완료 버튼 누를 시 업로드 로직
   const uploadImage = async () => {
-    getPresignedUrl();
-    console.log("이미지 업로드 s3 url:", presignedUrl);
+    if (!imageUrl.img1Url) return isEdit ? editPosting() : postPosting();
+    const urls: any = await getPresignedUrl();
+    console.log("이미지 업로드 s3 url:", urls?.presignedUrl);
 
     try {
-      const response = await axios.put(presignedUrl, imageUrl.img1url, {
-        headers: {
-          "Content-Type": imageUrl.img1url.type as any,
-        },
-      });
+      const response = await axios.put(urls.presignedUrl, imageUrl.img1Url);
+      if (response) postPosting(urls?.imgUrl);
       console.log("Image uploaded:", response.status);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
@@ -164,8 +171,7 @@ function Write() {
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          imageUrl.img1Url && uploadImage();
-          isEdit ? editPosting() : postPosting();
+          uploadImage();
         }}
       >
         <FormBox>
