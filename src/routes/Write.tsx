@@ -129,26 +129,23 @@ function Write() {
 
   // TODO: 이미지 올리기 구현
   // 백엔드에서 PresignedUrl, imageUrl 받아옴
-  useEffect(() => {
-    getPresignedUrl();
-  }, []);
-
   const getPresignedUrl = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`
       );
-
       setPresignedUrl(response.data.content.presignedUrl);
       console.log("pre", response.data.content.presignedUrl);
     } catch (error: any) {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
-  console.log("hi", presignedUrl);
 
   // 작성완료 버튼 누를 시 업로드 로직
   const uploadImage = async () => {
+    getPresignedUrl();
+    console.log("이미지 업로드 s3 url:", presignedUrl);
+
     try {
       const response = await axios.put(presignedUrl, imageUrl.img1url, {
         headers: {
@@ -167,7 +164,7 @@ function Write() {
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          uploadImage();
+          imageUrl.img1Url && uploadImage();
           isEdit ? editPosting() : postPosting();
         }}
       >
