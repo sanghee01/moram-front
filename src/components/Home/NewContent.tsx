@@ -1,9 +1,13 @@
 import { styled } from "styled-components";
-import CategoryBtn from "../CategoryBtn";
 import { useNavigate } from "react-router-dom";
+import { Tag, Category } from "../../styles/Tag_CatagoryStyles";
 
 interface NewContentProps {
   id: number;
+  nickname: string;
+  hitCount: number;
+  likesCount: number;
+  commentCount: number;
   img?: string;
   category: string;
   title: string;
@@ -14,6 +18,10 @@ interface NewContentProps {
 
 function NewContent({
   id,
+  nickname,
+  hitCount,
+  likesCount,
+  commentCount,
   img,
   category,
   title,
@@ -36,15 +44,14 @@ function NewContent({
       )}
       <div>
         <Title>
-          <div>
-            <span>
-              [{tag}] {title}
-            </span>
-            <CategoryBtn category={category} marginL={5} />
-          </div>
-          <Time> {date}</Time>
+          <Tag>{tag}</Tag>
+          <Category>{category}</Category>
+          <div>{title}</div>
+          <Info>
+            | {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
+          </Info>
         </Title>
-        <p>{content}</p>
+        <ContentText>{content.split("<br/>").join(" ")}</ContentText>
       </div>
     </Container>
   );
@@ -71,7 +78,6 @@ const Container = styled.div`
     margin: 5px 0;
   }
   & div {
-    width: 100%;
   }
 
   @media screen and (max-width: 1000px) {
@@ -88,15 +94,11 @@ const Container = styled.div`
   }
 `;
 
-const Title = styled.header`
+const Title = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
   font-weight: bold;
-
-  & div {
-    width: 80%;
-  }
+  gap: 5px;
 
   @media screen and (max-width: 1000px) {
     flex-direction: column;
@@ -108,10 +110,19 @@ const Title = styled.header`
   }
 `;
 
-const Time = styled.span`
-  opacity: 0.5;
+const Info = styled.span`
   font-weight: 500;
   font-size: 0.9rem;
 `;
 
+const ContentText = styled.div`
+  display: flex;
+  white-space: pre-wrap;
+  margin-top: 10px;
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.7;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
 export default NewContent;

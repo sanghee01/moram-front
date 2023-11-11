@@ -39,7 +39,7 @@ function Posting() {
   const getPosting = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`
+        `${process.env.REACT_APP_APIADDRESS}/posting/specific/${postId}`
       );
       const postData = response.data.content;
       postData.content = postData.content.split("<br/>").join("\n");

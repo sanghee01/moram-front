@@ -1,6 +1,6 @@
 import { styled } from "styled-components";
 import { handleDateChange } from "../../dateChange";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface NoticePostProps {
   id: number;
@@ -10,8 +10,6 @@ interface NoticePostProps {
 }
 
 function NoticePost({ id, title, nickname, writeTime }: NoticePostProps) {
-  const location = useLocation();
-  const navigate = useNavigate();
   return (
     <Container>
       <Link to={`/notice/${id}`}>
