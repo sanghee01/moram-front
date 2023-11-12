@@ -92,20 +92,18 @@ function Notification() {
                   ? "댓글이 달렸습니다."
                   : "답글이 달렸습니다."}
               </span>
-              <div>{handleDateChange(noti.notifyTime)}</div>
-              <SmallBtn
-                $padding="3px 10px"
-                $margin="0 0px"
-                $background="gray"
-                $backgroundHover="tomato"
-                $color="white"
+              <div>
+                {handleDateChange(noti.notifyTime)}{" "}
+                {noti.readType === 1 && "[읽음]"}
+              </div>
+              <DeleteBtn
                 onClick={(e: any) => {
                   e.stopPropagation();
                   deleteNotification(noti.id);
                 }}
               >
                 삭제
-              </SmallBtn>
+              </DeleteBtn>
             </NotiContainer>
           ))}
         </AlertContainer>
@@ -180,8 +178,17 @@ const NotiContainer = styled.div<any>`
   box-shadow: 3px 3px 7px black;
   &:hover {
     cursor: pointer;
-    transform: scale(1.03);
+    transform: scale(1.02);
   }
 `;
 
+const DeleteBtn = styled(SmallBtn)`
+  height: 27px !important;
+  background: "gray";
+  color: "white";
+
+  &:hover {
+    background: tomato;
+  }
+`;
 export default Notification;
