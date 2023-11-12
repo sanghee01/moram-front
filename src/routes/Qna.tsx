@@ -20,13 +20,9 @@ function Qna() {
   const CategoryButtonClick = (buttonText: string) => {
     setCategoryButton(buttonText);
     const buttonNumber =
-      [
-        "계정 문의",
-        "개선 사항",
-        "궁금한 점",
-        "오류 신고",
-        "기타",
-      ].indexOf(buttonText) + 1;
+      ["계정 문의", "개선 사항", "궁금한 점", "오류 신고", "기타"].indexOf(
+        buttonText
+      ) + 1;
     console.log(`${buttonText}`);
   };
   const EmailInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,25 +58,29 @@ function Qna() {
     setFiles(updatedFiles);
   };
 
-  const handleSubmit = async() => {
+  const handleSubmit = async () => {
     setIsSubmitted(true);
-    console.log('전송');
-    const response = await axios.post(`${process.env.REACT_APP_APIADDRESS}/user/qna`,{
-      category: categoryButton,
-      email : emailValue,
-      title : titleValue,
-      message: contentValue
-    })
-    console.log(response.data)
+    console.log("전송");
+    const response = await axios.post(
+      `${process.env.REACT_APP_APIADDRESS}/user/qna`,
+      {
+        category: categoryButton,
+        email: emailValue,
+        title: titleValue,
+        message: contentValue,
+      }
+    );
+    console.log(response.data);
     //백엔드에서 전송해준 문구를 띄울때 작성해야함
     alert(response?.data.message);
-    
-  }
+  };
   return (
     <Container>
       <QnaTtilePosition>
         <QnaTitle>
-          <h2><Span1>문의사항</Span1>은 <Span2>여기</Span2>에 남겨주세요.</h2>
+          <h2>
+            <Span1>문의사항</Span1>은 <Span2>여기</Span2>에 남겨주세요.
+          </h2>
         </QnaTitle>
       </QnaTtilePosition>
       <QnaContainer>
@@ -170,8 +170,9 @@ function Qna() {
           </ContentDiv>
           <SendButton>
             <div></div>
-        <button onClick={handleSubmit}>전송</button><button onClick={() => window.location.reload()}>취소</button>
-        </SendButton>
+            <button onClick={handleSubmit}>전송</button>
+            <button onClick={() => window.location.reload()}>취소</button>
+          </SendButton>
         </QnaMain>
       </QnaContainer>
     </Container>
@@ -205,12 +206,11 @@ const QnaCategory = styled.div`
     height: 50px;
     font-size: 15px;
     font-weight: 500;
-    weight: 500;
     background-color: white;
     outline: 0;
     border: transparent;
     border-radius: 15px;
-    transition: background-color 0.7s ease
+    transition: background-color 0.7s ease;
   }
   & button:hover {
     cursor: pointer;
@@ -248,11 +248,10 @@ const QnaTitle = styled.div`
       font-size: 1.8rem;
     }
   }
-  
 `;
 const Span1 = styled.span`
-font-size: 40px;
-font-weight: 600;
+  font-size: 40px;
+  font-weight: 600;
   color: #134478;
   @media screen and (max-width: 700px) {
     & {
@@ -261,7 +260,7 @@ font-weight: 600;
   }
 `;
 const Span2 = styled.span`
-font-size: 36px;
+  font-size: 36px;
   color: #6c6ce3;
   @media screen and (max-width: 700px) {
     & {
@@ -369,25 +368,25 @@ const FileLabel = styled.label`
   cursor: pointer;
 `;
 const SendButton = styled.div`
-display: flex;
-justify-content: center;
-align-items: center;
-width: 100%;
-height: 40px;
-gap: 0.6rem;
-& button {
-  outline: 0;
-  border: transparent;
-  background-color: #8080ee;
-  color: white;
-  border-radius: 12px;
-  width: 30%;
-  height: 40px; 
-  font-weight: 600;
-  font-size: 18px;
-  transition: background-color 0.5s ease
-}
-& button:hover {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 40px;
+  gap: 0.6rem;
+  & button {
+    outline: 0;
+    border: transparent;
+    background-color: #8080ee;
+    color: white;
+    border-radius: 12px;
+    width: 30%;
+    height: 40px;
+    font-weight: 600;
+    font-size: 18px;
+    transition: background-color 0.5s ease;
+  }
+  & button:hover {
     cursor: pointer;
     background-color: #b9b9f7;
   }
