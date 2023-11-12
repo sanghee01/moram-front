@@ -59,7 +59,7 @@ function Write() {
   }, [user]);
 
   useEffect(() => {
-    console.log("image url -> ", Object.values(previewImgUrl).length);
+    console.log("image url -> ", Object.values(previewImgUrl));
   }, [previewImgUrl]);
 
   console.log(category, tag, title, content);
@@ -109,9 +109,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: previewImgUrl.img1Url,
-          img2Url: previewImgUrl.img2Url,
-          img3Url: previewImgUrl.img3Url,
+          img1Url: imageurl[0]?.imageUrl,
+          img2Url: imageurl[1]?.imageUrl,
+          img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);
@@ -260,7 +260,7 @@ function Write() {
               accept="image/*"
               onChange={handleUploadImage}
             />
-            <label htmlFor="img2Url">이미지2</label>
+            {previewImgUrl.img1Url && <label htmlFor="img2Url">이미지2</label>}
             <input
               type="file"
               name="img2Url"
@@ -268,7 +268,8 @@ function Write() {
               accept="image/*"
               onChange={handleUploadImage}
             />
-            <label htmlFor="img3Url">이미지3</label>
+            {previewImgUrl.img2Url && <label htmlFor="img3Url">이미지3</label>}
+
             <input
               type="file"
               name="img3Url"
