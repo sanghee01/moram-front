@@ -38,18 +38,18 @@ function ProfileEdit() {
       }
     }
   };
-  useEffect(() => {
-    getSchoolData();
-  }, []);
-  const getSchoolData = async () => {
+
+  const getSchoolData = async (univName: string) => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/profile/univsearch`,
+        `${process.env.REACT_APP_APIADDRESS}/user/univsearch`,
         {
-          univName: schoolList,
+          univName,
         }
       );
       setSchoolList(response.data);
+      console.log(response.data);
+      console.log("-------");
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
@@ -60,7 +60,7 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/certuniv`,
+          `${process.env.REACT_APP_APIADDRESS}/user/certuniv`,
           {
             univName: schoolList,
             receivedEmail: schoolcertify,
@@ -126,14 +126,20 @@ function ProfileEdit() {
     setPw2(event.target.value);
     console.log(event.target.value);
   };
-  const SchoolCertifyInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSchoolCertify(event.target.value);
-    console.log(event.target.value);
+  const handleSchoolCertifyInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const univName = event.target.value;
+    setSchoolCertify(univName);
+    getSchoolData(univName);
   };
 
-  const filteredSchools = schoolList.filter((school) =>
-    school.toLowerCase().includes(schoolcertify.toLowerCase())
-  );
+  const filteredSchools = schoolList.filter((school) => {
+    if (typeof school === "string") {
+      return school.toLowerCase().includes(schoolcertify.toLowerCase());
+    }
+    return false;
+  });
 
   const OkClick1 = () => {
     console.log("닉네임변경");
@@ -212,10 +218,10 @@ function ProfileEdit() {
                   type="text"
                   placeholder="본인의 학교 입력"
                   value={schoolcertify}
-                  onChange={SchoolCertifyInput}
+                  onChange={handleSchoolCertifyInput}
                 />
                 <select
-                  value={schoolcertify}
+                  value={schoolList}
                   onChange={(event) => setSchoolCertify(event.target.value)}
                 >
                   <option value="">학교 찾기</option>
