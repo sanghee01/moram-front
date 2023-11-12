@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../state";
 import { BsReplyFill } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
+import { handleDateChange } from "../dateChange";
 
 function Posting() {
   const params = useParams();
@@ -22,15 +23,17 @@ function Posting() {
   const [isLiked, setIsLiked] = useState(false);
   const user = useRecoilValue(userState);
   const inputRef = useRef<any>(null);
+  const location = useLocation();
 
   useEffect(() => {
     getPosting();
     getComments();
-  }, []);
+    console.log("location ->", location);
+  }, [location]);
 
   useEffect(() => {
     if (user) getLike();
-  }, [user]);
+  }, [user, location]);
   const onChange = (e: any) => {
     setCommentContent(e.target.value);
   };
@@ -66,6 +69,18 @@ function Posting() {
         `${process.env.REACT_APP_APIADDRESS}/comment/${postId}`
       );
       setComments(response.data.content); //포스팅 데이터 받기
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
+
+  const deleteComment = async (commentId: any) => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/comment/${commentId}`
+      );
+      alert(response.data.message);
+      getComments();
     } catch (error: any) {
       alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
@@ -118,17 +133,6 @@ function Posting() {
     }
   };
 
-  /** 날짜 형식 변환 함수 */
-  const date = (dateStr: string) => {
-    const dateObj = new Date(dateStr);
-    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(dateObj.getDate()).padStart(2, "0")} ${String(
-      dateObj.getHours()
-    ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
-  };
-
   const reply = (commentId: any) => {
     const replies = comments.filter(
       (comments: any) => comments.parentId === commentId
@@ -148,7 +152,7 @@ function Posting() {
           </h2>
           <h4>
             {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} |{" "}
-            {date(posting.writeTime)}{" "}
+            {handleDateChange(posting.writeTime)}{" "}
             {posting.userId === user?.id && (
               <>
                 <SmallBtn
@@ -211,14 +215,14 @@ function Posting() {
             <CommentInput
               ref={inputRef}
               onChange={onChange}
-              onKeyDown={(e) => {
+              onKeyUp={(e) => {
                 if (e.key === "Enter") postComment();
               }}
               value={commentContent}
             />
             <Btn
               onClick={() => postComment()}
-              style={user || { background: "gray" }}
+              style={user || { background: "gray !important" }}
             >
               {user ? "작성" : "로그인 필요"}
             </Btn>
@@ -242,13 +246,44 @@ function Posting() {
               <>
                 <Comment>
                   <span style={{ color: "#5a59ff" }}>{comment.nickname}</span> :{" "}
-                  {comment.content}
+                  {comment.content}{" "}
+                  {(user?.id === comment.userId || user?.role === "admin") && (
+                    <SmallBtn
+                      $padding="4px 10px"
+                      $margin="0 8px"
+                      $background="tomato"
+                      $backgroundHover="red"
+                      $color="white"
+                      onClick={(e: any) => {
+                        e.stopPropagation();
+                        deleteComment(comment.id);
+                      }}
+                    >
+                      삭제
+                    </SmallBtn>
+                  )}
                 </Comment>
                 {reply(comment.id).map((reply: any) => (
                   <Comment key={reply.id}>
                     &nbsp;&nbsp;&nbsp;ㄴ{" "}
                     <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
                     {reply.content}
+                    {(user?.id === comment.userId ||
+                      user?.role === "admin") && (
+                      <SmallBtn
+                        $padding="4px 10px"
+                        $margin="0 8px"
+                        $background="tomato"
+                        $backgroundHover="red"
+                        $color="white"
+                        onClick={(e: any) => {
+                          e.stopPropagation();
+                          deleteComment(comment.id);
+                        }}
+                      >
+                        삭제
+                      </SmallBtn>
+                    )}
                   </Comment>
                 ))}
               </>
@@ -287,7 +322,7 @@ const InputContainer = styled.div`
 `;
 
 const Btn = styled(SmallBtn)<any>`
-  background-color: skyblue;
+  background-color: skyblue !important;
   height: 100%;
   padding: 0 20px;
 `;
@@ -334,13 +369,14 @@ const BtnContainer = styled.div`
 `;
 
 const LikeBtn = styled(SmallBtn)<any>`
-  background-color: ${(props) => (props.$isLiked ? "#fc8989" : "#fcd8d8")};
-  color: ${(props) => (props.$isLiked ? "white" : "black")};
+  background-color: ${(props) =>
+    props.$isLiked ? "#fc8989" : "#fcd8d8"} !important;
+  color: ${(props) => (props.$isLiked ? "white" : "black")} !important;
   width: 80px;
   height: 45px;
   padding: 0;
   &:hover {
-    background-color: #ff7c7c;
+    background-color: #ff7c7c !important;
   }
 `;
 
@@ -349,9 +385,9 @@ const ReportBtn = styled(SmallBtn)`
   width: 80px;
   height: 45px;
   padding: 0;
-  background-color: #9c9c9c;
+  background-color: #9c9c9c !important;
   &:hover {
-    background-color: #fa9363;
+    background-color: #fa9363 !important;
   }
 `;
 

@@ -8,6 +8,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { idsState, postingState, userState } from "../state";
 import { AiOutlineSearch } from "react-icons/ai";
 import { LuDelete } from "react-icons/lu";
+import { SmallBtn } from "../styles/ButtonStyles";
 
 function Community() {
   const location = useLocation();
@@ -60,6 +61,7 @@ function Community() {
     if (reloadQuery === "true") {
       setPostings("");
       setIds([99999, 0]);
+      changeQuery(); //reload 쿼리 초기화
     }
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -72,32 +74,35 @@ function Community() {
   useEffect(() => {
     console.log("category, tagfilter useffect  실행");
     if (isOpen) {
-      setIds([9999, 0]);
+      setIds([99999, 0]);
       setPostings("");
     }
-
-    //getPostings();
     loadSidebar();
-    // window.addEventListener("scroll", handleScroll);
-    // return () => {
-    //   window.removeEventListener("scroll", handleScroll);
-    // };
     setIsOpen(true);
   }, [categoryFilter, tagFilter, searchFilter]);
   useEffect(() => {
-    if (!postings) getPostings();
+    if (!postings) {
+      console.log("useEffect Posting -> ");
+      getPostings();
+    }
   }, [postings]);
   useEffect(() => {
     if (user) getBookmark();
   }, [user]);
   useEffect(() => {
-    if (isbottom) getPostings();
+    if (isbottom && postings) getPostings();
   }, [isbottom]);
   useEffect(() => {
     setCategoryFilter(queryParams.get("category") || "");
     setTagFilter(queryParams.get("tag") || "");
     setSearchFilter(queryParams.get("search") || "");
     loadSidebar();
+    /**커뮤니티 버튼을 다시 눌렀을 경우 새로고침 */
+    if (queryParams.get("reload") === "true") {
+      setIds([99999, 0]);
+      setPostings("");
+      changeQuery(); //reload 쿼리 초기화
+    }
   }, [location.search]); // location 객체가 변경될 때마다 실행됩니다.
 
   const loadSidebar = () => {
@@ -175,6 +180,30 @@ function Community() {
     }
   };
 
+  const deletePosting = async (postId: any) => {
+    let endPoint = "";
+    if (user.role === "user") endPoint = `posting/${postId}`;
+    else if (user.role === "admin") endPoint = `admin/posting/${postId}`;
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/${endPoint}`
+      );
+      if (user.role === "user") alert(response.data.message);
+      else if (user.role === "admin")
+        alert(`[어드민] ${response.data.message}`);
+      setPostings("");
+      setIds([99999, 0]);
+    } catch (error: any) {
+      if (user.role === "user")
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+      else if (user.role === "admin")
+        alert(
+          `[어드민] ${error?.response?.data?.message}` ||
+            "알 수 없는 에러 발생."
+        );
+    }
+  };
+
   const changeQuery = (
     newCategory: any = categoryFilter,
     newTag: any = tagFilter,
@@ -202,6 +231,7 @@ function Community() {
     const windowHeight = window.innerHeight;
     const fullHeight = document.documentElement.scrollHeight;
     const scrollPosition = window.scrollY;
+    console.log(windowHeight);
 
     //console.log(windowHeight + scrollPosition + 2, fullHeight);
     if (!loading && windowHeight + scrollPosition + 2 >= fullHeight) {
@@ -392,15 +422,26 @@ function Community() {
                   {posting.tag}
                 </TagBtn>
                 &nbsp;
-                <Link to={`/community/${posting.id}`}>
-                  {" "}
-                  {posting.title}{" "}
-                  {posting?.commentCount > 0 && [posting.commentCount]}
-                </Link>
+                <Link to={`/community/${posting.id}`}> {posting.title} </Link>
+                {(user?.id === posting.userId || user?.role === "admin") && (
+                  <SmallBtn
+                    $padding="4px 10px"
+                    $margin="0 8px"
+                    $background="tomato"
+                    $backgroundHover="red"
+                    $color="white"
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      deletePosting(posting.id);
+                    }}
+                  >
+                    삭제
+                  </SmallBtn>
+                )}
               </div>
               <div>
                 {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
-                | {date(posting.writeTime)}
+                💬{posting.commentCount} | {date(posting.writeTime)}
               </div>
             </Content>
           ))}

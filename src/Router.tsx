@@ -19,6 +19,8 @@ import { useRecoilValue } from "recoil";
 import { userState } from "./state";
 import Users from "./components/Admin/Users";
 import AllPosts from "./components/Admin/AllPosts";
+import NoticeDetail from "./routes/NoticeDetail";
+import WriteNotice from "./routes/WriteNotice";
 
 function AppRouter() {
   const user = useRecoilValue(userState);
@@ -31,6 +33,7 @@ function AppRouter() {
           <Route path="/community" element={<Community />} />
           <Route path="/community/:id" element={<Posting />} />
           <Route path="/notice" element={<Notice />} />
+          <Route path="/notice/:id" element={<NoticeDetail />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
           <Route path="/profile" element={<Profile />} />
@@ -45,6 +48,8 @@ function AppRouter() {
               <Route path="/gpt" element={<SelfIntroDuction />} />
               <Route path="/write" element={<Write />} />
               <Route path="/write/:id" element={<Write />} />
+              <Route path="/write-notice" element={<WriteNotice />} />
+              <Route path="/write-notice/:id" element={<WriteNotice />} />
             </>
           ) : (
             <>
