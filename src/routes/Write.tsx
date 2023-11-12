@@ -182,8 +182,16 @@ function Write() {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
-  const handleDeletePreviewImage = () => {
-    // URL.revokeObjectURL();
+  const handleDeletePreviewImage = (e: any) => {
+    console.log(e.target.id);
+    setPreviewImgUrl({
+      ...previewImgUrl,
+      [e.target.id]: "",
+    });
+    setLocalPreviewImgUrl({
+      ...localPreviewImgUrl,
+      [e.target.id]: "",
+    });
   };
   return (
     <Container>
@@ -242,46 +250,71 @@ function Write() {
             placeholder="내용을 입력하세요."
             value={content}
           />
-          <label htmlFor="img1Url">이미지 업로드</label>
+          <label>이미지 업로드</label>
           <UploadImgBox>
+            <label htmlFor="img1Url">이미지1</label>
             <input
               type="file"
               name="img1Url"
+              id="img1Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            <label htmlFor="img2Url">이미지2</label>
             <input
               type="file"
               name="img2Url"
+              id="img2Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            <label htmlFor="img3Url">이미지3</label>
             <input
               type="file"
               name="img3Url"
+              id="img3Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
           </UploadImgBox>
-          {isEdit ? (
-            <ShowImgBox>
-              {previewImgUrl.img1Url && <ShowImg src={previewImgUrl.img1Url} />}
-              {previewImgUrl.img2Url && <ShowImg src={previewImgUrl.img2Url} />}
-              {previewImgUrl.img3Url && <ShowImg src={previewImgUrl.img3Url} />}
-            </ShowImgBox>
-          ) : (
-            <ShowImgBox>
-              {localPreviewImgUrl.img1Url && (
-                <ShowImg src={localPreviewImgUrl.img1Url} />
-              )}
-              {localPreviewImgUrl.img2Url && (
-                <ShowImg src={localPreviewImgUrl.img2Url} />
-              )}
-              {localPreviewImgUrl.img3Url && (
-                <ShowImg src={localPreviewImgUrl.img3Url} />
-              )}
-            </ShowImgBox>
-          )}
+          <ShowImgBox>
+            {previewImgUrl.img1Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img1Url : localPreviewImgUrl.img1Url
+                  }
+                />
+                <div id="img1Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img2Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img2Url : localPreviewImgUrl.img2Url
+                  }
+                />
+                <div id="img2Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img3Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img3Url : localPreviewImgUrl.img3Url
+                  }
+                />
+                <div id="img3Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+          </ShowImgBox>
           {user ? (
             <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
           ) : (
@@ -371,9 +404,18 @@ const ShowImg = styled.img`
 `;
 const UploadImgBox = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 5px;
+  & label {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #c0cae2;
+  }
+  & label:hover {
+    filter: contrast(80%);
+    cursor: pointer;
+  }
   & input {
-    width: 30%;
+    display: none;
   }
 `;
 const ShowImgBox = styled.div`
