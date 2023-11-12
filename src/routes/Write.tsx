@@ -12,22 +12,23 @@ function Write() {
   const [tag, setTag] = useState<string>("");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
-  const [categoryList, setCategoryList] = useState(loadedCategory);
-  const user = useRecoilValue(userState);
-  const [imageUrl, setImageUrl] = useState<any>({
+  const [categoryList, setCategoryList] = useState<any>(loadedCategory);
+  const [previewImgUrl, setPreviewImgUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
     img3Url: "",
   });
+  const [localPreviewImgUrl, setLocalPreviewImgUrl] = useState<any>({
+    img1Url: "",
+    img2Url: "",
+    img3Url: "",
+  });
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const params = useParams();
   const postId: any = params?.id || "";
   const location = useLocation();
   const isEdit = postId;
-  // console.log("ref:", postId);
-  // console.log("loc:", location);
-  // console.log("string:", JSON.stringify(postId));
-  // console.log("isEdit:", isEdit);
 
   // 글 수정 페이지로 들어갈 시 처음에 input value값 설정하기
   useEffect(() => {
@@ -45,7 +46,7 @@ function Write() {
       setTag(location.state.tag);
       setTitle(location.state.title);
       setContent(location.state.content);
-      setImageUrl({
+      setPreviewImgUrl({
         img1Url: location.state.img1Url,
         img2Url: location.state.img2Url,
         img3Url: location.state.img3Url,
@@ -58,19 +59,28 @@ function Write() {
   }, [user]);
 
   useEffect(() => {
-    console.log("image url -> ", imageUrl);
-  }, [imageUrl]);
+    console.log("image url -> ", Object.values(previewImgUrl));
+  }, [previewImgUrl]);
 
   console.log(category, tag, title, content);
 
   const handleUploadImage = (e: any) => {
-    setImageUrl({
-      ...imageUrl,
-      [e.target.name]: URL.createObjectURL(e.target.files[0]),
-    });
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // 상태 업데이트를 위해 파일 객체 자체를 저장합니다.
+      setPreviewImgUrl({
+        ...previewImgUrl,
+        [e.target.name]: file,
+      });
+      setLocalPreviewImgUrl({
+        ...localPreviewImgUrl,
+        [e.target.name]: URL.createObjectURL(e.target.files[0]),
+      });
+    }
   };
 
-  const postPosting = async () => {
+  const postPosting = async (imageurl: any = "") => {
+    console.log("받아와지나", imageurl);
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/posting`,
@@ -79,9 +89,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageUrl.img1Url,
-          img2Url: imageUrl.img2Url,
-          img3Url: imageUrl.img3Url,
+          img1Url: imageurl[0]?.imageUrl,
+          img2Url: imageurl[1]?.imageUrl,
+          img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);
@@ -90,7 +100,7 @@ function Write() {
       alert(error?.response?.data.message || "알 수 없는 오류 발생.");
     }
   };
-  const editPosting = async () => {
+  const editPosting = async (imageurl: any = "") => {
     try {
       const response = await axios.put(
         `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`,
@@ -99,9 +109,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageUrl.img1Url,
-          img2Url: imageUrl.img2Url,
-          img3Url: imageUrl.img3Url,
+          img1Url: imageurl[0]?.imageUrl,
+          img2Url: imageurl[1]?.imageUrl,
+          img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);
@@ -126,57 +136,70 @@ function Write() {
     }
   };
 
-  const uploadImage = async () => {
+  // TODO: 이미지 올리기 구현
+  // 백엔드에서 PresignedUrl, previewImgUrl 받아옴
+  const getPresignedUrl = async () => {
     let imgCount = 0;
-    if (imageUrl.img1url) imgCount++;
-    if (imageUrl.img2url) imgCount++;
-    if (imageUrl.img3url) imgCount++;
-    if (imgCount === 0) {
-      postPosting();
-      return;
-    }
+    if (previewImgUrl.img1Url) imgCount++;
+    if (previewImgUrl.img2Url) imgCount++;
+    if (previewImgUrl.img3Url) imgCount++;
+
     try {
-      //const { presignedUrl, imageUrl } = await generatePresignedUrl();
-      const urlArray = await generatePresignedUrl();
-      const response = await axios.put(
-        urlArray[0].presignedUrl,
-        imageUrl.img1url,
-        {
-          headers: {
-            "Content-Type": imageUrl.img1url.type as any,
-          },
-        }
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl?imgCount=${imgCount}`
       );
-      console.log("Image uploaded:", response.status);
+      console.log("pre", response.data.content);
+      return {
+        urlContents: response.data.content,
+        imgCount: imgCount,
+      };
+    } catch (error: any) {
+      console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
+  };
+
+  // 작성완료 버튼 누를 시 업로드 로직
+  const uploadImage = async () => {
+    if (!previewImgUrl.img1Url) return isEdit ? editPosting() : postPosting();
+    const urls: any = await getPresignedUrl();
+    console.log("urls가 뭔데:", urls);
+    try {
+      let response;
+      for (let i = 0; i < urls.imgCount; i++) {
+        response = await axios.put(
+          urls.urlContents[i].presignedUrl,
+          previewImgUrl[`img${i + 1}Url`]
+        );
+      }
+      console.log("Image uploaded:", response);
+
+      if (response) {
+        isEdit
+          ? editPosting(urls?.urlContents)
+          : postPosting(urls?.urlContents);
+      }
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
-
-  const generatePresignedUrl = async () => {
-    let imgCount = 0;
-    if (imageUrl.img1url) imgCount++;
-    if (imageUrl.img2url) imgCount++;
-    if (imageUrl.img3url) imgCount++;
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/posting/imgurl`,
-        { imgCount }
-      );
-      return response.data.content;
-    } catch (error) {
-      console.error("Error generating presigned URL:", error);
-      throw error;
-    }
+  const handleDeletePreviewImage = (e: any) => {
+    console.log(e.target.id);
+    setPreviewImgUrl({
+      ...previewImgUrl,
+      [e.target.id]: "",
+    });
+    setLocalPreviewImgUrl({
+      ...localPreviewImgUrl,
+      [e.target.id]: "",
+    });
   };
-
   return (
     <Container>
       {isEdit ? <Title>글 수정</Title> : <Title>글 작성</Title>}
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
-          isEdit ? editPosting() : postPosting();
+          uploadImage();
         }}
       >
         <FormBox>
@@ -227,31 +250,71 @@ function Write() {
             placeholder="내용을 입력하세요."
             value={content}
           />
-          <label htmlFor="img1Url">이미지 업로드</label>
+          <label>이미지 업로드</label>
           <UploadImgBox>
+            <label htmlFor="img1Url">이미지1</label>
             <input
               type="file"
               name="img1Url"
+              id="img1Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            {previewImgUrl.img1Url && <label htmlFor="img2Url">이미지2</label>}
             <input
               type="file"
               name="img2Url"
+              id="img2Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            {previewImgUrl.img2Url && <label htmlFor="img3Url">이미지3</label>}
+
             <input
               type="file"
               name="img3Url"
+              id="img3Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
           </UploadImgBox>
           <ShowImgBox>
-            {imageUrl.img1Url && <ShowImg src={imageUrl.img1Url} />}
-            {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
-            {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
+            {previewImgUrl.img1Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img1Url : localPreviewImgUrl.img1Url
+                  }
+                />
+                <div id="img1Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img2Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img2Url : localPreviewImgUrl.img2Url
+                  }
+                />
+                <div id="img2Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img3Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img3Url : localPreviewImgUrl.img3Url
+                  }
+                />
+                <div id="img3Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
           </ShowImgBox>
           {user ? (
             <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
@@ -342,9 +405,18 @@ const ShowImg = styled.img`
 `;
 const UploadImgBox = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 5px;
+  & label {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #c0cae2;
+  }
+  & label:hover {
+    filter: contrast(80%);
+    cursor: pointer;
+  }
   & input {
-    width: 30%;
+    display: none;
   }
 `;
 const ShowImgBox = styled.div`

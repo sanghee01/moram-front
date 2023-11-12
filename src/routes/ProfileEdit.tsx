@@ -1,7 +1,6 @@
-import { useState ,useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
 
 function ProfileEdit() {
   const [nickname, setNickname] = useState("");
@@ -13,7 +12,7 @@ function ProfileEdit() {
   const [imgSelect, setImgSelect] = useState(false);
   const [deletUser, setDeletUser] = useState("");
 
-  const profileImageChange= () => {
+  const profileImageChange = () => {
     setImgSelect(true);
   };
   const profileImageNot = () => {
@@ -21,28 +20,33 @@ function ProfileEdit() {
   };
 
   const nicknameData = async () => {
-    const confirmed = window.confirm(`닉네임을 ${nickname}로 변경하시겠습니까?`);
+    const confirmed = window.confirm(
+      `닉네임을 ${nickname}로 변경하시겠습니까?`
+    );
     if (confirmed) {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,{
-          nickname: nickname
-        }
-      );
-      alert(response.data.message);
-    } catch (error: any) {
-      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,
+          {
+            nickname: nickname,
+          }
+        );
+        alert(response.data.message);
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+        alert(error.response.data);
+      }
     }
-  }
   };
   useEffect(() => {
     getSchoolData();
   }, []);
   const getSchoolData = async () => {
     try {
-       const response = await axios.get(`${process.env.REACT_APP_APIADDRESS}/univsearch`);
-       setSchoolList(response.data);
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/univsearch`
+      );
+      setSchoolList(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
@@ -51,57 +55,61 @@ function ProfileEdit() {
   const schoolData = async () => {
     const confirmed = window.confirm(`학교를 인증하시겠습니까?`);
     if (confirmed) {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/univcert`,{
-          schoolname: schoolcertify
-        }
-      );
-      alert(response.data.message);
-    } catch (error: any) {
-      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_APIADDRESS}/univcert`,
+          {
+            schoolname: schoolcertify,
+          }
+        );
+        alert(response.data.message);
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+        alert(error.response.data);
+      }
     }
-  }
   };
-  const passwordData = async () => {const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
-  if (confirmed) {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,{
-          prepw:prePwValue,
-          pw1:pwValue1,
-          pw2:pwValue2
-        }
-      );
-
-      console.log(`response.data : ${response.data}`);
-      alert(response.data.message);
-    } catch (error: any) {
-      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data);
-    }
-  }
-  };
-  useEffect(() => {
-    getDeletUser();
-  }, []);
-  const getDeletUser = async () => {
-    const confirmed = window.confirm(`정말로 탈퇴 하시겠습니가? \n탈퇴 후에는 복구할 수 없습니다.`);
+  const passwordData = async () => {
+    const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
     if (confirmed) {
-    try {
-       const response = await axios.delete(`${process.env.REACT_APP_APIADDRESS}/user`);
-       setDeletUser(response.data);
-    } catch (error: any) {
-      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data);
+      try {
+        const response = await axios.post(
+          `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,
+          {
+            prepw: prePwValue,
+            pw1: pwValue1,
+            pw2: pwValue2,
+          }
+        );
+
+        console.log(`response.data : ${response.data}`);
+        alert(response.data.message);
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+        alert(error.response.data);
+      }
     }
-    
   };
-  }
-const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
-  setNickname(event.target.value);
-};
+
+  const handleDeleteUser = async () => {
+    const confirmed = window.confirm(
+      `정말로 탈퇴 하시겠습니까? \n탈퇴 후에는 복구할 수 없습니다.`
+    );
+    if (confirmed) {
+      try {
+        const response = await axios.delete(
+          `${process.env.REACT_APP_APIADDRESS}/user`
+        );
+        setDeletUser(response.data);
+      } catch (error: any) {
+        console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+        alert(error.response.data);
+      }
+    }
+  };
+  const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(event.target.value);
+  };
   const CheckPreviousPw = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPrePw(event.target.value);
     console.log(event.target.value);
@@ -119,140 +127,147 @@ const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
     console.log(event.target.value);
   };
 
-  const filteredSchools = schoolList.filter(school =>
-  school.toLowerCase().includes(schoolcertify.toLowerCase())
-);
+  const filteredSchools = schoolList.filter((school) =>
+    school.toLowerCase().includes(schoolcertify.toLowerCase())
+  );
 
-const OkClick1 = () => {
-  console.log("닉네임변경");
-  nicknameData();
-};
-const OkClick2 = () => {
-  console.log("학교 인증");
-  schoolData();
-};
-const OkClick3 = () => {
-  console.log("보안설정");
-  passwordData();
-};
+  const OkClick1 = () => {
+    console.log("닉네임변경");
+    nicknameData();
+  };
+  const OkClick2 = () => {
+    console.log("학교 인증");
+    schoolData();
+  };
+  const OkClick3 = () => {
+    console.log("보안설정");
+    passwordData();
+  };
   return (
     <Container1>
       <Container2>
-      <PartName>
-        <h2>설정</h2>
-      </PartName>
-      <ProfileEditMain>
-        <ProfileImageEdit>
-          <h2>프로필 수정</h2>
-          <p>나의 프로필을 수정 하실 수 있습니다.</p>
-          <ProfileImageChange>
-            <ProfileImage1>
-              <h4>프로필 이미지</h4>
-            </ProfileImage1>
-            <ProfileImage2>
-              <img src="./assets/profileimage.jpg" />
-              <ChangeDelete>
-                <button onClick={profileImageChange}>사진 변경</button>
-                <button>기본 이미지</button>
-              </ChangeDelete>
-            </ProfileImage2>
-          </ProfileImageChange>
-          {imgSelect && (
-        <ImgModal>
-        <div><h3>원하는 캐릭터를 선택해 주세요</h3>
-          <button onClick={profileImageNot}>닫기</button></div>
-          <Img>프로필 사진들 넣을 곳</Img>
-        </ImgModal>
-      )}
-        </ProfileImageEdit>
-        <NicknameEdit>
-          <h2>닉네임 변경</h2>
-          <p>나의 닉네임을 변경 하실 수 있습니다.</p>
-          <NicknameChange>
-            <Nickname1>
-              <h4>닉네임 변경</h4>
-            </Nickname1>
-            <Nickname2>
-              <input
-                type="text"
-                placeholder="닉네임 변경"
-                value={nickname}
-                onChange={ChangeNickname}
-              />
-              <OkButton>
-                <button onClick={OkClick1}>변경</button><button onClick={() => window.location.reload()}>취소</button>
-              </OkButton>
-            </Nickname2>
-          </NicknameChange>
-        </NicknameEdit>
-        <SchoolCertify>
-          <h2>학교 인증</h2>
-          <p>나의 학교를 인증 하실수 있습니다.</p>
-          <SchoolCertifyBox>
-            <SchoolCertifyTtitle>
-              <h4>학교 인증</h4>
-            </SchoolCertifyTtitle>
-            <SchoolSelect>
-              <input
-                type="text"
-                placeholder="본인의 학교 입력"
-                value={schoolcertify}
-                onChange={SchoolCertifyInput}
-              />
-              <select
-  value={schoolcertify}
-  onChange={(event) => setSchoolCertify(event.target.value)}
->
-<option value="">학교 찾기</option>
-        {filteredSchools.map(school => (
-          <option key={school} value={school}>{school}</option>
-        ))}
-</select>
-              <OkButton>
-                <button onClick={OkClick2}>확인</button><button onClick={() => window.location.reload()}>취소</button>
-              </OkButton>
-            </SchoolSelect>
-          </SchoolCertifyBox>
-        </SchoolCertify>
-        <SecurityEdit>
-          <h2>보안 설정</h2>
-          <p>나의 비밀번호를 변경 하실 수 있습니다.</p>
-          <SecurityChange>
-            <Security1>
-              <h4>비밀번호 변경</h4>
-            </Security1>
-            <Security2>
-              <input
-                type="text"
-                placeholder="현재 비밀번호"
-                value={prePwValue}
-                onChange={CheckPreviousPw}
-              />
-              <div>
+        <PartName>
+          <h2>설정</h2>
+        </PartName>
+        <ProfileEditMain>
+          <ProfileImageEdit>
+            <h2>프로필 수정</h2>
+            <p>나의 프로필을 수정 하실 수 있습니다.</p>
+            <ProfileImageChange>
+              <ProfileImage1>
+                <h4>프로필 이미지</h4>
+              </ProfileImage1>
+              <ProfileImage2>
+                <img src="./assets/profileimage.jpg" />
+                <ChangeDelete>
+                  <button onClick={profileImageChange}>사진 변경</button>
+                  <button>기본 이미지</button>
+                </ChangeDelete>
+              </ProfileImage2>
+            </ProfileImageChange>
+            {imgSelect && (
+              <ImgModal>
+                <div>
+                  <h3>원하는 캐릭터를 선택해 주세요</h3>
+                  <button onClick={profileImageNot}>닫기</button>
+                </div>
+                <Img>프로필 사진들 넣을 곳</Img>
+              </ImgModal>
+            )}
+          </ProfileImageEdit>
+          <NicknameEdit>
+            <h2>닉네임 변경</h2>
+            <p>나의 닉네임을 변경 하실 수 있습니다.</p>
+            <NicknameChange>
+              <Nickname1>
+                <h4>닉네임 변경</h4>
+              </Nickname1>
+              <Nickname2>
                 <input
                   type="text"
-                  placeholder="비밀번호 변경"
-                  value={pwValue1}
-                  onChange={ChangeUserPw1}
+                  placeholder="닉네임 변경"
+                  value={nickname}
+                  onChange={ChangeNickname}
                 />
-                <p>최소 8자리 이상이며 대소문자,숫자, 특수문자 하나씩 포함</p>
-              </div>
-              <input
-                type="text"
-                placeholder="비밀번호 확인"
-                value={pwValue2}
-                onChange={ChangeUserPw2}
-              />
-              <OkButton>
-                <button onClick={OkClick3}>변경</button><button onClick={() => window.location.reload()}>취소</button>
-              </OkButton>
-            </Security2>
-          </SecurityChange>
-        </SecurityEdit>
-        <DeletUser>
-          <button >회원 탈퇴</button>
-        </DeletUser>
-      </ProfileEditMain>
+                <OkButton>
+                  <button onClick={OkClick1}>변경</button>
+                  <button onClick={() => window.location.reload()}>취소</button>
+                </OkButton>
+              </Nickname2>
+            </NicknameChange>
+          </NicknameEdit>
+          <SchoolCertify>
+            <h2>학교 인증</h2>
+            <p>나의 학교를 인증 하실수 있습니다.</p>
+            <SchoolCertifyBox>
+              <SchoolCertifyTtitle>
+                <h4>학교 인증</h4>
+              </SchoolCertifyTtitle>
+              <SchoolSelect>
+                <input
+                  type="text"
+                  placeholder="본인의 학교 입력"
+                  value={schoolcertify}
+                  onChange={SchoolCertifyInput}
+                />
+                <select
+                  value={schoolcertify}
+                  onChange={(event) => setSchoolCertify(event.target.value)}
+                >
+                  <option value="">학교 찾기</option>
+                  {filteredSchools.map((school) => (
+                    <option key={school} value={school}>
+                      {school}
+                    </option>
+                  ))}
+                </select>
+                <OkButton>
+                  <button onClick={OkClick2}>확인</button>
+                  <button onClick={() => window.location.reload()}>취소</button>
+                </OkButton>
+              </SchoolSelect>
+            </SchoolCertifyBox>
+          </SchoolCertify>
+          <SecurityEdit>
+            <h2>보안 설정</h2>
+            <p>나의 비밀번호를 변경 하실 수 있습니다.</p>
+            <SecurityChange>
+              <Security1>
+                <h4>비밀번호 변경</h4>
+              </Security1>
+              <Security2>
+                <input
+                  type="text"
+                  placeholder="현재 비밀번호"
+                  value={prePwValue}
+                  onChange={CheckPreviousPw}
+                />
+                <div>
+                  <input
+                    type="text"
+                    placeholder="비밀번호 변경"
+                    value={pwValue1}
+                    onChange={ChangeUserPw1}
+                  />
+                  <p>최소 8자리 이상이며 대소문자,숫자, 특수문자 하나씩 포함</p>
+                </div>
+                <input
+                  type="text"
+                  placeholder="비밀번호 확인"
+                  value={pwValue2}
+                  onChange={ChangeUserPw2}
+                />
+                <OkButton>
+                  <button onClick={OkClick3}>변경</button>
+                  <button onClick={() => window.location.reload()}>취소</button>
+                </OkButton>
+              </Security2>
+            </SecurityChange>
+          </SecurityEdit>
+          <DeletUser>
+            <button onClick={handleDeleteUser}>회원 탈퇴</button>
+          </DeletUser>
+        </ProfileEditMain>
       </Container2>
     </Container1>
   );
@@ -308,8 +323,7 @@ const ImgModal = styled.div`
     font-weight: 500;
   }
 `;
-const Img = styled.div`
-`;
+const Img = styled.div``;
 const ProfileImageEdit = styled.div`
   & p {
     margin-top: 0.2rem;
@@ -363,7 +377,7 @@ const ChangeDelete = styled.div`
     border-radius: 10px;
     font-size: 15px;
     font-weight: 500;
-    transition: background-color 0.5s ease
+    transition: background-color 0.5s ease;
   }
   & button:hover {
     cursor: pointer;
@@ -530,7 +544,6 @@ const Security2 = styled.div`
   & input {
     width: 290px;
   }
- 
 `;
 const OkButton = styled.div`
   display: flex;
@@ -544,7 +557,7 @@ const OkButton = styled.div`
     height: 31px;
     width: 48%;
     font-weight: 500;
-    transition: background-color 0.5s ease
+    transition: background-color 0.5s ease;
   }
   & button:hover {
     cursor: pointer;
@@ -553,14 +566,15 @@ const OkButton = styled.div`
 `;
 
 const DeletUser = styled.div`
-display: flex;
-align-items: center;
-& button {
-  background-color: transparent;
+  display: flex;
+  align-items: center;
+  & button {
+    background-color: transparent;
     outline: 0;
     border: 0;
     font-weight: 500;
     color: gray;
-}`;
+  }
+`;
 
 export default ProfileEdit;

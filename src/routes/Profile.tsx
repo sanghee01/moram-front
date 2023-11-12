@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MyComment from "../components/Profile/MyComment";
+import { handleDateChange } from "../dateChange";
 
 function Profile() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -12,7 +13,7 @@ function Profile() {
   const [loading, setLoading] = useState(true);
   const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
-  const [showPosts, setShowPosts] = useState(false);
+  const [showPosts, setShowPosts] = useState(true);
   const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
@@ -24,12 +25,16 @@ function Profile() {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/profile`
       );
-      setNickname(response.data.nickname);
-      console.log(response.data.nickname);
-      setEmail(response.data.email);
+      setNickname(response.data.nickname); // TODO: 수정 필요
+      setEmail(response.data.email); // TODO: 수정 필요
+
       setPosts(response.data.posting);
       setComments(response.data.comment);
-      console.log(response.data.comment);
+
+      setLoading(false);
+
+      console.log("posting", response.data.posting);
+      console.log("comment", response.data.comment);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
@@ -39,89 +44,92 @@ function Profile() {
   const navigate = useNavigate();
   return (
     <MainContainer>
-      <ProfileMain>
-        <ProfileContainer>
-          <img src="./assets/profileimage.jpg" />
-          <Container>
-            <ProfileInpromation>
-              <InformationBox>
-                <ProfileContent>
-                  <SettingIcon onClick={() => navigate("/profile-edit")}>
-                    <IoSettingsOutline size="20" />
-                  </SettingIcon>
-                  <h1>{nickname}</h1>
-                  <h4>{email}</h4>
-                </ProfileContent>
-                <ProfileWrite>
-                  <button
-                    onClick={() => {
-                      getMyData();
-                      setShowPosts(true);
-                      setShowComments(false);
-                    }}
-                  >
-                    작성한 글
-                  </button>
-                  <button
-                    onClick={() => {
-                      getMyData();
-                      setShowPosts(false);
-                      setShowComments(true);
-                    }}
-                  >
-                    작성한 댓글
-                  </button>
-                </ProfileWrite>
-              </InformationBox>
-            </ProfileInpromation>
-          </Container>
-        </ProfileContainer>
-        <Box>
-          {showPosts && (
-            <PostContentBox>
-              {posts?.length < 1 ? (
-                <span>게시글이 없습니다.</span>
-              ) : (
-                posts?.map((item) => {
-                  return (
-                    <MyPost
-                      key={item.id}
-                      id={item.id}
-                      img={item.img1Url}
-                      category={item.category}
-                      title={item.title}
-                      date={item.writeTime}
-                      content={item.content}
-                      tag={item.tag}
-                    />
-                  );
-                })
-              )}
-            </PostContentBox>
-          )}
-          {showComments && (
-            <CommentBox>
-              {comments?.length < 1 ? (
-                <span>게시글이 없습니다.</span>
-              ) : (
-                comments?.map((item) => {
-                  return (
-                    <MyComment
-                      userid={item.userid}
-                      id={item.id}
-                      date={item.writeTime}
-                      content={item.content}
-                      tag={item.tag}
-                      postid={item.postid}
-                      nickname={item.nickname}
-                    />
-                  );
-                })
-              )}
-            </CommentBox>
-          )}
-        </Box>
-      </ProfileMain>
+      <ProfileContainer>
+        <img src="./assets/profileimage.jpg" />
+        <Container>
+          <ProfileInpromation>
+            <InformationBox>
+              <ProfileContent>
+                <SettingIcon onClick={() => navigate("/profile-edit")}>
+                  <IoSettingsOutline size="20" />
+                </SettingIcon>
+                <h1>nickname</h1>
+                <h4>email@naver.com</h4>
+              </ProfileContent>
+              <ProfileWrite>
+                <button
+                  onClick={() => {
+                    getMyData();
+                    setShowPosts(true);
+                    setShowComments(false);
+                  }}
+                >
+                  작성한 글
+                </button>
+                <button
+                  onClick={() => {
+                    getMyData();
+                    setShowPosts(false);
+                    setShowComments(true);
+                  }}
+                >
+                  작성한 댓글
+                </button>
+              </ProfileWrite>
+            </InformationBox>
+          </ProfileInpromation>
+        </Container>
+      </ProfileContainer>
+      <Box>
+        {showPosts && (
+          <PostContentBox>
+            {loading ? (
+              <span>loading...</span>
+            ) : posts?.length < 1 ? (
+              <span>게시글이 없습니다.</span>
+            ) : (
+              posts?.map((item) => {
+                return (
+                  <MyPost
+                    key={item.id}
+                    id={item.id}
+                    nickname={item.nickname}
+                    hitCount={item.hitCount}
+                    likesCount={item.likesCount}
+                    commentCount={item.commentCount}
+                    img={item.img1Url}
+                    category={item.category}
+                    title={item.title}
+                    date={handleDateChange(item.writeTime)}
+                    content={item.content}
+                    tag={item.tag}
+                  />
+                );
+              })
+            )}
+          </PostContentBox>
+        )}
+        {showComments && (
+          <CommentBox>
+            {loading ? (
+              <span>loading...</span>
+            ) : comments?.length < 1 ? (
+              <span>게시글이 없습니다.</span>
+            ) : (
+              comments?.map((item) => {
+                return (
+                  <MyComment
+                    key={item.id}
+                    postId={item.postId}
+                    date={handleDateChange(item.writeTime)}
+                    content={item.content}
+                  />
+                );
+              })
+            )}
+          </CommentBox>
+        )}
+      </Box>
     </MainContainer>
   );
 }
@@ -129,33 +137,35 @@ function Profile() {
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 80%;
   justify-content: center;
   align-items: center;
-  margin: auto;
-  margin-top: 1.5rem;
-`;
+  margin: 3rem auto;
+  width: 60%;
 
-const ProfileMain = styled.div`
-  display: flex;
-  width: 65%;
-  flex-direction: column;
-  margin: 1.5rem 0;
   & section {
     display: flex;
     width: 100%;
   }
+`;
+
+const ProfileContainer = styled.div`
+  display: flex;
+  width: 100%;
+  margin-bottom: 50px;
+
   & img {
     border-radius: 100%;
     width: 165px;
     height: 165px;
   }
+
   @media screen and (max-width: 1000px) {
     & img {
       width: 150px;
       height: 150px;
     }
   }
+
   @media screen and (max-width: 800px) {
     & img {
       width: 125px;
@@ -164,14 +174,11 @@ const ProfileMain = styled.div`
   }
 `;
 
-const ProfileContainer = styled.div`
-  display: flex;
-  width: 100%;
-`;
 const Container = styled.div`
   display: flex;
   width: 100%;
 `;
+
 const ProfileInpromation = styled.div`
   padding-left: 1rem;
   width: 100%;
@@ -202,6 +209,7 @@ const ProfileInpromation = styled.div`
     }
   }
 `;
+
 const ProfileContent = styled.div`
   display: flex;
   flex-direction: column;
@@ -227,6 +235,7 @@ const InformationBox = styled.div`
     justify-content: center;
   }
 `;
+
 const SettingIcon = styled.button`
   background-color: transparent;
   outline: 0;
@@ -274,19 +283,21 @@ const ProfileWrite = styled.div`
     }
   }
 `;
+
 const CommentBox = styled.div`
   display: flex;
+  flex-direction: column;
 `;
 
 const PostContentBox = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 25px;
 `;
 
 const Box = styled.div`
-  display: flex;
-  margin-top: 1rem;
-  gap: 25px;
+  width: 100%;
+  min-height: 100vh;
 `;
+
 export default Profile;

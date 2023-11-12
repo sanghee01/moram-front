@@ -1,67 +1,45 @@
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 interface CommentProps {
-    id: number;
-    userid: number;
-    postid: number;
-    nickname: string;
-    date: string;
-    content: string;
-    tag: string;
-  }
+  postId: number;
+  date: string;
+  content: string;
+}
 
-  function MyComment({
-    id,
-    userid,
-    postid,
-    nickname,
-    date,
-    content,
-    tag,
-  }: CommentProps) {
-    const navigate = useNavigate();
-  
-    return (
-      <Container
-        onClick={() => {
-            navigate(`/community/${id}`);
-        }}
-      >
-        <ContainerBox>
-          <ContentBox>
-            <ContentContainer>
-                <span>[{postid}]</span>
-                <span>{nickname}</span><span>[{userid}]</span>
-            </ContentContainer>
-            <Time> {date}</Time>
-          </ContentBox>
-          <Content><span>[{id}]</span><p>{content}</p></Content>
-        </ContainerBox>
-      </Container>
-    );
-  }
-  const Container = styled.div`
+function MyComment({ postId, date, content }: CommentProps) {
+  const navigate = useNavigate();
+
+  return (
+    <Container
+      onClick={() => {
+        navigate(`/community/${postId}`);
+      }}
+    >
+      <ContentText>{content}</ContentText>
+      <span> {date}</span>
+    </Container>
+  );
+}
+const Container = styled.div`
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   padding: 15px 0;
-
   &:hover {
     cursor: pointer;
   }
-  `;
- const ContainerBox = styled.div`
- display: flex;
- 
- `;
-  const ContentBox = styled.div`
-  `;
-    const ContentContainer = styled.div`
-   `;
-    const Content = styled.div`
-    display: flex;
-    gap: 0.2rem;
-    `;
-     const Time = styled.div`
-     `;
- export default MyComment;
+`;
+
+const ContentText = styled.div`
+  display: flex;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.7;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+`;
+
+export default MyComment;
