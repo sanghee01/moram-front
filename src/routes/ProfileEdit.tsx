@@ -10,6 +10,15 @@ function ProfileEdit() {
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
+  const [imgSelect, setImgSelect] = useState(false);
+  const [deletUser, setDeletUser] = useState("");
+
+  const profileImageChange= () => {
+    setImgSelect(true);
+  };
+  const profileImageNot = () => {
+    setImgSelect(false);
+  };
 
   const nicknameData = async () => {
     const confirmed = window.confirm(`닉네임을 ${nickname}로 변경하시겠습니까?`);
@@ -74,7 +83,22 @@ function ProfileEdit() {
     }
   }
   };
-
+  useEffect(() => {
+    getDeletUser();
+  }, []);
+  const getDeletUser = async () => {
+    const confirmed = window.confirm(`정말로 탈퇴 하시겠습니가? \n탈퇴 후에는 복구할 수 없습니다.`);
+    if (confirmed) {
+    try {
+       const response = await axios.delete(`${process.env.REACT_APP_APIADDRESS}/user`);
+       setDeletUser(response.data);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data);
+    }
+    
+  };
+  }
 const ChangeNickname = (event: React.ChangeEvent<HTMLInputElement>) => {
   setNickname(event.target.value);
 };
@@ -128,11 +152,18 @@ const OkClick3 = () => {
             <ProfileImage2>
               <img src="./assets/profileimage.jpg" />
               <ChangeDelete>
-                <button>사진 변경</button>
+                <button onClick={profileImageChange}>사진 변경</button>
                 <button>기본 이미지</button>
               </ChangeDelete>
             </ProfileImage2>
           </ProfileImageChange>
+          {imgSelect && (
+        <ImgModal>
+        <div><h3>원하는 캐릭터를 선택해 주세요</h3>
+          <button onClick={profileImageNot}>닫기</button></div>
+          <Img>프로필 사진들 넣을 곳</Img>
+        </ImgModal>
+      )}
         </ProfileImageEdit>
         <NicknameEdit>
           <h2>닉네임 변경</h2>
@@ -218,6 +249,9 @@ const OkClick3 = () => {
             </Security2>
           </SecurityChange>
         </SecurityEdit>
+        <DeletUser>
+          <button >회원 탈퇴</button>
+        </DeletUser>
       </ProfileEditMain>
       </Container2>
     </Container1>
@@ -244,6 +278,38 @@ const ProfileEditMain = styled.div`
   gap: 2rem;
 `;
 
+const ImgModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 45%;
+  transform: translate(-20%, -62%);
+  width: 380px;
+  height: 380px;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  & h3 {
+    position: absolute;
+    top: 16px;
+    right: 74px;
+  }
+  & button {
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    background-color: transparent;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    font-size: 15px;
+    font-weight: 500;
+  }
+`;
+const Img = styled.div`
+`;
 const ProfileImageEdit = styled.div`
   & p {
     margin-top: 0.2rem;
@@ -485,4 +551,16 @@ const OkButton = styled.div`
     background-color: #d6d3fb;
   }
 `;
+
+const DeletUser = styled.div`
+display: flex;
+align-items: center;
+& button {
+  background-color: transparent;
+    outline: 0;
+    border: 0;
+    font-weight: 500;
+    color: gray;
+}`;
+
 export default ProfileEdit;
