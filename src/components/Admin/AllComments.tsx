@@ -1,7 +1,7 @@
 import axios from "axios";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import { Title, Table, Row } from "../../styles/TableStyles";
+import { Title, Table, Row, GoToPost } from "../../styles/TableStyles";
 import { handleDateChange } from "../../dateChange";
 import { useNavigate } from "react-router-dom";
 
@@ -22,10 +22,24 @@ function AllComments() {
       const allCommentsData = response.data.content;
       SetAllCommentsData(allCommentsData);
       setLoding(false);
+      console.log("allCommentsData:", allCommentsData);
     } catch (error: any) {
       alert(error.response.data);
     }
   };
+
+  const deleteComment = async (e: any) => {
+    console.log("삭제하고자 하는 댓글 id", e.target.id);
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/admin/allcomments/${e.target.id}`
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      alert(error.response.data);
+    }
+  };
+
   return (
     <Container>
       <Title>작성된 댓글 목록</Title>
@@ -38,22 +52,27 @@ function AllComments() {
             <thead>
               <tr>
                 <th>postId</th>
+                <th>작성시간</th>
                 <th>작성자</th>
                 <th>내용</th>
-                <th>작성시간</th>
+                <th>댓글 삭제</th>
               </tr>
             </thead>
             <tbody>
               {allCommentsData.map((comment: any) => {
                 return (
-                  <Row
-                    key={comment.id}
-                    onClick={() => navigate(`/community/${comment.postId}`)}
-                  >
+                  <Row key={comment.id}>
                     <td>{comment.postId}</td>
-                    <td>{comment.nickname}</td>
-                    <td>{comment.content}</td>
                     <td>{handleDateChange(comment.writeTime)}</td>
+                    <td>{comment.nickname}</td>
+                    <GoToPost
+                      onClick={() => navigate(`/community/${comment.postId}`)}
+                    >
+                      {comment.content}
+                    </GoToPost>
+                    <td id={comment.id} onClick={deleteComment}>
+                      삭제
+                    </td>
                   </Row>
                 );
               })}

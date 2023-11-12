@@ -1,7 +1,7 @@
 import axios from "axios";
 import { styled } from "styled-components";
 import { useEffect, useState } from "react";
-import { Title, Table, Row } from "../../styles/TableStyles";
+import { Title, Table, Row, GoToPost } from "../../styles/TableStyles";
 import { handleDateChange } from "../../dateChange";
 import { useNavigate } from "react-router-dom";
 
@@ -26,6 +26,19 @@ function AllPosts() {
       alert(error.response.data);
     }
   };
+
+  const deletePost = async (e: any) => {
+    console.log("삭제하고자 하는 글 id", e.target.id);
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/admin/allposts/${e.target.id}`
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      alert(error.response.data);
+    }
+  };
+
   return (
     <Container>
       <Title>작성된 글 목록</Title>
@@ -39,25 +52,28 @@ function AllPosts() {
               <tr>
                 <th>ID</th>
                 <th>작성시간</th>
-                <th>제목</th>
                 <th>작성자</th>
+                <th>제목</th>
                 <th>태그</th>
                 <th>카테고리</th>
+                <th>글 삭제</th>
               </tr>
             </thead>
             <tbody>
               {allPostsData.map((post: any) => {
                 return (
-                  <Row
-                    key={post.id}
-                    onClick={() => navigate(`/community/${post.id}`)}
-                  >
+                  <Row key={post.id}>
                     <td>{post.id}</td>
                     <td>{handleDateChange(post.writeTime)}</td>
-                    <td>{post.title}</td>
                     <td>{post.nickname}</td>
+                    <GoToPost onClick={() => navigate(`/community/${post.id}`)}>
+                      {post.title}
+                    </GoToPost>
                     <td>{post.tag}</td>
                     <td>{post.category}</td>
+                    <td id={post.id} onClick={deletePost}>
+                      삭제
+                    </td>
                   </Row>
                 );
               })}
