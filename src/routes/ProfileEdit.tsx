@@ -6,6 +6,7 @@ function ProfileEdit() {
   const [nickname, setNickname] = useState("");
   const [schoolcertify, setSchoolCertify] = useState("");
   const [schoolList, setSchoolList] = useState<string[]>([]);
+  const [schoolEmail, setSchoolEmail] = useState("");
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
@@ -49,21 +50,22 @@ function ProfileEdit() {
       );
       setSchoolList(response.data);
       console.log(response.data);
-      console.log("-------");
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
     }
   };
   const schoolData = async () => {
-    const confirmed = window.confirm(`학교를 인증하시겠습니까?`);
+    const confirmed = window.confirm(
+      `학교를 "${schoolcertify}"로 인증하시겠습니까?`
+    );
     if (confirmed) {
       try {
         const response = await axios.post(
           `${process.env.REACT_APP_APIADDRESS}/user/certuniv`,
           {
-            univName: schoolList,
-            receivedEmail: schoolcertify,
+            univName: schoolcertify,
+            receivedEmail: schoolEmail,
           }
         );
         alert(response.data.message);
@@ -73,6 +75,7 @@ function ProfileEdit() {
       }
     }
   };
+
   const passwordData = async () => {
     const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
     if (confirmed) {
@@ -130,8 +133,10 @@ function ProfileEdit() {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const univName = event.target.value;
+    const receivedEmail = event.target.value;
     setSchoolCertify(univName);
     getSchoolData(univName);
+    setSchoolEmail(receivedEmail);
   };
 
   const filteredSchools = schoolList.filter((school) => {
@@ -231,6 +236,12 @@ function ProfileEdit() {
                     </option>
                   ))}
                 </select>
+                <input
+                  type="text"
+                  placeholder="학교 이메일 입력"
+                  value={schoolEmail}
+                  onChange={handleSchoolCertifyInput}
+                />
                 <OkButton>
                   <button onClick={OkClick2}>확인</button>
                   <button onClick={() => window.location.reload()}>취소</button>
