@@ -13,12 +13,12 @@ function Write() {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [categoryList, setCategoryList] = useState<any>(loadedCategory);
-  const [imageUrl, setImageUrl] = useState<any>({
+  const [previewImgUrl, setPreviewImgUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
     img3Url: "",
   });
-  const [localImageUrl, setLocalImageUrl] = useState<any>({
+  const [localPreviewImgUrl, setLocalPreviewImgUrl] = useState<any>({
     img1Url: "",
     img2Url: "",
     img3Url: "",
@@ -29,10 +29,6 @@ function Write() {
   const postId: any = params?.id || "";
   const location = useLocation();
   const isEdit = postId;
-  // console.log("ref:", postId);
-  // console.log("loc:", location);
-  // console.log("string:", JSON.stringify(postId));
-  // console.log("isEdit:", isEdit);
 
   // 글 수정 페이지로 들어갈 시 처음에 input value값 설정하기
   useEffect(() => {
@@ -50,7 +46,7 @@ function Write() {
       setTag(location.state.tag);
       setTitle(location.state.title);
       setContent(location.state.content);
-      setImageUrl({
+      setPreviewImgUrl({
         img1Url: location.state.img1Url,
         img2Url: location.state.img2Url,
         img3Url: location.state.img3Url,
@@ -63,8 +59,8 @@ function Write() {
   }, [user]);
 
   useEffect(() => {
-    console.log("image url -> ", imageUrl);
-  }, [imageUrl]);
+    console.log("image url -> ", Object.values(previewImgUrl));
+  }, [previewImgUrl]);
 
   console.log(category, tag, title, content);
 
@@ -72,12 +68,12 @@ function Write() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       // 상태 업데이트를 위해 파일 객체 자체를 저장합니다.
-      setImageUrl({
-        ...imageUrl,
+      setPreviewImgUrl({
+        ...previewImgUrl,
         [e.target.name]: file,
       });
-      setLocalImageUrl({
-        ...localImageUrl,
+      setLocalPreviewImgUrl({
+        ...localPreviewImgUrl,
         [e.target.name]: URL.createObjectURL(e.target.files[0]),
       });
     }
@@ -113,9 +109,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageurl.img1Url,
-          img2Url: imageUrl.img2Url,
-          img3Url: imageUrl.img3Url,
+          img1Url: imageurl[0]?.imageUrl,
+          img2Url: imageurl[1]?.imageUrl,
+          img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);
@@ -141,12 +137,12 @@ function Write() {
   };
 
   // TODO: 이미지 올리기 구현
-  // 백엔드에서 PresignedUrl, imageUrl 받아옴
+  // 백엔드에서 PresignedUrl, previewImgUrl 받아옴
   const getPresignedUrl = async () => {
     let imgCount = 0;
-    if (imageUrl.img1Url) imgCount++;
-    if (imageUrl.img2Url) imgCount++;
-    if (imageUrl.img3Url) imgCount++;
+    if (previewImgUrl.img1Url) imgCount++;
+    if (previewImgUrl.img2Url) imgCount++;
+    if (previewImgUrl.img3Url) imgCount++;
 
     try {
       const response = await axios.get(
@@ -164,7 +160,7 @@ function Write() {
 
   // 작성완료 버튼 누를 시 업로드 로직
   const uploadImage = async () => {
-    if (!imageUrl.img1Url) return isEdit ? editPosting() : postPosting();
+    if (!previewImgUrl.img1Url) return isEdit ? editPosting() : postPosting();
     const urls: any = await getPresignedUrl();
     console.log("urls가 뭔데:", urls);
     try {
@@ -172,7 +168,7 @@ function Write() {
       for (let i = 0; i < urls.imgCount; i++) {
         response = await axios.put(
           urls.urlContents[i].presignedUrl,
-          imageUrl[`img${i + 1}Url`]
+          previewImgUrl[`img${i + 1}Url`]
         );
       }
       console.log("Image uploaded:", response);
@@ -186,7 +182,17 @@ function Write() {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
-
+  const handleDeletePreviewImage = (e: any) => {
+    console.log(e.target.id);
+    setPreviewImgUrl({
+      ...previewImgUrl,
+      [e.target.id]: "",
+    });
+    setLocalPreviewImgUrl({
+      ...localPreviewImgUrl,
+      [e.target.id]: "",
+    });
+  };
   return (
     <Container>
       {isEdit ? <Title>글 수정</Title> : <Title>글 작성</Title>}
@@ -244,40 +250,72 @@ function Write() {
             placeholder="내용을 입력하세요."
             value={content}
           />
-          <label htmlFor="img1Url">이미지 업로드</label>
+          <label>이미지 업로드</label>
           <UploadImgBox>
+            <label htmlFor="img1Url">이미지1</label>
             <input
               type="file"
               name="img1Url"
+              id="img1Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            {previewImgUrl.img1Url && <label htmlFor="img2Url">이미지2</label>}
             <input
               type="file"
               name="img2Url"
+              id="img2Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
+            {previewImgUrl.img2Url && <label htmlFor="img3Url">이미지3</label>}
+
             <input
               type="file"
               name="img3Url"
+              id="img3Url"
               accept="image/*"
               onChange={handleUploadImage}
             />
           </UploadImgBox>
-          {isEdit ? (
-            <ShowImgBox>
-              {imageUrl.img1Url && <ShowImg src={imageUrl.img1Url} />}
-              {imageUrl.img2Url && <ShowImg src={imageUrl.img2Url} />}
-              {imageUrl.img3Url && <ShowImg src={imageUrl.img3Url} />}
-            </ShowImgBox>
-          ) : (
-            <ShowImgBox>
-              {imageUrl.img1Url && <ShowImg src={localImageUrl.img1Url} />}
-              {imageUrl.img2Url && <ShowImg src={localImageUrl.img2Url} />}
-              {imageUrl.img3Url && <ShowImg src={localImageUrl.img3Url} />}
-            </ShowImgBox>
-          )}
+          <ShowImgBox>
+            {previewImgUrl.img1Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img1Url : localPreviewImgUrl.img1Url
+                  }
+                />
+                <div id="img1Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img2Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img2Url : localPreviewImgUrl.img2Url
+                  }
+                />
+                <div id="img2Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+            {previewImgUrl.img3Url && (
+              <>
+                <ShowImg
+                  src={
+                    isEdit ? previewImgUrl.img3Url : localPreviewImgUrl.img3Url
+                  }
+                />
+                <div id="img3Url" onClick={handleDeletePreviewImage}>
+                  삭제
+                </div>
+              </>
+            )}
+          </ShowImgBox>
           {user ? (
             <button type="submit">{isEdit ? "수정완료" : "작성완료"}</button>
           ) : (
@@ -367,9 +405,18 @@ const ShowImg = styled.img`
 `;
 const UploadImgBox = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 5px;
+  & label {
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #c0cae2;
+  }
+  & label:hover {
+    filter: contrast(80%);
+    cursor: pointer;
+  }
   & input {
-    width: 30%;
+    display: none;
   }
 `;
 const ShowImgBox = styled.div`
