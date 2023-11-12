@@ -1,7 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 function Intro() {
+  const navigate = useNavigate();
   return (
     <Container>
       <ContainerBox>
@@ -20,7 +22,7 @@ function Intro() {
             많은 사람들의 꿀팁까지 확인할 수 있습니다.
           </p>
           <div>
-            <button>가입하고 시작</button>
+            <button onClick={() => navigate("/register")}>가입하고 시작</button>
           </div>
         </IntroTitle>
         <IntroImg>
@@ -85,7 +87,7 @@ const IntroImg = styled.div`
 `;
 
 const ContainerBox2 = styled.div`
-  margin: 1rem 0;
+  margin-bottom: 2rem;
   width: 65%;
   display: flex;
   justify-content: center;

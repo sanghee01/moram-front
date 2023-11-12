@@ -21,7 +21,7 @@ function ProfileEdit() {
 
   const nicknameData = async () => {
     const confirmed = window.confirm(
-      `닉네임을 ${nickname}로 변경하시겠습니까?`
+      `닉네임을 "${nickname}"로 변경하시겠습니까?`
     );
     if (confirmed) {
       try {
@@ -43,8 +43,11 @@ function ProfileEdit() {
   }, []);
   const getSchoolData = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/univsearch`
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/profile/univsearch`,
+        {
+          univName: schoolList,
+        }
       );
       setSchoolList(response.data);
     } catch (error: any) {
@@ -57,9 +60,10 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/univcert`,
+          `${process.env.REACT_APP_APIADDRESS}/certuniv`,
           {
-            schoolname: schoolcertify,
+            univName: schoolList,
+            receivedEmail: schoolcertify,
           }
         );
         alert(response.data.message);
