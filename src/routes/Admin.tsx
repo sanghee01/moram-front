@@ -15,6 +15,9 @@ function Admin() {
           <Tab>
             <Link to="allComments">AllComments</Link>
           </Tab>
+          <Tab>
+            <Link to="reports">Reports</Link>
+          </Tab>
         </Tabs>
         <Outlet />
       </Container>
