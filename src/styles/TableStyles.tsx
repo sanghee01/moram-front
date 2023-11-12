@@ -45,4 +45,8 @@ export const Table = styled.table`
 `;
 export const Row = styled.tr`
   text-align: center;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;

@@ -5,22 +5,22 @@ import { Title, Table, Row } from "../../styles/TableStyles";
 import { handleDateChange } from "../../dateChange";
 import { useNavigate } from "react-router-dom";
 
-function AllPosts() {
-  const [allPostsData, SetAllPostsData] = useState<null | any>(null);
+function AllComments() {
+  const [allCommentsData, SetAllCommentsData] = useState<null | any>(null);
   const [loading, setLoding] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    getAllPosts();
+    getAllComments();
   }, []);
 
-  const getAllPosts = async () => {
+  const getAllComments = async () => {
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/admin/allposts`
+        `${process.env.REACT_APP_APIADDRESS}/admin/allcomments`
       );
-      const allPostsData = response.data.content;
-      SetAllPostsData(allPostsData);
+      const allCommentsData = response.data.content;
+      SetAllCommentsData(allCommentsData);
       setLoding(false);
     } catch (error: any) {
       alert(error.response.data);
@@ -28,36 +28,32 @@ function AllPosts() {
   };
   return (
     <Container>
-      <Title>작성된 글 목록</Title>
+      <Title>작성된 댓글 목록</Title>
       {loading ? (
         <div>loading...</div>
       ) : (
         <>
-          <span>총합 : {allPostsData.length}</span>
+          <span>총합 : {allCommentsData.length}</span>
           <Table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>작성시간</th>
-                <th>제목</th>
+                <th>postId</th>
                 <th>작성자</th>
-                <th>태그</th>
-                <th>카테고리</th>
+                <th>내용</th>
+                <th>작성시간</th>
               </tr>
             </thead>
             <tbody>
-              {allPostsData.map((post: any) => {
+              {allCommentsData.map((comment: any) => {
                 return (
                   <Row
-                    key={post.id}
-                    onClick={() => navigate(`/community/${post.id}`)}
+                    key={comment.id}
+                    onClick={() => navigate(`/community/${comment.postId}`)}
                   >
-                    <td>{post.id}</td>
-                    <td>{handleDateChange(post.writeTime)}</td>
-                    <td>{post.title}</td>
-                    <td>{post.nickname}</td>
-                    <td>{post.tag}</td>
-                    <td>{post.category}</td>
+                    <td>{comment.postId}</td>
+                    <td>{comment.nickname}</td>
+                    <td>{comment.content}</td>
+                    <td>{handleDateChange(comment.writeTime)}</td>
                   </Row>
                 );
               })}
@@ -69,7 +65,7 @@ function AllPosts() {
   );
 }
 
-export default AllPosts;
+export default AllComments;
 
 const Container = styled.div`
   width: 70%;
