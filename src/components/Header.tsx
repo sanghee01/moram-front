@@ -54,7 +54,7 @@ function Header() {
           <Link to="/notice">공지사항</Link>
         </Tab>
         <Tab>
-          <Link to="/qna">문의하기</Link>
+          <Link to="/gpt">자소서 작성</Link>
         </Tab>
         <Tab>
           <Link to="/intro">모람모람</Link>
@@ -137,6 +137,7 @@ const BtnContainer = styled.div`
     border: 0;
     border-radius: 8px;
     font-size: 0.9rem;
+    white-space: nowrap;
   }
   & button:hover {
     filter: contrast(130%);

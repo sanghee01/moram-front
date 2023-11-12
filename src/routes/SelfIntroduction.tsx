@@ -61,44 +61,52 @@ function SelfIntroDuction() {
   };
   return (
     <Container>
-      <h2>인공지능을 활용하여 자기소개서를 정리해드립니다.</h2>
-      <h3 style={{ color: "#5a59ff" }}>사용 가능 횟수 {gptCount}</h3>
-      <Textarea
-        ref={textareaRef}
-        value={text}
-        onChange={onChange}
-        placeholder="자기소개서 내용을 여기에 입력하세요..."
-      ></Textarea>
-      {user ? (
-        <SmallBtn
-          onClick={() => {
-            setIsLoading(true);
-            postGpt();
-          }}
-        >
-          {isLoading ? "정리 중..." : "정리"}
-        </SmallBtn>
-      ) : (
-        <SmallBtn $background={"gray"}>로그인 필요</SmallBtn>
-      )}
-      {result && (
-        <>
-          <hr style={{ width: "100%" }} />
-          <h2>결과</h2>
-          <ResultDiv>{result}</ResultDiv>
-        </>
-      )}
+      <ContainerForm>
+        <h2>인공지능을 활용하여 자기소개서를 정리해드립니다.</h2>
+        <h3 style={{ color: "#5a59ff" }}>사용 가능 횟수 {gptCount}</h3>
+        <Textarea
+          ref={textareaRef}
+          value={text}
+          onChange={onChange}
+          placeholder="자기소개서 내용을 여기에 입력하세요..."
+        ></Textarea>
+        {user ? (
+          <SmallBtn
+            onClick={() => {
+              setIsLoading(true);
+              postGpt();
+            }}
+          >
+            {isLoading ? "정리 중..." : "정리"}
+          </SmallBtn>
+        ) : (
+          <SmallBtn $background={"gray"}>로그인 필요</SmallBtn>
+        )}
+        {result && (
+          <>
+            <hr style={{ width: "100%" }} />
+            <h2>결과</h2>
+            <ResultDiv>{result}</ResultDiv>
+          </>
+        )}
+      </ContainerForm>
     </Container>
   );
 }
-
 const Container = styled.div`
+  width: 100%;
+  min-height: calc(100dvh - 272px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+const ContainerForm = styled.div`
   width: 90%;
   max-width: 800px;
   background-color: whitesmoke;
   border-radius: 15px;
   margin: auto;
-  margin-top: 20px;
+  margin-top: 25px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -112,7 +120,7 @@ const Textarea = styled.textarea`
   font-family: inherit;
   resize: none; /* 사용자가 리사이즈하지 못하도록 함 */
   overflow: hidden; /* 스크롤바가 나타나지 않도록 함 */
-  min-height: 100px; /* 최소 높이 설정 */
+  min-height: 200px; /* 최소 높이 설정 */
   border-radius: 15px;
 
   &:focus {

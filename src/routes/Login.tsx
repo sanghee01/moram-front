@@ -58,6 +58,9 @@ function Login() {
           placeholder="이메일"
           onChange={onChange}
           value={email}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") login();
+          }}
         />
         <Label>비밀번호</Label>
         <Input
@@ -66,6 +69,9 @@ function Login() {
           placeholder="비밀번호"
           onChange={onChange}
           value={password}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") login();
+          }}
         />
         <Buttons>
           <button

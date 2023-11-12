@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Logo,
@@ -20,8 +20,7 @@ function Register() {
   const [count, setCount] = useState(301); //인증 유효 시간
   const [verified, setVerified] = useState(false); //메일 인증이 됐는지 확인
   const [isLoading, setIsLoading] = useState(false); //인증번호전송 버튼 로딩 관리
-  let timer: any; //인증번호 유효시간 카운트를 위한 타이머
-
+  const timerRef = useRef<any>(null);
   const navigate = useNavigate();
   const onChange = (e: any) => {
     const {
@@ -33,6 +32,22 @@ function Register() {
     if (id === "verifyCode") setVerifyCode(value);
     if (id === "nickname") setNickname(value);
   };
+
+  useEffect(() => {
+    // 타이머 시작
+    if (count < 301 && count > 0) {
+      timerRef.current = setInterval(() => {
+        setCount((prevCount) => prevCount - 1);
+      }, 1000);
+    }
+
+    // 타이머 클리어
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [count]);
 
   /**회원가입 버튼 누르면 실행하는 함수 */
   const register = async () => {
@@ -73,7 +88,6 @@ function Register() {
       if (response.data) {
         alert(response.data.message); //메일 발신 성공
         setCount(300);
-        timer = setInterval(() => setCount((prev) => prev - 1), 1000);
       }
     } catch (error: any) {
       alert(error?.response?.data?.message || "알 수 없는 에러 발생");
@@ -153,7 +167,17 @@ function Register() {
         )}
 
         {count <= 300 && !verified && (
-          <CountNum>인증 유효 시간: {displayTime()}</CountNum>
+          <CountNum>
+            {count > 0
+              ? `인증 유효 시간: ${displayTime()}`
+              : `인증 시간이 만료됨`}
+            <ResendBtn
+              onClick={() => sendVerify()}
+              style={isLoading ? { background: "gray" } : {}}
+            >
+              메일 재전송
+            </ResendBtn>
+          </CountNum>
         )}
         <Label>비밀번호</Label>
         <Input
@@ -162,6 +186,9 @@ function Register() {
           placeholder="비밀번호"
           onChange={onChange}
           value={password}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") register();
+          }}
         />
         <Label>비밀번호 확인</Label>
         <Input
@@ -170,6 +197,9 @@ function Register() {
           placeholder="비밀번호"
           onChange={onChange}
           value={passwordVerify}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") register();
+          }}
         />
         <Buttons>
           {verified ? (
@@ -231,5 +261,18 @@ const CountNum = styled.div`
   width: 100%;
   height: 30px;
   color: red;
+`;
+
+const ResendBtn = styled.button`
+  height: 33px;
+  width: auto;
+  border-radius: 15px;
+  margin: 5px 5px;
+  padding: 0 15px;
+  border: 0;
+  background-color: #9d9dff;
+  color: white;
+  transition: all 0.5s;
+  font-size: 1.05rem;
 `;
 export default Register;

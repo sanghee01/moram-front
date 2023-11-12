@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 function Footer() {
@@ -6,6 +7,7 @@ function Footer() {
       <div>팀명: 공공플플</div>
       <div>FE: 박재연, 이고운, 이상희 | BE: 박재연, 전준영, 이효진, 이연주</div>
       <div>Copyright © 모람모람. All Rights Reserved.</div>
+      <Link to="/qna">문의하기</Link>
     </Container>
   );
 }

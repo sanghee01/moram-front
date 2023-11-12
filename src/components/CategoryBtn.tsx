@@ -6,8 +6,6 @@ import { idsState, postingState } from "../state";
 function CategoryBtn({ category, tag, marginL, marginR }: any) {
   const location = useLocation();
   const navigate = useNavigate();
-  const setPostings = useSetRecoilState(postingState);
-  const setIds = useSetRecoilState(idsState);
 
   return (
     <Btn
@@ -38,7 +36,7 @@ const Btn = styled.button<any>`
   margin-left: ${(props) => `${props.$marginL}px`};
   margin-right: ${(props) => `${props.$marginR}px`};
   transition: 0.5s all;
-
+  white-space: nowrap;
   &:hover {
     background-color: #606ffc;
   }
