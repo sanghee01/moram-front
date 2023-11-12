@@ -147,6 +147,7 @@ function Community() {
       setIds([response.data.content.lastId, endId]);
       loading = false;
     } catch (error: any) {
+      setPostings([]); //검색어 하나 입력시 posting 값이 바뀌기 위해
       alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
