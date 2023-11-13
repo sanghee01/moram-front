@@ -109,6 +109,18 @@ const Container = styled.div`
     margin-bottom: 1ch;
     font-size: 1.5rem;
   }
+
+  @media screen and (max-width: 1200px) {
+    width: 80%;
+    font-size: 0.9rem;
+    & h1 {
+      font-size: 1.2rem;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    width: 85%;
+    font-size: 0.7rem;
+  }
 `;
 
 const PopularContentBox = styled.div`
