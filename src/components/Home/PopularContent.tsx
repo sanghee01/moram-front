@@ -42,8 +42,8 @@ function PopularContent({
       )}
       <Title>
         <div>
-          <Tag>{tag}</Tag>
           <Category>{category}</Category>
+          <Tag>{tag}</Tag>
           <div> {title}</div>
         </div>
         <Info>
