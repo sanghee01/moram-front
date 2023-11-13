@@ -99,6 +99,9 @@ const LogoImg = styled.img`
   @media screen and (max-width: 700px) {
     height: 70%;
   }
+  @media screen and (max-width: 400px) {
+    height: 60%;
+  }
 `;
 
 const RightContainer = styled.div`
@@ -108,21 +111,6 @@ const RightContainer = styled.div`
   gap: 10px;
 `;
 
-const SearchInput = styled.input`
-  width: 50%;
-  padding: 7px 15px;
-  border-radius: 8px;
-  border: none;
-  background-color: rgba(0, 0, 0, 0.1);
-  outline: none;
-
-  @media screen and (max-width: 1300px) {
-    width: 70%;
-  }
-  @media screen and (max-width: 450px) {
-    font-size: 0.9rem;
-  }
-`;
 const BtnContainer = styled.div`
   display: flex;
   align-items: center;
@@ -149,12 +137,16 @@ const BtnContainer = styled.div`
   @media screen and (max-width: 900px) {
     & button {
       font-size: 0.9rem;
+      padding: 0 7px;
+      height: 90%;
     }
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 480px) {
     & button {
       font-size: 0.75rem;
+      height: 80%;
+      padding: 0 5px;
     }
   }
 `;
@@ -170,7 +162,7 @@ const Tabs = styled.div`
   }
   @media screen and (max-width: 600px) {
     padding: 0 5%;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -181,7 +173,7 @@ const Tab = styled.span`
     align-items: center;
     text-decoration: none;
     color: white;
-    font-weight: bolder;
+    font-weight: 500;
     padding: 15px 0;
   }
   & a:hover {
