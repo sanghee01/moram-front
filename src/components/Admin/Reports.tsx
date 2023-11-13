@@ -30,7 +30,7 @@ function Reports() {
 
   return (
     <Container>
-      <Title>작성된 글 목록</Title>
+      <Title>신고 목록</Title>
       {loading ? (
         <div>loading...</div>
       ) : (
