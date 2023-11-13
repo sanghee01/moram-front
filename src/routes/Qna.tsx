@@ -136,7 +136,7 @@ function Qna() {
               onChange={TitleInput}
             />
           </TitleDiv>
-          <AttachFile>
+          {/* <AttachFile>
             <FileContainer>
               <AttachFileDiv>
                 <FileLabel htmlFor="upload-button">파일 선택</FileLabel>
@@ -159,7 +159,7 @@ function Qna() {
                 ))}
               </FileBox>
             </FileContainer>
-          </AttachFile>
+          </AttachFile> */}
           <ContentDiv>
             <h4>Message</h4>
             <ContentTextarea
@@ -311,19 +311,20 @@ const ContentTextarea = styled.textarea`
   -moz-border-radius: 10px;
   border-radius: 15px;
   resize: none;
+  padding: 1rem;
 `;
 
-const AttachFile = styled.div`
-  display: flex;
-  flex-direction: columns;
-  height: 40px;
-`;
-const FileContainer = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 1.8rem;
-  justify-content: space-between;
-`;
+// const AttachFile = styled.div`
+//   display: flex;
+//   flex-direction: columns;
+//   height: 40px;
+// `;
+// const FileContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   gap: 1.8rem;
+//   justify-content: space-between;
+// `;
 const AttachFileDiv = styled.div`
   display: flex;
   flex-direction: column;
