@@ -74,6 +74,7 @@ export default Notice;
 
 const Container = styled.div`
   width: 70%;
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   margin: auto;
 `;
 

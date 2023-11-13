@@ -23,6 +23,7 @@ import NoticeDetail from "./routes/NoticeDetail";
 import WriteNotice from "./routes/WriteNotice";
 import AllComments from "./components/Admin/AllComments";
 import Reports from "./components/Admin/Reports";
+import EmptyPage from "./routes/EmptyPage";
 
 function AppRouter() {
   const user = useRecoilValue(userState);
@@ -57,21 +58,20 @@ function AppRouter() {
               <Route path="/write/:id" element={<Write />} />
               <Route path="/write-notice" element={<WriteNotice />} />
               <Route path="/write-notice/:id" element={<WriteNotice />} />
+              <Route path="/login" element={<EmptyPage wrongAccess={true} />} />
+              <Route
+                path="/register"
+                element={<EmptyPage wrongAccess={true} />}
+              />
             </>
           ) : (
             <>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route
-                path="*"
-                element={
-                  <h2>페이지가 없거나 로그인이 필요한 페이지 입니다.</h2>
-                }
-              />
+              <Route path="*" element={<EmptyPage needLogin={true} />} />
             </>
           )}
-
-          <Route path="*" element={<h2>404 NOT FOUND PAGE</h2>} />
+          <Route path="*" element={<EmptyPage />} />
         </Routes>
         <Footer />
       </Router>

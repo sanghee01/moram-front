@@ -147,6 +147,7 @@ function Community() {
       setIds([response.data.content.lastId, endId]);
       loading = false;
     } catch (error: any) {
+      setPostings([]); //검색어 하나 입력시 posting 값이 바뀌기 위해
       alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
@@ -263,7 +264,7 @@ function Community() {
   return (
     <Container ref={scrollContainerRef}>
       <HamburgerMenu onClick={toggleSidebar} open={isSidebarOpen}>
-        {isSidebarOpen ? "❎" : "☰"}
+        {isSidebarOpen ? "❌" : "☰"}
       </HamburgerMenu>
       {/* 좌측에 있는 과 선택 버튼 */}
       <Sidebar open={isSidebarOpen}>
@@ -423,7 +424,7 @@ function Community() {
                 </TagBtn>
                 &nbsp;
                 <Link to={`/community/${posting.id}`}> {posting.title} </Link>
-                {(user?.id === posting.userId || user?.role === "admin") && (
+                {/* {(user?.id === posting.userId || user?.role === "admin") && (
                   <SmallBtn
                     $padding="4px 10px"
                     $margin="0 8px"
@@ -437,7 +438,7 @@ function Community() {
                   >
                     삭제
                   </SmallBtn>
-                )}
+                )} */}
               </div>
               <div>
                 {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
@@ -456,6 +457,7 @@ const tagList = ["자유", "정보", "질문", "스터디", "취업"];
 const Container = styled.div`
   display: flex;
   max-width: 1500px;
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   margin: auto;
   padding: 10px;
   gap: 10px;
@@ -513,7 +515,7 @@ const TagContainer = styled.div`
 
   @media screen and (max-width: 1200px) {
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
 
     & div {
       display: flex;
@@ -560,7 +562,7 @@ const Sidebar = styled.div<any>`
   overflow-y: scroll;
   z-index: 0;
 
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 900px) {
     height: calc(100dvh - 140px);
     position: fixed;
     transition: transform 0.3s ease-in-out;
@@ -625,6 +627,7 @@ const TagBtn = styled.button<any>`
   transition: 0.5s all;
   border: 0;
   margin-right: 5px;
+  white-space: nowrap;
   & * {
     color: ${(props) => props.$color || "black"};
   }
@@ -641,16 +644,16 @@ const TagBtn = styled.button<any>`
 `;
 
 const HamburgerMenu = styled.div<any>`
-  width: 70px;
-  height: 70px;
+  width: 75px;
+  height: 75px;
   display: none;
-  font-size: 2rem;
+  font-size: 1.8rem;
   cursor: pointer;
   box-shadow: 0px 0px 20px black;
   border-radius: 50px;
   color: white;
 
-  @media (max-width: 768px) {
+  @media (max-width: 900px) {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -666,7 +669,7 @@ const HamburgerMenu = styled.div<any>`
 const SearchContainer = styled.div`
   display: flex;
   width: 300px;
-  min-height: 40px;
+  min-height: 50px;
   margin-left: auto;
   margin-right: 10px;
   gap: 10px;

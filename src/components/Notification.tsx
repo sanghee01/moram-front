@@ -15,6 +15,28 @@ function Notification() {
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const location = useLocation();
+  const popupRef = useRef<any>(null);
+  const btnRef = useRef<any>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: any) {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target) &&
+        !btnRef.current.contains(event.target)
+      ) {
+        setIsOpen(false); // 팝업을 닫는 함수를 호출합니다.
+      }
+    }
+
+    // 문서에 클릭 리스너를 추가합니다.
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      // 컴포넌트가 언마운트될 때 리스너를 제거합니다.
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -62,15 +84,17 @@ function Notification() {
   };
   return (
     <>
-      <Container $isOpen={isOpen}>
+      <Container ref={btnRef} $isOpen={isOpen}>
         <GrNotification
           id="notification"
           onClick={() => setIsOpen((prev: any) => !prev)}
         />
-        {notiCount}
+        <span style={notiCount > 0 ? { color: "tomato" } : { color: "black" }}>
+          {notiCount}
+        </span>
       </Container>
       {isOpen && (
-        <AlertContainer>
+        <AlertContainer ref={popupRef}>
           {notification?.map((noti: any, index: any) => (
             <NotiContainer
               key={noti.id}

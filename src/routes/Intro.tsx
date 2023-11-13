@@ -50,6 +50,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
 `;
 const ContainerBox = styled.div`
   width: 65%;

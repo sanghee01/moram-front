@@ -21,6 +21,8 @@ function Posting() {
   const [replyNickname, setReplyNickname] = useState<null | String>(null); //답글할 닉네임
   const [replyComment, setReplyComment] = useState<null | String>(null); //답글할 댓글 내용
   const [isLiked, setIsLiked] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [reportText, setReportText] = useState("");
   const user = useRecoilValue(userState);
   const inputRef = useRef<any>(null);
   const location = useLocation();
@@ -108,6 +110,7 @@ function Posting() {
         likesCount: response.data.content.likesCount,
       }));
     } catch (error: any) {
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
   };
@@ -133,6 +136,23 @@ function Posting() {
     }
   };
 
+  const postReport = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/posting/report/${postId}`,
+        { reason: reportText }
+      );
+      if (response.data) {
+        alert(response.data.message);
+        setReportText("");
+        setIsReportOpen(false);
+      }
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
+
   const reply = (commentId: any) => {
     const replies = comments.filter(
       (comments: any) => comments.parentId === commentId
@@ -151,8 +171,8 @@ function Posting() {
             {posting.title}
           </h2>
           <h4>
-            {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} |{" "}
-            {handleDateChange(posting.writeTime)}{" "}
+            {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} 💬
+            {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
             {posting.userId === user?.id && (
               <>
                 <SmallBtn
@@ -184,17 +204,38 @@ function Posting() {
           </h4>
           <hr />
           <ContentText>{posting.content}</ContentText>
-          <img src={posting.img1Url} />
-          <img src={posting.img2Url} />
-          <img src={posting.img3Url} />
+          <Img src={posting.img1Url} />
+          <Img src={posting.img2Url} />
+          <Img src={posting.img3Url} />
           <BtnContainer>
             <LikeBtn $isLiked={isLiked} onClick={() => postLike()}>
               ❤️ {posting.likesCount}
             </LikeBtn>
-            <ReportBtn>🚨</ReportBtn>
+            <ReportBtn onClick={() => setIsReportOpen((prev) => !prev)}>
+              🚨
+            </ReportBtn>
           </BtnContainer>
-          <hr />
+          {isReportOpen && (
+            <InputContainer>
+              <CommentInput
+                // ref={inputRef}
+                onChange={(e) => setReportText(e.target.value)}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") postReport();
+                }}
+                placeholder="신고할 내용을 요약해 주세요."
+                value={reportText}
+              />
+              <Btn
+                onClick={() => postReport()}
+                style={user ? { background: "orange" } : { background: "gray" }}
+              >
+                {user ? "전송" : "로그인 필요"}
+              </Btn>
+            </InputContainer>
+          )}
 
+          <hr />
           <h2>댓글</h2>
           {replyId && (
             <ReplyText
@@ -247,29 +288,9 @@ function Posting() {
                 <Comment>
                   <span style={{ color: "#5a59ff" }}>{comment.nickname}</span> :{" "}
                   {comment.content}{" "}
-                  {(user?.id === comment.userId || user?.role === "admin") && (
-                    <SmallBtn
-                      $padding="4px 10px"
-                      $margin="0 8px"
-                      $background="tomato"
-                      $backgroundHover="red"
-                      $color="white"
-                      onClick={(e: any) => {
-                        e.stopPropagation();
-                        deleteComment(comment.id);
-                      }}
-                    >
-                      삭제
-                    </SmallBtn>
-                  )}
-                </Comment>
-                {reply(comment.id).map((reply: any) => (
-                  <Comment key={reply.id}>
-                    &nbsp;&nbsp;&nbsp;ㄴ{" "}
-                    <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
-                    {reply.content}
-                    {(user?.id === comment.userId ||
-                      user?.role === "admin") && (
+                  <div style={{ color: "gray" }}>
+                    {handleDateChange(comment.writeTime)}
+                    {user?.id === comment.userId && (
                       <SmallBtn
                         $padding="4px 10px"
                         $margin="0 8px"
@@ -284,6 +305,31 @@ function Posting() {
                         삭제
                       </SmallBtn>
                     )}
+                  </div>
+                </Comment>
+                {reply(comment.id).map((reply: any) => (
+                  <Comment key={reply.id}>
+                    &nbsp;&nbsp;&nbsp;ㄴ{" "}
+                    <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
+                    {reply.content}
+                    <div style={{ color: "gray", marginLeft: "16px" }}>
+                      {handleDateChange(reply.writeTime)}
+                      {user?.id === reply.userId && (
+                        <SmallBtn
+                          $padding="3px 10px"
+                          $margin="0 8px"
+                          $background="tomato"
+                          $backgroundHover="red"
+                          $color="white"
+                          onClick={(e: any) => {
+                            e.stopPropagation();
+                            deleteComment(comment.id);
+                          }}
+                        >
+                          삭제
+                        </SmallBtn>
+                      )}
+                    </div>
                   </Comment>
                 ))}
               </>
@@ -304,6 +350,11 @@ const Container = styled.div`
   margin: 15px auto;
   background-color: whitesmoke;
   border-radius: 15px;
+`;
+
+const Img = styled.img`
+  border-radius: 30px;
+  margin: 20px 0;
 `;
 
 const CommentInput = styled(Input)`
@@ -366,6 +417,10 @@ const BtnContainer = styled.div`
   width: 100%;
   gap: 10px;
   margin: 10px 0;
+`;
+
+const ReportContainer = styled.div`
+  display: flex;
 `;
 
 const LikeBtn = styled(SmallBtn)<any>`
