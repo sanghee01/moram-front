@@ -46,7 +46,8 @@ function SelfIntroDuction() {
       setResult("인공지능이 열심히 작성 중...");
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/gpt`,
-        { content: text }
+        { content: text },
+        { timeout: 100000 }
       );
       setResult(response.data.content); //포스팅 데이터 받기
       setIsLoading(false);
