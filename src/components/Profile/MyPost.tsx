@@ -44,8 +44,8 @@ function MyPost({
       )}
       <div>
         <Title>
-          <Tag>{tag}</Tag>
           <Category>{category}</Category>
+          <Tag>{tag}</Tag>
           <div>{title}</div>
           <Info>
             | {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}

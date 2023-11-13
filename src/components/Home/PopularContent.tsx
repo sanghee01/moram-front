@@ -42,8 +42,8 @@ function PopularContent({
       )}
       <Title>
         <div>
-          <Tag>{tag}</Tag>
           <Category>{category}</Category>
+          <Tag>{tag}</Tag>
           <div> {title}</div>
         </div>
         <Info>
@@ -85,21 +85,17 @@ const Title = styled.div`
     align-items: center;
     gap: 5px;
   }
+  @media screen and (max-width: 450px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const Info = styled.span`
   font-weight: 500;
   font-size: 0.9rem;
+  @media screen and (max-width: 450px) {
+    font-size: 0.7rem;
+  }
 `;
 
-const ContentText = styled.div`
-  display: flex;
-  white-space: pre-wrap;
-  margin-top: 10px;
-  display: -webkit-box;
-  overflow: hidden;
-  line-height: 1.7;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-`;
 export default PopularContent;

@@ -1,11 +1,14 @@
 import styled from "styled-components";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdBuildCircle } from "react-icons/md";
 import MyPost from "../components/Profile/MyPost";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import MyComment from "../components/Profile/MyComment";
 import { handleDateChange } from "../dateChange";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
 
 function Profile() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -15,6 +18,7 @@ function Profile() {
   const [email, setEmail] = useState("");
   const [showPosts, setShowPosts] = useState(true);
   const [showComments, setShowComments] = useState(false);
+  const user = useRecoilValue(userState);
 
   useEffect(() => {
     getMyData();
@@ -50,9 +54,19 @@ function Profile() {
           <ProfileInpromation>
             <InformationBox>
               <ProfileContent>
-                <SettingIcon onClick={() => navigate("/profile-edit")}>
-                  <IoSettingsOutline size="20" />
+                <SettingIcon>
+                  <IoSettingsOutline
+                    size="20"
+                    onClick={() => navigate("/profile-edit")}
+                  />
+                  {user?.role === "admin" && (
+                    <MdBuildCircle
+                      size="20"
+                      onClick={() => navigate("/admin")}
+                    />
+                  )}
                 </SettingIcon>
+
                 <h1>{nickname}</h1>
                 <h4>{email}</h4>
               </ProfileContent>
@@ -237,15 +251,12 @@ const InformationBox = styled.div`
 `;
 
 const SettingIcon = styled.button`
+  display: flex;
   background-color: transparent;
   outline: 0;
   border: 0;
-  width: 20px;
-  height: 20px;
   padding: 0;
-  @media screen and (max-width: 800px) {
-    size: 10px;
-  }
+  gap: 5px;
 `;
 
 const ProfileWrite = styled.div`

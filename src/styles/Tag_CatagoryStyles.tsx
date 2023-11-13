@@ -2,11 +2,10 @@ import styled from "styled-components";
 
 export const Tag = styled.div<any>`
   background-color: ${(props) => props.$background || "#ced3ff"};
-  padding: 5px 5px;
+  padding: 5px;
   border-radius: 5px;
   transition: 0.5s all;
   border: 0;
-  margin-right: 5px;
   & * {
     color: ${(props) => props.$color || "black"};
   }
@@ -20,6 +19,11 @@ export const Tag = styled.div<any>`
     filter: contrast(130%);
     cursor: pointer;
   }
+
+  @media screen and (max-width: 450px) {
+    padding: 3px;
+    font-size: 0.7rem;
+  }
 `;
 
 export const Category = styled.div<any>`
@@ -31,5 +35,9 @@ export const Category = styled.div<any>`
   transition: 0.5s all;
   &:hover {
     background-color: #606ffc;
+  }
+  @media screen and (max-width: 450px) {
+    padding: 3px;
+    font-size: 0.7rem;
   }
 `;

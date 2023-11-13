@@ -148,6 +148,8 @@ const fadein = keyframes`
   }
   `;
 const Container = styled.div<any>`
+  display: flex;
+  align-items: baseline;
   width: 50px;
   height: 100%;
   & #notification {
@@ -162,6 +164,19 @@ const Container = styled.div<any>`
   & #notification:hover {
     cursor: pointer;
     background-color: #b9b9ff;
+  }
+  @media screen and (max-width: 700px) {
+    & #notification {
+      padding: 10px;
+      width: 40px;
+      height: 100%;
+      border-radius: 10px;
+      transition: 0.5s all;
+      background-color: ${(props) => props.$isOpen && "#bbbbff"};
+    }
+    & span {
+      font-size: 0.7rem;
+    }
   }
 `;
 

@@ -12,7 +12,7 @@ function AllPosts() {
 
   useEffect(() => {
     getAllPosts();
-  }, []);
+  }, [allPostsData]);
 
   const getAllPosts = async () => {
     try {
@@ -28,10 +28,9 @@ function AllPosts() {
   };
 
   const deletePost = async (e: any) => {
-    console.log("삭제하고자 하는 글 id", e.target.id);
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_APIADDRESS}/admin/allposts/${e.target.id}`
+        `${process.env.REACT_APP_APIADDRESS}/admin/posting/${e.target.id}`
       );
       alert(response.data.message);
     } catch (error: any) {
@@ -60,23 +59,29 @@ function AllPosts() {
               </tr>
             </thead>
             <tbody>
-              {allPostsData.map((post: any) => {
-                return (
-                  <Row key={post.id}>
-                    <td>{post.id}</td>
-                    <td>{handleDateChange(post.writeTime)}</td>
-                    <td>{post.nickname}</td>
-                    <GoToPost onClick={() => navigate(`/community/${post.id}`)}>
-                      {post.title}
-                    </GoToPost>
-                    <td>{post.tag}</td>
-                    <td>{post.category}</td>
-                    <td id={post.id} onClick={deletePost}>
-                      삭제
-                    </td>
-                  </Row>
-                );
-              })}
+              {allPostsData
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((post: any) => {
+                  return (
+                    <Row key={post.id}>
+                      <td>{post.id}</td>
+                      <td>{handleDateChange(post.writeTime)}</td>
+                      <td>{post.nickname}</td>
+                      <GoToPost
+                        onClick={() => navigate(`/community/${post.id}`)}
+                      >
+                        {post.title}
+                      </GoToPost>
+                      <td>{post.tag}</td>
+                      <td>{post.category}</td>
+                      <td id={post.id} onClick={deletePost}>
+                        삭제
+                      </td>
+                    </Row>
+                  );
+                })}
             </tbody>
           </Table>
         </>
