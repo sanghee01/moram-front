@@ -11,6 +11,7 @@ function ProfileEdit() {
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
   const [imgSelect, setImgSelect] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletUser, setDeletUser] = useState("");
 
   const profileImageChange = () => {
@@ -18,6 +19,61 @@ function ProfileEdit() {
   };
   const profileImageNot = () => {
     setImgSelect(false);
+  };
+  const imageFiles = [
+    "./assets/profileselectimage/black.jpg",
+    "./assets/profileselectimage/blue.jpg",
+    "./assets/profileselectimage/green.jpg",
+    "./assets/profileselectimage/lightpurple.jpg",
+    "./assets/profileselectimage/pink.jpg",
+    "./assets/profileselectimage/skyblue.jpg",
+    "./assets/profileselectimage/white.jpg",
+    "./assets/profileselectimage/yellow.jpg",
+    "./assets/profileselectimage/yellowgreen.jpg",
+  ];
+  const handleImageSelect = (image: string) => {
+    setSelectedImage(image);
+    console.log(`Selected image: ${image}`);
+  };
+  const handleOkClick = async () => {
+    const splitImage = selectedImage?.split("/");
+    const fileName = splitImage?.pop();
+
+    let colorName = "";
+
+    if (fileName) {
+      colorName = fileName.split(".").shift() || "";
+    }
+
+    try {
+      console.log(`${colorName}`);
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/profile/changeimg`,
+        { img: colorName }
+      );
+      alert(response.data.message);
+      setSelectedImage(`./assets/profileselectimage/${colorName}.jpg`);
+      profileImageNot();
+      profileImageNot();
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    getProfileImage();
+  }, []);
+  const getProfileImage = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/profile`
+      );
+      const imageName = response.data.img;
+      setSelectedImage(`./assets/profileselectimage/${imageName}.jpg`);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data.message);
+    }
   };
 
   const nicknameData = async () => {
@@ -27,7 +83,7 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,
+          `${process.env.REACT_APP_APIADDRESS}/profile/cgnickname`,
           {
             nickname: nickname,
           }
@@ -87,7 +143,7 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,
+          `${process.env.REACT_APP_APIADDRESS}/profile/cgpw`,
           {
             prepw: prePwValue,
             pw1: pwValue1,
@@ -177,7 +233,11 @@ function ProfileEdit() {
                 <h4>프로필 이미지</h4>
               </ProfileImage1>
               <ProfileImage2>
-                <img src="./assets/profileimage.jpg" />
+                <img
+                  src={
+                    selectedImage || "./assets/profileselectimage/skyblue.jpg"
+                  }
+                />
                 <ChangeDelete>
                   <button onClick={profileImageChange}>사진 변경</button>
                   <button>기본 이미지</button>
@@ -190,11 +250,17 @@ function ProfileEdit() {
                   <h3>원하는 캐릭터를 선택해 주세요</h3>
                   <button onClick={profileImageNot}>닫기</button>
                 </div>
-                <div>
-                  <Img>프로필 사진들 넣을 곳</Img>
-                </div>
+                <ImageGrid>
+                  {imageFiles.map((imageFile, index) => (
+                    <Img
+                      key={index}
+                      src={imageFile}
+                      onClick={() => handleImageSelect(imageFile)}
+                    />
+                  ))}
+                </ImageGrid>
                 <Okbutton>
-                  <button>확인</button>
+                  <button onClick={handleOkClick}>확인</button>
                 </Okbutton>
               </ImgModal>
             )}
@@ -330,18 +396,22 @@ const ImgModal = styled.div`
   top: 50%;
   left: 45%;
   transform: translate(+40%, -40%);
-  width: 450px;
-  height: 450px;
+  width: 480px;
+  height: 480px;
   background: white;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  & div {
+    display: flex;
+    flex-direction: column;
+  }
   & h3 {
     position: absolute;
     top: 16px;
-    right: 100px;
+    right: 120px;
   }
   & button {
     position: absolute;
@@ -381,13 +451,22 @@ const Okbutton = styled.div`
     color: white;
   }
 `;
-const Img = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 420px;
-  height: 350px;
+const ImageGrid = styled.div`
+  display: grid;
+  overflow-y: auto;
+  width: 440px;
+  max-height: 390px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
 `;
+
+const Img = styled.img`
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  cursor: pointer;
+`;
+
 const ProfileImageEdit = styled.div`
   & p {
     margin-top: 0.2rem;

@@ -14,6 +14,7 @@ function Profile() {
   const [posts, setPosts] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [profileImg, setProfileImg] = useState("");
   const [nickname, setNickname] = useState("");
   const [school, setSchool] = useState("");
   const [email, setEmail] = useState("");
@@ -23,14 +24,17 @@ function Profile() {
 
   useEffect(() => {
     getMyData();
-  }, []);
+  }, [profileImg]);
 
   const getMyData = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/profile`
       );
-
+      console.log("sdkflskdf", profileImg);
+      console.log("response data: ", response.data);
+      console.log("img", response.data.img);
+      setProfileImg(response.data.img);
       setNickname(response.data.nickname);
       setEmail(response.data.email);
       setSchool(response.data.univName);
@@ -52,7 +56,7 @@ function Profile() {
   return (
     <MainContainer>
       <ProfileContainer>
-        <img src="./assets/profileimage.jpg" />
+        <img src={`./assets/profileselectimage/${profileImg}.jpg`} />
         <Container>
           <ProfileInpromation>
             <InformationBox>
