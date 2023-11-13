@@ -67,11 +67,10 @@ function Qna() {
         category: categoryButton,
         email: emailValue,
         title: titleValue,
-        message: contentValue,
+        content: contentValue,
       }
     );
     console.log(response.data);
-    //백엔드에서 전송해준 문구를 띄울때 작성해야함
     alert(response?.data.message);
   };
   return (

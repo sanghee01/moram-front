@@ -406,7 +406,7 @@ const ImgModal = styled.div`
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   & div {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
   }
   & h3 {
     position: absolute;
@@ -415,8 +415,8 @@ const ImgModal = styled.div`
   }
   & button {
     position: absolute;
-    top: 4px;
-    right: 10px;
+    top: 6px;
+    right: 14px;
     background-color: transparent;
     display: inline-block;
     outline: 0;
@@ -452,19 +452,25 @@ const Okbutton = styled.div`
   }
 `;
 const ImageGrid = styled.div`
-  display: grid;
+  flex-wrap: wrap;
   overflow-y: auto;
   width: 440px;
   max-height: 390px;
-  grid-template-columns: repeat(3, 1fr);
-  grid-gap: 10px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  gap: 10px;
 `;
 
 const Img = styled.img`
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: auto;
   object-fit: cover;
-  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    opacity: 0.7;
+    cursor: pointer;
+    transform: scale(1.1);
+  }
 `;
 
 const ProfileImageEdit = styled.div`
