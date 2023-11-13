@@ -12,7 +12,7 @@ function AllPosts() {
 
   useEffect(() => {
     getAllPosts();
-  }, []);
+  }, [allPostsData]);
 
   const getAllPosts = async () => {
     try {
@@ -28,10 +28,9 @@ function AllPosts() {
   };
 
   const deletePost = async (e: any) => {
-    console.log("삭제하고자 하는 글 id", e.target.id);
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_APIADDRESS}/admin/allposts/${e.target.id}`
+        `${process.env.REACT_APP_APIADDRESS}/admin/posting/${e.target.id}`
       );
       alert(response.data.message);
     } catch (error: any) {

@@ -12,7 +12,7 @@ function AllComments() {
 
   useEffect(() => {
     getAllComments();
-  }, []);
+  }, [allCommentsData]);
 
   const getAllComments = async () => {
     try {
@@ -22,7 +22,6 @@ function AllComments() {
       const allCommentsData = response.data.content;
       SetAllCommentsData(allCommentsData);
       setLoding(false);
-      console.log("allCommentsData:", allCommentsData);
     } catch (error: any) {
       alert(error.response.data);
     }
@@ -32,7 +31,7 @@ function AllComments() {
     console.log("삭제하고자 하는 댓글 id", e.target.id);
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_APIADDRESS}/admin/allcomments/${e.target.id}`
+        `${process.env.REACT_APP_APIADDRESS}/admin/comment/${e.target.id}`
       );
       alert(response.data.message);
     } catch (error: any) {

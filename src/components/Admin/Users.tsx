@@ -5,24 +5,36 @@ import { Title, Table, Row } from "../../styles/TableStyles";
 import { handleDateChange } from "../../dateChange";
 
 function Users() {
-  const [users, SetUsers] = useState<null | any>(null);
+  const [usersData, SetUsersData] = useState<null | any>(null);
   const [loading, setLoding] = useState(true);
   useEffect(() => {
     getUserInfo();
-  }, []);
+  }, [usersData]);
   const getUserInfo = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/admin/allusers`
       );
       const userData = response.data.content;
-      SetUsers(userData);
+      SetUsersData(userData);
       setLoding(false);
-      //   console.log("userData:", userData);
     } catch (error: any) {
       alert(error.response.data);
     }
   };
+
+  const deleteUser = async (e: any) => {
+    console.log("삭제하고자 하는 글 id", e.target.id);
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/admin/user/${e.target.id}`
+      );
+      alert(response.data.message);
+    } catch (error: any) {
+      alert(error.response.data);
+    }
+  };
+
   return (
     <Container>
       <Title>회원정보</Title>
@@ -30,7 +42,7 @@ function Users() {
         <div>loading...</div>
       ) : (
         <>
-          <span>회원 수 : {users.length}</span>
+          <span>회원 수 : {usersData.length}</span>
           <Table>
             <thead>
               <tr>
@@ -42,10 +54,11 @@ function Users() {
                 <th>가입플랫폼</th>
                 <th>가입날짜</th>
                 <th>GptCount</th>
+                <th>회원 삭제</th>
               </tr>
             </thead>
             <tbody>
-              {users
+              {usersData
                 ?.sort((a: any, b: any) => {
                   return b.id - a.id;
                 })
@@ -60,6 +73,9 @@ function Users() {
                       <td>{user.platformType}</td>
                       <td>{handleDateChange(user.regDate)}</td>
                       <td>{user.gptCount}</td>
+                      <td id={user.id} onClick={deleteUser}>
+                        삭제
+                      </td>
                     </Row>
                   );
                 })}
