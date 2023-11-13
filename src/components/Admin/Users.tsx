@@ -45,20 +45,24 @@ function Users() {
               </tr>
             </thead>
             <tbody>
-              {users?.map((user: any) => {
-                return (
-                  <Row key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.nickname}</td>
-                    <td>{user.role}</td>
-                    <td>{user.univName}</td>
-                    <td>{user.email}</td>
-                    <td>{user.platformType}</td>
-                    <td>{handleDateChange(user.regDate)}</td>
-                    <td>{user.gptCount}</td>
-                  </Row>
-                );
-              })}
+              {users
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((user: any) => {
+                  return (
+                    <Row key={user.id}>
+                      <td>{user.id}</td>
+                      <td>{user.nickname}</td>
+                      <td>{user.role}</td>
+                      <td>{user.univName}</td>
+                      <td>{user.email}</td>
+                      <td>{user.platformType}</td>
+                      <td>{handleDateChange(user.regDate)}</td>
+                      <td>{user.gptCount}</td>
+                    </Row>
+                  );
+                })}
             </tbody>
           </Table>
         </>

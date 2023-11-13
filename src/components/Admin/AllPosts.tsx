@@ -60,23 +60,29 @@ function AllPosts() {
               </tr>
             </thead>
             <tbody>
-              {allPostsData.map((post: any) => {
-                return (
-                  <Row key={post.id}>
-                    <td>{post.id}</td>
-                    <td>{handleDateChange(post.writeTime)}</td>
-                    <td>{post.nickname}</td>
-                    <GoToPost onClick={() => navigate(`/community/${post.id}`)}>
-                      {post.title}
-                    </GoToPost>
-                    <td>{post.tag}</td>
-                    <td>{post.category}</td>
-                    <td id={post.id} onClick={deletePost}>
-                      삭제
-                    </td>
-                  </Row>
-                );
-              })}
+              {allPostsData
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((post: any) => {
+                  return (
+                    <Row key={post.id}>
+                      <td>{post.id}</td>
+                      <td>{handleDateChange(post.writeTime)}</td>
+                      <td>{post.nickname}</td>
+                      <GoToPost
+                        onClick={() => navigate(`/community/${post.id}`)}
+                      >
+                        {post.title}
+                      </GoToPost>
+                      <td>{post.tag}</td>
+                      <td>{post.category}</td>
+                      <td id={post.id} onClick={deletePost}>
+                        삭제
+                      </td>
+                    </Row>
+                  );
+                })}
             </tbody>
           </Table>
         </>

@@ -51,7 +51,7 @@ function AllComments() {
           <Table>
             <thead>
               <tr>
-                <th>postId</th>
+                <th>ID</th>
                 <th>작성시간</th>
                 <th>작성자</th>
                 <th>내용</th>
@@ -59,23 +59,27 @@ function AllComments() {
               </tr>
             </thead>
             <tbody>
-              {allCommentsData.map((comment: any) => {
-                return (
-                  <Row key={comment.id}>
-                    <td>{comment.postId}</td>
-                    <td>{handleDateChange(comment.writeTime)}</td>
-                    <td>{comment.nickname}</td>
-                    <GoToPost
-                      onClick={() => navigate(`/community/${comment.postId}`)}
-                    >
-                      {comment.content}
-                    </GoToPost>
-                    <td id={comment.id} onClick={deleteComment}>
-                      삭제
-                    </td>
-                  </Row>
-                );
-              })}
+              {allCommentsData
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((comment: any) => {
+                  return (
+                    <Row key={comment.id}>
+                      <td>{comment.id}</td>
+                      <td>{handleDateChange(comment.writeTime)}</td>
+                      <td>{comment.nickname}</td>
+                      <GoToPost
+                        onClick={() => navigate(`/community/${comment.postId}`)}
+                      >
+                        {comment.content}
+                      </GoToPost>
+                      <td id={comment.id} onClick={deleteComment}>
+                        삭제
+                      </td>
+                    </Row>
+                  );
+                })}
             </tbody>
           </Table>
         </>
