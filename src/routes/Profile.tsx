@@ -53,8 +53,8 @@ function Profile() {
                 <SettingIcon onClick={() => navigate("/profile-edit")}>
                   <IoSettingsOutline size="20" />
                 </SettingIcon>
-                <h1>nickname</h1>
-                <h4>email@naver.com</h4>
+                <h1>{nickname}</h1>
+                <h4>{email}</h4>
               </ProfileContent>
               <ProfileWrite>
                 <button

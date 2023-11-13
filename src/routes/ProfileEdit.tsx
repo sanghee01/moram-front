@@ -6,6 +6,7 @@ function ProfileEdit() {
   const [nickname, setNickname] = useState("");
   const [schoolcertify, setSchoolCertify] = useState("");
   const [schoolList, setSchoolList] = useState<string[]>([]);
+  const [schoolEmail, setSchoolEmail] = useState("");
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
@@ -21,7 +22,7 @@ function ProfileEdit() {
 
   const nicknameData = async () => {
     const confirmed = window.confirm(
-      `닉네임을 ${nickname}로 변경하시겠습니까?`
+      `닉네임을 "${nickname}"로 변경하시겠습니까?`
     );
     if (confirmed) {
       try {
@@ -38,28 +39,33 @@ function ProfileEdit() {
       }
     }
   };
-  useEffect(() => {
-    getSchoolData();
-  }, []);
-  const getSchoolData = async () => {
+
+  const getSchoolData = async (univName: string) => {
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_APIADDRESS}/univsearch`
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/user/univsearch`,
+        {
+          univName,
+        }
       );
       setSchoolList(response.data);
+      console.log(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data);
     }
   };
   const schoolData = async () => {
-    const confirmed = window.confirm(`학교를 인증하시겠습니까?`);
+    const confirmed = window.confirm(
+      `학교를 "${schoolcertify}"로 인증하시겠습니까?`
+    );
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/univcert`,
+          `${process.env.REACT_APP_APIADDRESS}/user/certuniv`,
           {
-            schoolname: schoolcertify,
+            univName: schoolcertify,
+            receivedEmail: schoolEmail,
           }
         );
         alert(response.data.message);
@@ -69,6 +75,7 @@ function ProfileEdit() {
       }
     }
   };
+
   const passwordData = async () => {
     const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
     if (confirmed) {
@@ -122,14 +129,22 @@ function ProfileEdit() {
     setPw2(event.target.value);
     console.log(event.target.value);
   };
-  const SchoolCertifyInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSchoolCertify(event.target.value);
-    console.log(event.target.value);
+  const handleSchoolCertifyInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const univName = event.target.value;
+    const receivedEmail = event.target.value;
+    setSchoolCertify(univName);
+    getSchoolData(univName);
+    setSchoolEmail(receivedEmail);
   };
 
-  const filteredSchools = schoolList.filter((school) =>
-    school.toLowerCase().includes(schoolcertify.toLowerCase())
-  );
+  const filteredSchools = schoolList.filter((school) => {
+    if (typeof school === "string") {
+      return school.toLowerCase().includes(schoolcertify.toLowerCase());
+    }
+    return false;
+  });
 
   const OkClick1 = () => {
     console.log("닉네임변경");
@@ -208,10 +223,10 @@ function ProfileEdit() {
                   type="text"
                   placeholder="본인의 학교 입력"
                   value={schoolcertify}
-                  onChange={SchoolCertifyInput}
+                  onChange={handleSchoolCertifyInput}
                 />
                 <select
-                  value={schoolcertify}
+                  value={schoolList}
                   onChange={(event) => setSchoolCertify(event.target.value)}
                 >
                   <option value="">학교 찾기</option>
@@ -221,6 +236,12 @@ function ProfileEdit() {
                     </option>
                   ))}
                 </select>
+                <input
+                  type="text"
+                  placeholder="학교 이메일 입력"
+                  value={schoolEmail}
+                  onChange={handleSchoolCertifyInput}
+                />
                 <OkButton>
                   <button onClick={OkClick2}>확인</button>
                   <button onClick={() => window.location.reload()}>취소</button>
