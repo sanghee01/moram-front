@@ -11,6 +11,7 @@ function ProfileEdit() {
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
   const [imgSelect, setImgSelect] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletUser, setDeletUser] = useState("");
 
   const profileImageChange = () => {
@@ -18,6 +19,61 @@ function ProfileEdit() {
   };
   const profileImageNot = () => {
     setImgSelect(false);
+  };
+  const imageFiles = [
+    "./assets/profileselectimage/black.jpg",
+    "./assets/profileselectimage/blue.jpg",
+    "./assets/profileselectimage/green.jpg",
+    "./assets/profileselectimage/lightpurple.jpg",
+    "./assets/profileselectimage/pink.jpg",
+    "./assets/profileselectimage/skyblue.jpg",
+    "./assets/profileselectimage/white.jpg",
+    "./assets/profileselectimage/yellow.jpg",
+    "./assets/profileselectimage/yellowgreen.jpg",
+  ];
+  const handleImageSelect = (image: string) => {
+    setSelectedImage(image);
+    console.log(`Selected image: ${image}`);
+  };
+  const handleOkClick = async () => {
+    const splitImage = selectedImage?.split("/");
+    const fileName = splitImage?.pop();
+
+    let colorName = "";
+
+    if (fileName) {
+      colorName = fileName.split(".").shift() || "";
+    }
+
+    try {
+      console.log(`${colorName}`);
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/profile/changeimg`,
+        { img: colorName }
+      );
+      alert(response.data.message);
+      setSelectedImage(`./assets/profileselectimage/${colorName}.jpg`);
+      profileImageNot();
+      profileImageNot();
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data.message);
+    }
+  };
+  useEffect(() => {
+    getProfileImage();
+  }, []);
+  const getProfileImage = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/profile`
+      );
+      const imageName = response.data.img;
+      setSelectedImage(`./assets/profileselectimage/${imageName}.jpg`);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data.message);
+    }
   };
 
   const nicknameData = async () => {
@@ -27,7 +83,7 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/profile/changenickname`,
+          `${process.env.REACT_APP_APIADDRESS}/profile/cgnickname`,
           {
             nickname: nickname,
           }
@@ -52,8 +108,13 @@ function ProfileEdit() {
       console.log(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data);
+      alert(error.response.data.message);
     }
+  };
+  const handleSchoolEmailInput = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSchoolEmail(event.target.value);
   };
   const schoolData = async () => {
     const confirmed = window.confirm(
@@ -61,6 +122,7 @@ function ProfileEdit() {
     );
     if (confirmed) {
       try {
+        console.log(`${schoolcertify},${schoolEmail}`);
         const response = await axios.post(
           `${process.env.REACT_APP_APIADDRESS}/user/certuniv`,
           {
@@ -71,7 +133,7 @@ function ProfileEdit() {
         alert(response.data.message);
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-        alert(error.response.data);
+        alert(error.response.data.message);
       }
     }
   };
@@ -81,7 +143,7 @@ function ProfileEdit() {
     if (confirmed) {
       try {
         const response = await axios.post(
-          `${process.env.REACT_APP_APIADDRESS}/profile/changepw`,
+          `${process.env.REACT_APP_APIADDRESS}/profile/cgpw`,
           {
             prepw: prePwValue,
             pw1: pwValue1,
@@ -133,10 +195,8 @@ function ProfileEdit() {
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const univName = event.target.value;
-    const receivedEmail = event.target.value;
     setSchoolCertify(univName);
     getSchoolData(univName);
-    setSchoolEmail(receivedEmail);
   };
 
   const filteredSchools = schoolList.filter((school) => {
@@ -173,7 +233,11 @@ function ProfileEdit() {
                 <h4>프로필 이미지</h4>
               </ProfileImage1>
               <ProfileImage2>
-                <img src="./assets/profileimage.jpg" />
+                <img
+                  src={
+                    selectedImage || "./assets/profileselectimage/skyblue.jpg"
+                  }
+                />
                 <ChangeDelete>
                   <button onClick={profileImageChange}>사진 변경</button>
                   <button>기본 이미지</button>
@@ -186,7 +250,18 @@ function ProfileEdit() {
                   <h3>원하는 캐릭터를 선택해 주세요</h3>
                   <button onClick={profileImageNot}>닫기</button>
                 </div>
-                <Img>프로필 사진들 넣을 곳</Img>
+                <ImageGrid>
+                  {imageFiles.map((imageFile, index) => (
+                    <Img
+                      key={index}
+                      src={imageFile}
+                      onClick={() => handleImageSelect(imageFile)}
+                    />
+                  ))}
+                </ImageGrid>
+                <Okbutton>
+                  <button onClick={handleOkClick}>확인</button>
+                </Okbutton>
               </ImgModal>
             )}
           </ProfileImageEdit>
@@ -240,11 +315,12 @@ function ProfileEdit() {
                   type="text"
                   placeholder="학교 이메일 입력"
                   value={schoolEmail}
-                  onChange={handleSchoolCertifyInput}
+                  onChange={handleSchoolEmailInput}
                 />
                 <OkButton>
                   <button onClick={OkClick2}>확인</button>
                   <button onClick={() => window.location.reload()}>취소</button>
+                  <button>삭제</button>
                 </OkButton>
               </SchoolSelect>
             </SchoolCertifyBox>
@@ -258,14 +334,14 @@ function ProfileEdit() {
               </Security1>
               <Security2>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="현재 비밀번호"
                   value={prePwValue}
                   onChange={CheckPreviousPw}
                 />
                 <div>
                   <input
-                    type="text"
+                    type="password"
                     placeholder="비밀번호 변경"
                     value={pwValue1}
                     onChange={ChangeUserPw1}
@@ -273,7 +349,7 @@ function ProfileEdit() {
                   <p>최소 8자리 이상이며 대소문자,숫자, 특수문자 하나씩 포함</p>
                 </div>
                 <input
-                  type="text"
+                  type="password"
                   placeholder="비밀번호 확인"
                   value={pwValue2}
                   onChange={ChangeUserPw2}
@@ -316,26 +392,31 @@ const ProfileEditMain = styled.div`
 
 const ImgModal = styled.div`
   position: fixed;
+  padding: 1rem;
   top: 50%;
   left: 45%;
-  transform: translate(-20%, -62%);
-  width: 380px;
-  height: 380px;
+  transform: translate(+40%, -40%);
+  width: 480px;
+  height: 480px;
   background: white;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  & div {
+    display: flex;
+    flex-direction: row;
+  }
   & h3 {
     position: absolute;
     top: 16px;
-    right: 74px;
+    right: 120px;
   }
   & button {
     position: absolute;
-    top: 4px;
-    right: 10px;
+    top: 6px;
+    right: 14px;
     background-color: transparent;
     display: inline-block;
     outline: 0;
@@ -344,7 +425,54 @@ const ImgModal = styled.div`
     font-weight: 500;
   }
 `;
-const Img = styled.div``;
+const Okbutton = styled.div`
+  position: fixed;
+  display: flex;
+  top: 90%;
+  left: 65%;
+  transform: translate(+40%, -40%);
+  & button {
+    width: 100px;
+    height: 30px;
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    background-color: #d6d3fb;
+    border-radius: 10px;
+    display: inline-block;
+    outline: 0;
+    border: 0;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background-color 0.7s ease;
+  }
+  & button:hover {
+    background-color: #6c6ce3;
+    color: white;
+  }
+`;
+const ImageGrid = styled.div`
+  flex-wrap: wrap;
+  overflow-y: auto;
+  width: 440px;
+  max-height: 390px;
+  grid-template-columns: repeat(2, 1fr);
+  grid-auto-rows: minmax(100px, auto);
+  gap: 10px;
+`;
+
+const Img = styled.img`
+  width: 200px;
+  height: auto;
+  object-fit: cover;
+  transition: all 0.3s ease-in-out;
+  &:hover {
+    opacity: 0.7;
+    cursor: pointer;
+    transform: scale(1.1);
+  }
+`;
+
 const ProfileImageEdit = styled.div`
   & p {
     margin-top: 0.2rem;
@@ -569,6 +697,7 @@ const Security2 = styled.div`
 const OkButton = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 0.2rem;
   & button {
     background-color: transparent;
     outline: 0;

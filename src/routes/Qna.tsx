@@ -37,41 +37,40 @@ function Qna() {
     setContent(event.target.value);
   };
 
-  const fileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const selectedFiles = Array.from(event.target.files);
-      const imageFiles: FileInfo[] = selectedFiles
-        .filter((file) => file.type.startsWith("image"))
-        .map((file) => ({
-          id: generateId(),
-          file: file,
-        }));
-      if (imageFiles.length > 0) {
-        setFiles([imageFiles[0]]);
-      } else {
-        alert("이미지 파일만 업로드 가능합니다.");
-      }
-    }
-  };
-  const RemoveFile = (id: string) => {
-    const updatedFiles = files.filter((file) => file.id !== id);
-    setFiles(updatedFiles);
-  };
+  // const fileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files) {
+  //     const selectedFiles = Array.from(event.target.files);
+  //     const imageFiles: FileInfo[] = selectedFiles
+  //       .filter((file) => file.type.startsWith("image"))
+  //       .map((file) => ({
+  //         id: generateId(),
+  //         file: file,
+  //       }));
+  //     if (imageFiles.length > 0) {
+  //       setFiles([imageFiles[0]]);
+  //     } else {
+  //       alert("이미지 파일만 업로드 가능합니다.");
+  //     }
+  //   }
+  // };
+  // const RemoveFile = (id: string) => {
+  //   const updatedFiles = files.filter((file) => file.id !== id);
+  //   setFiles(updatedFiles);
+  // };
 
   const handleSubmit = async () => {
     setIsSubmitted(true);
     console.log("전송");
     const response = await axios.post(
-      `${process.env.REACT_APP_APIADDRESS}/user/qna`,
+      `${process.env.REACT_APP_APIADDRESS}/user/ask`,
       {
         category: categoryButton,
         email: emailValue,
         title: titleValue,
-        message: contentValue,
+        content: contentValue,
       }
     );
     console.log(response.data);
-    //백엔드에서 전송해준 문구를 띄울때 작성해야함
     alert(response?.data.message);
   };
   return (
@@ -136,7 +135,7 @@ function Qna() {
               onChange={TitleInput}
             />
           </TitleDiv>
-          <AttachFile>
+          {/* <AttachFile>
             <FileContainer>
               <AttachFileDiv>
                 <FileLabel htmlFor="upload-button">파일 선택</FileLabel>
@@ -159,7 +158,7 @@ function Qna() {
                 ))}
               </FileBox>
             </FileContainer>
-          </AttachFile>
+          </AttachFile> */}
           <ContentDiv>
             <h4>Message</h4>
             <ContentTextarea
@@ -311,19 +310,20 @@ const ContentTextarea = styled.textarea`
   -moz-border-radius: 10px;
   border-radius: 15px;
   resize: none;
+  padding: 1rem;
 `;
 
-const AttachFile = styled.div`
-  display: flex;
-  flex-direction: columns;
-  height: 40px;
-`;
-const FileContainer = styled.div`
-  display: flex;
-  width: 100%;
-  gap: 1.8rem;
-  justify-content: space-between;
-`;
+// const AttachFile = styled.div`
+//   display: flex;
+//   flex-direction: columns;
+//   height: 40px;
+// `;
+// const FileContainer = styled.div`
+//   display: flex;
+//   width: 100%;
+//   gap: 1.8rem;
+//   justify-content: space-between;
+// `;
 const AttachFileDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -339,34 +339,34 @@ const FileBox = styled.div`
   width: 507px;
   padding: 0.2rem 0.6rem;
 `;
-const FileName = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-`;
-const FileDelet = styled.button`
-  margin-left: 10px;
-  background-color: transparent;
-  outline: 0;
-  border: 0;
-  font-size: 15px;
-  color: gray;
-`;
-const FileLabel = styled.label`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 70px;
-  height: 50px;
-  font-weight: 530;
-  font-size: 14px;
-  background-color: #dbdbdb;
-  border-radius: 15px;
-  cursor: pointer;
-`;
+// const FileName = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   text-overflow: ellipsis;
+//   overflow: hidden;
+//   white-space: nowrap;
+// `;
+// const FileDelet = styled.button`
+//   margin-left: 10px;
+//   background-color: transparent;
+//   outline: 0;
+//   border: 0;
+//   font-size: 15px;
+//   color: gray;
+// `;
+// const FileLabel = styled.label`
+//   display: inline-flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 70px;
+//   height: 50px;
+//   font-weight: 530;
+//   font-size: 14px;
+//   background-color: #dbdbdb;
+//   border-radius: 15px;
+//   cursor: pointer;
+// `;
 const SendButton = styled.div`
   display: flex;
   justify-content: center;

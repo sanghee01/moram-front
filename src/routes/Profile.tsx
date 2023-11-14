@@ -14,7 +14,9 @@ function Profile() {
   const [posts, setPosts] = useState<any[]>([]);
   const [comments, setComments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [profileImg, setProfileImg] = useState("");
   const [nickname, setNickname] = useState("");
+  const [school, setSchool] = useState("");
   const [email, setEmail] = useState("");
   const [showPosts, setShowPosts] = useState(true);
   const [showComments, setShowComments] = useState(false);
@@ -22,15 +24,20 @@ function Profile() {
 
   useEffect(() => {
     getMyData();
-  }, []);
+  }, [profileImg]);
 
   const getMyData = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_APIADDRESS}/profile`
       );
-      setNickname(response.data.nickname); // TODO: 수정 필요
-      setEmail(response.data.email); // TODO: 수정 필요
+      console.log("sdkflskdf", profileImg);
+      console.log("response data: ", response.data);
+      console.log("img", response.data.img);
+      setProfileImg(response.data.img);
+      setNickname(response.data.nickname);
+      setEmail(response.data.email);
+      setSchool(response.data.univName);
 
       setPosts(response.data.posting);
       setComments(response.data.comment);
@@ -49,7 +56,7 @@ function Profile() {
   return (
     <MainContainer>
       <ProfileContainer>
-        <img src="./assets/profileimage.jpg" />
+        <img src={`./assets/profileselectimage/${profileImg}.jpg`} />
         <Container>
           <ProfileInpromation>
             <InformationBox>
@@ -68,6 +75,7 @@ function Profile() {
                 </SettingIcon>
 
                 <h1>{nickname}</h1>
+                <h3>{school}</h3>
                 <h4>{email}</h4>
               </ProfileContent>
               <ProfileWrite>
@@ -198,9 +206,15 @@ const ProfileInpromation = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
+  & h3 {
+    font-size: 23px;
+  }
   @media screen and (max-width: 1000px) {
     & h1 {
       font-size: 30px;
+    }
+    & h3 {
+      font-size: 19px;
     }
     & h4 {
       font-size: 16px;
@@ -210,6 +224,9 @@ const ProfileInpromation = styled.div`
     & h1 {
       font-size: 25px;
     }
+    & h3 {
+      font-size: 16px;
+    }
     & h4 {
       font-size: 11px;
     }
@@ -217,6 +234,9 @@ const ProfileInpromation = styled.div`
   @media screen and (max-width: 600px) {
     & h1 {
       font-size: 22px;
+    }
+    & h3 {
+      font-size: 13px;
     }
     & h4 {
       font-size: 9px;
