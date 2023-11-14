@@ -33,13 +33,25 @@ function Intro() {
         <h2>우리의 목표</h2>
         <Goal>
           <div>
-            <span>[아이콘]</span>목표 1
+            <span>[아이콘]</span>
+            <div>
+              <p>목표 1</p>
+              <p>다양한 지식 공유</p>
+            </div>
           </div>
           <div>
-            <span>[아이콘]</span>목적 2
+            <span>[아이콘]</span>
+            <div>
+              <p>목적 2</p>
+              <p>대학생 통합 커뮤니티</p>
+            </div>
           </div>
           <div>
-            <span>[아이콘]</span>목표 3
+            <span>[아이콘]</span>
+            <div>
+              <p>목표 3</p>
+              <p></p>
+            </div>
           </div>
         </Goal>
       </ContainerBox2>
@@ -66,6 +78,20 @@ const IntroTitle = styled.div`
   gap: 1.5rem;
   width: 60%;
   margin: 2rem 0rem;
+  & button {
+    width: 150px;
+    height: 40px;
+    font-weight: 600;
+    border-radius: 10px;
+    background-color: #d6d3fb;
+    outline: 0;
+    border: 0;
+    transition: background-color 0.5s ease;
+  }
+  & button:hover {
+    background-color: #6c6ce3;
+    color: white;
+  }
   & span {
     font-size: 40px;
     color: purple;
@@ -88,7 +114,7 @@ const IntroImg = styled.div`
 `;
 
 const ContainerBox2 = styled.div`
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
   width: 65%;
   display: flex;
   justify-content: center;
@@ -99,7 +125,11 @@ const ContainerBox2 = styled.div`
 
 const Goal = styled.div`
   display: flex;
+  width: 80%;
   justify-content: space-between;
+  & div {
+    display: flex;
+  }
 `;
 
 export default Intro;
