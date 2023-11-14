@@ -116,6 +116,7 @@ function Posting() {
   };
 
   const postComment = async () => {
+    if (commentContent.length < 1) return;
     if (!user) return;
     try {
       let api;
@@ -125,12 +126,12 @@ function Posting() {
       const response = await axios.post(`${api}`, {
         content: commentContent,
       });
-      alert(response.data.message); //포스팅 데이터 받기
       setCommentContent("");
       getComments();
       setReplyId(null);
       setReplyNickname(null);
       setReplyComment(null);
+      alert(response.data.message); //포스팅 데이터 받기
     } catch (error: any) {
       alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }
