@@ -24,7 +24,7 @@ function Header() {
   return (
     <Container>
       <Nav>
-        <LogoImg onClick={() => navigate("/")} src="assets/logo.png" />
+        <LogoImg src="/assets/logo.png" onClick={() => navigate("/")} />
         <RightContainer>
           <BtnContainer>
             {user ? (
@@ -137,16 +137,16 @@ const BtnContainer = styled.div`
   @media screen and (max-width: 900px) {
     & button {
       font-size: 0.9rem;
-      padding: 0 7px;
+      padding: 0 9px;
       height: 90%;
     }
   }
 
   @media screen and (max-width: 480px) {
+    gap: 8px;
     & button {
       font-size: 0.75rem;
       height: 80%;
-      padding: 0 5px;
     }
   }
 `;
