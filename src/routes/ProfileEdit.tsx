@@ -4,9 +4,9 @@ import axios from "axios";
 
 function ProfileEdit() {
   const [nickname, setNickname] = useState("");
-  const [schoolcertify, setSchoolCertify] = useState("");
+  const [schoolcertify, setSchoolCertify] = useState<any>("");
   const [schoolList, setSchoolList] = useState<string[]>([]);
-  const [schoolEmail, setSchoolEmail] = useState("");
+  const [schoolEmail, setSchoolEmail] = useState<any>("");
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
   const [pwValue2, setPw2] = useState("");
@@ -14,12 +14,14 @@ function ProfileEdit() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletUser, setDeletUser] = useState("");
 
-  const profileImageChange = () => {
-    setImgSelect(true);
+  const profileImageChange = (defaultImg = false) => {
+    if (!defaultImg) setImgSelect(true);
+    else setSelectedImage(defaultImage);
   };
   const profileImageNot = () => {
     setImgSelect(false);
   };
+  const defaultImage = "./assets/profileselectimage/skyblue.jpg";
   const imageFiles = [
     "./assets/profileselectimage/black.jpg",
     "./assets/profileselectimage/blue.jpg",
@@ -137,6 +139,16 @@ function ProfileEdit() {
       }
     }
   };
+  const SchoolDataDelete = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.REACT_APP_APIADDRESS}/user/univ`
+      );
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error.response.data.message);
+    }
+  };
 
   const passwordData = async () => {
     const confirmed = window.confirm(`비밀번호를 변경하시겠습니까?`);
@@ -218,6 +230,15 @@ function ProfileEdit() {
     console.log("보안설정");
     passwordData();
   };
+  const resetInputs = () => {
+    setSchoolCertify("");
+    setSchoolEmail("");
+    setPrePw("");
+    setPw1("");
+    setPw2("");
+    setNickname("");
+  };
+
   return (
     <Container1>
       <Container2>
@@ -239,8 +260,12 @@ function ProfileEdit() {
                   }
                 />
                 <ChangeDelete>
-                  <button onClick={profileImageChange}>사진 변경</button>
-                  <button>기본 이미지</button>
+                  <button onClick={() => profileImageChange()}>
+                    사진 변경
+                  </button>
+                  <button onClick={() => profileImageChange(true)}>
+                    기본 이미지
+                  </button>
                 </ChangeDelete>
               </ProfileImage2>
             </ProfileImageChange>
@@ -281,7 +306,7 @@ function ProfileEdit() {
                 />
                 <OkButton>
                   <button onClick={OkClick1}>변경</button>
-                  <button onClick={() => window.location.reload()}>취소</button>
+                  <button onClick={resetInputs}>취소</button>
                 </OkButton>
               </Nickname2>
             </NicknameChange>
@@ -319,8 +344,8 @@ function ProfileEdit() {
                 />
                 <OkButton>
                   <button onClick={OkClick2}>확인</button>
-                  <button onClick={() => window.location.reload()}>취소</button>
-                  <button>삭제</button>
+                  <button onClick={resetInputs}>취소</button>
+                  <button onClick={SchoolDataDelete}>삭제</button>
                 </OkButton>
               </SchoolSelect>
             </SchoolCertifyBox>
@@ -356,7 +381,7 @@ function ProfileEdit() {
                 />
                 <OkButton>
                   <button onClick={OkClick3}>변경</button>
-                  <button onClick={() => window.location.reload()}>취소</button>
+                  <button onClick={resetInputs}>취소</button>
                 </OkButton>
               </Security2>
             </SecurityChange>
