@@ -9,6 +9,11 @@ import { idsState, postingState, userState } from "../state";
 import { AiOutlineSearch } from "react-icons/ai";
 import { LuDelete } from "react-icons/lu";
 import { SmallBtn } from "../styles/ButtonStyles";
+import ProfilePhoto from "../components/ProfilePhoto";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoClose } from "react-icons/io5";
+import { MdExpandMore } from "react-icons/md";
+import { MdExpandLess } from "react-icons/md";
 
 function Community() {
   const location = useLocation();
@@ -117,7 +122,7 @@ function Community() {
         break;
       }
     }
-    initialIsExpandedState["즐겨찾는 학과"] = true;
+    if (user) initialIsExpandedState["즐겨찾는 학과"] = true;
     initialIsExpandedState[foundCategory] = true;
     setIsExpanded(initialIsExpandedState);
   };
@@ -264,21 +269,30 @@ function Community() {
   return (
     <Container ref={scrollContainerRef}>
       <HamburgerMenu onClick={toggleSidebar} open={isSidebarOpen}>
-        {isSidebarOpen ? "❌" : "☰"}
+        {isSidebarOpen ? (
+          <IoClose fill={"white"} size={40} />
+        ) : (
+          <RxHamburgerMenu stroke={"white"} strokeWidth={"1px"} />
+        )}
       </HamburgerMenu>
       {/* 좌측에 있는 과 선택 버튼 */}
       <Sidebar open={isSidebarOpen}>
         {Object.keys(categoryList).map((bigCategory: any) => (
-          <BigCategory key={bigCategory}>
+          <BigCategory key={bigCategory} $isOpen={isExpanded[bigCategory]}>
             <button
               onClick={() => toggleBigCategory(bigCategory)}
-              style={
-                isExpanded[bigCategory]
-                  ? { background: "white", color: "black" }
-                  : { backgroundColor: "#0e2b49" }
-              }
+              // style={
+              //   isExpanded[bigCategory]
+              //     ? { background: "white", color: "black" }
+              //     : { backgroundColor: "#9758af" }
+              // }
             >
-              {bigCategory} {isExpanded[bigCategory] ? "-" : "+"}
+              {bigCategory}{" "}
+              {isExpanded[bigCategory] ? (
+                <MdExpandLess size={30} fill={"#6060fa"} />
+              ) : (
+                <MdExpandMore size={30} fill={"white"} />
+              )}
             </button>
             {/* 계열 클릭해서 펼쳐졌을 때 */}
             {isExpanded[bigCategory] && (
@@ -297,15 +311,15 @@ function Community() {
                     }}
                     style={
                       category === categoryFilter
-                        ? { background: "#b0b0fc" }
+                        ? { background: "#a3a3ff" }
                         : {}
                     }
                   >
                     {category}
                     <Star onClick={(e) => postBookmark(e, category)}>
                       {categoryList["즐겨찾는 학과"].includes(category)
-                        ? "★"
-                        : "☆"}
+                        ? "❤️"
+                        : "🤍"}
                     </Star>
                   </button>
                 ))}
@@ -370,7 +384,7 @@ function Community() {
                 }}
               >
                 <div>
-                  학과 : {categoryFilter} <LuDelete size="23" />
+                  학과 - {categoryFilter} <LuDelete size="23" />
                 </div>
               </TagBtn>
             )}
@@ -384,7 +398,7 @@ function Community() {
                 }}
               >
                 <div>
-                  태그 : {tagFilter} <LuDelete size="23" />
+                  태그 - {tagFilter} <LuDelete size="23" />
                 </div>
               </TagBtn>
             )}
@@ -398,7 +412,7 @@ function Community() {
                 }}
               >
                 <div>
-                  검색어 : {searchFilter} <LuDelete size="23" />
+                  검색어 - {searchFilter} <LuDelete size="23" />
                 </div>
               </TagBtn>
             )}
@@ -441,6 +455,7 @@ function Community() {
                 )} */}
               </div>
               <div>
+                <ProfilePhoto name={posting.profileImg} />
                 {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
                 💬{posting.commentCount} | {date(posting.writeTime)}
               </div>
@@ -540,25 +555,25 @@ const FilterContainer = styled.div`
   align-items: center;
   flex-direction: row;
   width: 100%;
-  background-color: #c2ddf7;
+  background-color: #c6c2f7;
   border-radius: 20px;
   padding: 15px;
-  gap: 10px;
+  gap: 15px;
 `;
 
 const Sidebar = styled.div<any>`
   width: 300px;
-  height: 600px;
+  height: calc(100dvh - var(--headerHeight) - 20px);
   border-radius: 10px;
-  background-color: #0e2b49;
+  background-color: #8e8efd;
   display: flex;
   position: sticky;
   top: 143px;
   flex-direction: column;
-  padding: 15px;
+  padding: 15px 15px;
   justify-content: flex-start;
   align-items: center;
-  gap: 25px;
+  gap: 10px;
   overflow-y: scroll;
   z-index: 0;
 
@@ -573,23 +588,30 @@ const Sidebar = styled.div<any>`
   }
 `;
 
-const BigCategory = styled.div`
+const BigCategory = styled.div<any>`
   width: 100%;
+  background-color: ${(props) => (props.$isOpen ? "#7070ff" : "")};
+  border-radius: 10px;
+  padding: 10px;
 
   & button {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
     width: 100%;
     height: 50px;
     border: 0px;
-    border-radius: 20px;
     font-size: 1.15rem;
     font-weight: 700;
-    color: white;
-    border: 2px solid white;
+    color: ${(props) => (props.$isOpen ? "#6060fa" : "white")};
+    background: ${(props) => (props.$isOpen ? "white" : "transparent")};
+    border-radius: 10px;
     transition: 0.3s all;
   }
 
   & button:hover {
-    filter: contrast(200%);
+    background-color: #b1b1ff;
     cursor: pointer;
   }
 `;
@@ -598,25 +620,25 @@ const CategoryContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px 10px;
+  padding: 20px 7px;
 
   & button {
     width: 100%;
     height: 40px;
-    background-color: white;
-    border-radius: 20px;
+    background-color: transparent;
+    border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.1rem;
     font-weight: 600;
-    color: black;
-    padding: 0 23px;
+    color: white;
+    padding: 0 17px;
   }
 
   & button:hover {
     cursor: pointer;
-    background: #d1bcf8;
+    background: #8787ff;
   }
 `;
 
@@ -649,7 +671,7 @@ const HamburgerMenu = styled.div<any>`
   display: none;
   font-size: 1.8rem;
   cursor: pointer;
-  box-shadow: 0px 0px 20px black;
+  box-shadow: 3px 5px 17px rgba(0, 0, 0, 0.5);
   border-radius: 50px;
   color: white;
 
@@ -659,10 +681,10 @@ const HamburgerMenu = styled.div<any>`
     align-items: center;
     position: fixed;
     left: 30px;
-    bottom: 30px;
+    bottom: 35px;
     z-index: 10;
 
-    background-color: ${(props) => (props.open ? "#7979f7" : "#5a59ff")};
+    background-color: ${(props) => (props.open ? "#a4a4ff" : "#5a59ff")};
   }
 `;
 
@@ -673,15 +695,19 @@ const SearchContainer = styled.div`
   margin-left: auto;
   margin-right: 10px;
   gap: 10px;
+  border-radius: 15px;
+  border: 2px solid #9f9ff8;
+  background-color: white;
+  border-radius: 15px;
   & input {
     width: calc(100% - 40px);
-    background-color: whitesmoke;
+    background-color: white;
     border-radius: 15px;
-    border: 3px solid #9f9ff8;
+    border: 0;
     padding: 0 10px;
   }
   & input:focus {
-    border: 3px solid #5a59ff;
+    border: 0;
     outline: none;
   }
   & div {
@@ -690,6 +716,8 @@ const SearchContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-right: 10px;
+    background-color: white;
   }
   & div:hover {
     cursor: pointer;
@@ -705,7 +733,8 @@ const SearchContainer = styled.div`
 
 const Star = styled.div`
   margin-left: auto;
-  color: tomato;
+  margin-right: -5px;
+  color: yellow;
   font-size: 1.5rem;
 
   &:hover {

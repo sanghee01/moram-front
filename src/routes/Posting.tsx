@@ -9,6 +9,7 @@ import { userState } from "../state";
 import { BsReplyFill } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
 import { handleDateChange } from "../dateChange";
+import ProfilePhoto from "../components/ProfilePhoto";
 
 function Posting() {
   const params = useParams();
@@ -172,36 +173,40 @@ function Posting() {
             {posting.title}
           </h2>
           <h4>
-            {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} 💬
-            {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
-            {posting.userId === user?.id && (
-              <>
-                <SmallBtn
-                  $padding="4px 10px"
-                  $margin="5px"
-                  $background="tomato"
-                  $backgroundHover="red"
-                  $color="white"
-                  onClick={() => deletePosting()}
-                >
-                  글 삭제
-                </SmallBtn>
-                <SmallBtn
-                  $padding="4px 10px"
-                  $margin="5px"
-                  $background="skyblue"
-                  $backgroundHover="lightblue"
-                  $color="white"
-                  onClick={() =>
-                    navigate(`/write/${posting.id}`, {
-                      state: posting,
-                    })
-                  }
-                >
-                  글 수정
-                </SmallBtn>
-              </>
-            )}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <ProfilePhoto name={posting.profileImg} />
+              {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
+              💬
+              {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
+              {posting.userId === user?.id && (
+                <>
+                  <SmallBtn
+                    $padding="4px 10px"
+                    $margin="5px"
+                    $background="tomato"
+                    $backgroundHover="red"
+                    $color="white"
+                    onClick={() => deletePosting()}
+                  >
+                    글 삭제
+                  </SmallBtn>
+                  <SmallBtn
+                    $padding="4px 10px"
+                    $margin="5px"
+                    $background="skyblue"
+                    $backgroundHover="lightblue"
+                    $color="white"
+                    onClick={() =>
+                      navigate(`/write/${posting.id}`, {
+                        state: posting,
+                      })
+                    }
+                  >
+                    글 수정
+                  </SmallBtn>
+                </>
+              )}
+            </div>
           </h4>
           <hr />
           <ContentText>{posting.content}</ContentText>

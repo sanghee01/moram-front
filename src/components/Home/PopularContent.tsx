@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Tag, Category } from "../../styles/Tag_CatagoryStyles";
+import ProfilePhoto from "../ProfilePhoto";
 
 interface PopularContentProps {
   id: number;
@@ -13,6 +14,7 @@ interface PopularContentProps {
   title: string;
   date: string;
   tag: string;
+  profileImg: string;
 }
 
 function PopularContent({
@@ -26,6 +28,7 @@ function PopularContent({
   title,
   date,
   tag,
+  profileImg,
 }: PopularContentProps) {
   const navigate = useNavigate();
 
@@ -47,6 +50,7 @@ function PopularContent({
           <div> {title}</div>
         </div>
         <Info>
+          <ProfilePhoto name={profileImg} />
           {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
         </Info>
       </Title>
@@ -90,7 +94,9 @@ const Title = styled.div`
   }
 `;
 
-const Info = styled.span`
+const Info = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: 500;
   font-size: 0.9rem;
   @media screen and (max-width: 450px) {
