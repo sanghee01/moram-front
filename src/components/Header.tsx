@@ -153,6 +153,7 @@ const BtnContainer = styled.div`
 
 const Tabs = styled.div`
   background-color: #0e2b49;
+  height: 54px;
   padding: 0 20%;
   display: grid;
   grid-template-columns: repeat(4, 1fr);

@@ -578,7 +578,8 @@ const Sidebar = styled.div<any>`
   z-index: 0;
 
   @media screen and (max-width: 900px) {
-    height: calc(100dvh - 140px);
+    height: calc(100dvh - var(--headerHeight) + 1px);
+    border-radius: 0 10px 10px 0;
     position: fixed;
     transition: transform 0.3s ease-in-out;
     transform: ${(props) =>
