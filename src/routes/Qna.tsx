@@ -174,6 +174,7 @@ function Qna() {
           </SendButton>
         </QnaMain>
       </QnaContainer>
+      <p>*문의 내용을 작성하시면 입력하신 본인의 메일로 알림이 갑니다.*</p>
     </Container>
   );
 }
@@ -186,11 +187,15 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  & p {
+    font-size: 15px;
+    color: tomato;
+    margin-bottom: 2rem;
+  }
 `;
 const QnaContainer = styled.div`
   width: 100%;
   margin: 0 4rem;
-  margin-bottom: 1rem;
   padding: 2rem 12%;
   background-color: #f6f6f6;
   border-radius: 25px;

@@ -14,12 +14,14 @@ function ProfileEdit() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [deletUser, setDeletUser] = useState("");
 
-  const profileImageChange = () => {
-    setImgSelect(true);
+  const profileImageChange = (defaultImg = false) => {
+    if (!defaultImg) setImgSelect(true);
+    else setSelectedImage(defaultImage);
   };
   const profileImageNot = () => {
     setImgSelect(false);
   };
+  const defaultImage = "./assets/profileselectimage/skyblue.jpg";
   const imageFiles = [
     "./assets/profileselectimage/black.jpg",
     "./assets/profileselectimage/blue.jpg",
@@ -239,8 +241,12 @@ function ProfileEdit() {
                   }
                 />
                 <ChangeDelete>
-                  <button onClick={profileImageChange}>사진 변경</button>
-                  <button>기본 이미지</button>
+                  <button onClick={() => profileImageChange()}>
+                    사진 변경
+                  </button>
+                  <button onClick={() => profileImageChange(true)}>
+                    기본 이미지
+                  </button>
                 </ChangeDelete>
               </ProfileImage2>
             </ProfileImageChange>
