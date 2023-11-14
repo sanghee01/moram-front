@@ -100,6 +100,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 25px 0;
 `;
 const ContainerForm = styled.div`
   width: 90%;
@@ -107,7 +108,6 @@ const ContainerForm = styled.div`
   background-color: whitesmoke;
   border-radius: 15px;
   margin: auto;
-  margin-top: 25px;
   padding: 20px;
   display: flex;
   flex-direction: column;

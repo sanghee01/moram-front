@@ -101,7 +101,7 @@ function Community() {
     if (queryParams.get("reload") === "true") {
       setIds([99999, 0]);
       setPostings("");
-      changeQuery(); //reload 쿼리 초기화
+      changeQuery(queryParams.get("category"), queryParams.get("tag")); //reload 쿼리 초기화
     }
   }, [location.search]); // location 객체가 변경될 때마다 실행됩니다.
 
