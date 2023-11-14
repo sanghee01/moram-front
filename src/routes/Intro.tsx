@@ -18,11 +18,11 @@ function Intro() {
           <p>
             학과에 대한 정보를 얻는데 <br />
             어려움을 느끼고 계시나요? <br />
-            모람모람은 (대학 게시판 커뮤니티)로
+            모람모람은 <Span1>대학 게시판 커뮤니티</Span1>로
             <br />
             당신의 대학생활을 더욱 풍요롭게 만들어 줄 사이트입니다. <br />
             다앙한 학교, 다양한 학과에 대한 정보부터 <br />
-            많은 사람들의 꿀팁까지 확인할 수 있습니다.
+            많은 사람들의 꿀팁까지 확인하실 수 있습니다.
           </p>
           <div>
             <button onClick={() => navigate("/register")}>가입하고 시작</button>
@@ -92,7 +92,7 @@ const IntroTitle = styled.div`
     height: 40px;
     font-weight: 600;
     border-radius: 10px;
-    background-color: #d6d3fb;
+    background-color: #eceaff;
     outline: 0;
     border: 0;
     transition: background-color 0.7s ease;
@@ -113,6 +113,11 @@ const IntroTitle = styled.div`
     font-size: 16px;
   }
 `;
+const Span1 = styled.div`
+  display: inline-block;
+  font-weight: 1000;
+  color: purple;
+`;
 
 const IntroImg = styled.div`
   margin: 3rem 0;
@@ -131,13 +136,14 @@ const ContainerBox2 = styled.div`
   height: 220px;
   display: flex;
   justify-content: center;
-  background-color: #eeedff;
+  background-color: #f0efff;
   border-radius: 25px;
   align-items: center;
   flex-direction: column;
   gap: 2rem;
 
   & h2 {
+    font-size: 26px;
   }
 `;
 
@@ -162,7 +168,7 @@ const GoalBox1 = styled.div`
   gap: 2rem;
   border-radius: 20px;
   background-color: #f9f9f9;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 15px rgba(59, 59, 59, 0.2);
   transition: all 0.3s ease;
   div p:first-child {
     font-weight: bold;
@@ -177,7 +183,7 @@ const GoalBox2 = styled.div`
   gap: 2rem;
   border-radius: 20px;
   background-color: #e9f9f9;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 15px rgba(59, 59, 59, 0.2);
   transition: all 0.3s ease;
   div p:first-child {
     font-weight: bold;
@@ -192,7 +198,7 @@ const GoalBox3 = styled.div`
   gap: 2rem;
   border-radius: 20px;
   background-color: #f9f7e9;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 15px rgba(59, 59, 59, 0.2);
   transition: all 0.3s ease;
   div p:first-child {
     font-weight: bold;
