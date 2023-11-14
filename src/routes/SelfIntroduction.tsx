@@ -47,7 +47,7 @@ function SelfIntroDuction() {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/gpt`,
         { content: text },
-        { timeout: 100000 }
+        { timeout: 200000 }
       );
       setResult(response.data.content); //포스팅 데이터 받기
       setIsLoading(false);
@@ -100,6 +100,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 25px 0;
 `;
 const ContainerForm = styled.div`
   width: 90%;
@@ -107,7 +108,6 @@ const ContainerForm = styled.div`
   background-color: whitesmoke;
   border-radius: 15px;
   margin: auto;
-  margin-top: 25px;
   padding: 20px;
   display: flex;
   flex-direction: column;

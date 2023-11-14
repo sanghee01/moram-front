@@ -6,6 +6,7 @@ export const Tag = styled.div<any>`
   border-radius: 5px;
   transition: 0.5s all;
   border: 0;
+  white-space: nowrap;
   & * {
     color: ${(props) => props.$color || "black"};
   }

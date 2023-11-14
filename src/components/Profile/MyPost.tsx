@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Tag, Category } from "../../styles/Tag_CatagoryStyles";
+import CategoryBtn from "../CategoryBtn";
 
 interface PostContentProps {
   id: number;
@@ -44,11 +45,13 @@ function MyPost({
       )}
       <div>
         <Title>
-          <Category>{category}</Category>
-          <Tag>{tag}</Tag>
-          <div>{title}</div>
+          <div>
+            <CategoryBtn category={category} />
+            <Tag>{tag}</Tag>
+            {title}
+          </div>
           <Info>
-            | {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
+            {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
           </Info>
         </Title>
         <ContentText>{content.split("<br/>").join(" ")}</ContentText>
@@ -98,11 +101,19 @@ const Title = styled.div`
   align-items: center;
   font-weight: bold;
   gap: 5px;
+  flex-direction: column;
+  align-items: start;
+
+  & div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
   @media screen and (max-width: 1000px) {
     flex-direction: column;
     align-items: start;
-    gap: 0;
+    gap: 5px;
     & div {
       width: inherit;
     }
