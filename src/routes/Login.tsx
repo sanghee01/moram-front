@@ -1,16 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Logo,
-  Container,
-  Form,
-  Input,
-  Buttons,
-  Label,
-} from "../styles/LoginStyles";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../state";
+import styled from "styled-components";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -49,50 +42,111 @@ function Login() {
 
   return (
     <Container>
-      <Form>
-        <Logo>모람모람 로그인하기</Logo>
-        <Label>이메일</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="이메일"
-          onChange={onChange}
-          value={email}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") login();
-          }}
+      <Logo src="/assets/logo.png" onClick={() => navigate("/")} />
+      <Input
+        id="email"
+        type="email"
+        placeholder="이메일"
+        onChange={onChange}
+        value={email}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") login();
+        }}
+      />
+      <Input
+        id="password"
+        type="password"
+        placeholder="비밀번호"
+        onChange={onChange}
+        value={password}
+        onKeyUp={(e) => {
+          if (e.key === "Enter") login();
+        }}
+      />
+      <LoginBtn onClick={() => login()}>로그인</LoginBtn>
+      <SpanBox>
+        <span>비밀번호 찾기</span>
+        <span onClick={() => navigate("/register")}>회원가입</span>
+      </SpanBox>
+      <EasyLoginBox>
+        <span>간편로그인</span>
+        <KakaoLoginBtn
+          src="/assets/kakaoLogo.svg"
+          onClick={() =>
+            navigate(`${process.env.REACT_APP_APIADDRESS}/user/kakao`)
+          }
         />
-        <Label>비밀번호</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="비밀번호"
-          onChange={onChange}
-          value={password}
-          onKeyUp={(e) => {
-            if (e.key === "Enter") login();
-          }}
-        />
-        <Buttons>
-          <button
-            style={{ backgroundColor: "rgb(40, 98, 255)" }}
-            onClick={() => login()}
-          >
-            로그인
-          </button>
-          <a
-            href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
-            target="_self"
-          >
-            카카오로 로그인/회원가입
-          </a>
-          <button onClick={() => navigate("/register")}>
-            이메일로 회원가입하기
-          </button>
-        </Buttons>
-      </Form>
+      </EasyLoginBox>
     </Container>
   );
 }
 
+const Logo = styled.img`
+  height: 70px;
+  margin-bottom: 20px;
+`;
+
+const Container = styled.div`
+  width: 400px;
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 7px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid gray;
+`;
+
+const LoginBtn = styled.div`
+  width: 100%;
+
+  padding: 9px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #5a59ff;
+  color: white;
+  &:hover {
+    cursor: pointer;
+    filter: contrast(200%);
+  }
+`;
+
+const SpanBox = styled.div`
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  & span {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+const EasyLoginBox = styled.div`
+  width: 100%;
+  margin-top: 30px;
+  border-top: 1px solid lightgray;
+  & span {
+    color: rgba(0, 0, 0, 0.7);
+  }
+`;
+
+const KakaoLoginBtn = styled.img`
+  height: 50px;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #fddc3f;
+  border-radius: 10px;
+`;
 export default Login;
