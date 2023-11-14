@@ -99,6 +99,9 @@ const LogoImg = styled.img`
   @media screen and (max-width: 700px) {
     height: 70%;
   }
+  @media screen and (max-width: 450px) {
+    margin-left: -6px;
+  }
   @media screen and (max-width: 400px) {
     height: 60%;
   }

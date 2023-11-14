@@ -178,35 +178,35 @@ function Posting() {
               {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
               💬
               {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
-              {posting.userId === user?.id && (
-                <>
-                  <SmallBtn
-                    $padding="4px 10px"
-                    $margin="5px"
-                    $background="tomato"
-                    $backgroundHover="red"
-                    $color="white"
-                    onClick={() => deletePosting()}
-                  >
-                    글 삭제
-                  </SmallBtn>
-                  <SmallBtn
-                    $padding="4px 10px"
-                    $margin="5px"
-                    $background="skyblue"
-                    $backgroundHover="lightblue"
-                    $color="white"
-                    onClick={() =>
-                      navigate(`/write/${posting.id}`, {
-                        state: posting,
-                      })
-                    }
-                  >
-                    글 수정
-                  </SmallBtn>
-                </>
-              )}
             </div>
+            {posting.userId === user?.id && (
+              <>
+                <SmallBtn
+                  $padding="4px 10px"
+                  $margin="5px"
+                  $background="tomato"
+                  $backgroundHover="red"
+                  $color="white"
+                  onClick={() => deletePosting()}
+                >
+                  글 삭제
+                </SmallBtn>
+                <SmallBtn
+                  $padding="4px 10px"
+                  $margin="5px"
+                  $background="skyblue"
+                  $backgroundHover="lightblue"
+                  $color="white"
+                  onClick={() =>
+                    navigate(`/write/${posting.id}`, {
+                      state: posting,
+                    })
+                  }
+                >
+                  글 수정
+                </SmallBtn>
+              </>
+            )}
           </h4>
           <hr />
           <ContentText>{posting.content}</ContentText>

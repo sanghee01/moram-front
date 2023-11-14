@@ -11,6 +11,7 @@ export const SmallBtn = styled.button<any>`
   border-radius: 15px;
   font-weight: 500;
   border: 0;
+  white-space: nowrap;
 
   &:hover {
     cursor: pointer;

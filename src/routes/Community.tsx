@@ -511,6 +511,7 @@ const TagContainer = styled.div`
   border-radius: 20px;
   padding: 15px;
   justify-content: space-between;
+  gap: 15px;
   & div {
     display: flex;
     gap: 10px;
@@ -694,7 +695,6 @@ const SearchContainer = styled.div`
   width: 300px;
   min-height: 50px;
   margin-left: auto;
-  margin-right: 10px;
   gap: 10px;
   border-radius: 15px;
   border: 2px solid #9f9ff8;
