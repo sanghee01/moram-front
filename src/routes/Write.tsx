@@ -168,7 +168,10 @@ function Write() {
       for (let i = 0; i < urls.imgCount; i++) {
         response = await axios.put(
           urls.urlContents[i].presignedUrl,
-          previewImgUrl[`img${i + 1}Url`]
+          previewImgUrl[`img${i + 1}Url`],
+          {
+            headers: { "Content-Type": "image/jpg" },
+          }
         );
       }
       console.log("Image uploaded:", response);
