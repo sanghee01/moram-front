@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function ProfileEdit() {
   const [nickname, setNickname] = useState("");
@@ -12,11 +13,9 @@ function ProfileEdit() {
   const [pwValue2, setPw2] = useState("");
   const [imgSelect, setImgSelect] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [deletUser, setDeletUser] = useState("");
 
   const profileImageChange = (defaultImg = false) => {
-    if (!defaultImg) setImgSelect(true);
-    else setSelectedImage(defaultImage);
+    setImgSelect(true);
   };
   const profileImageNot = () => {
     setImgSelect(false);
@@ -144,6 +143,8 @@ function ProfileEdit() {
       const response = await axios.delete(
         `${process.env.REACT_APP_APIADDRESS}/user/univ`
       );
+      alert(response.data.message);
+      console.log(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
       alert(error.response.data.message);
@@ -172,6 +173,7 @@ function ProfileEdit() {
     }
   };
 
+  const navigate = useNavigate();
   const handleDeleteUser = async () => {
     const confirmed = window.confirm(
       `정말로 탈퇴 하시겠습니까? \n탈퇴 후에는 복구할 수 없습니다.`
@@ -181,7 +183,8 @@ function ProfileEdit() {
         const response = await axios.delete(
           `${process.env.REACT_APP_APIADDRESS}/user`
         );
-        setDeletUser(response.data);
+        alert(response.data.message);
+        navigate("/main");
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
         alert(error.response.data);
@@ -262,9 +265,6 @@ function ProfileEdit() {
                 <ChangeDelete>
                   <button onClick={() => profileImageChange()}>
                     사진 변경
-                  </button>
-                  <button onClick={() => profileImageChange(true)}>
-                    기본 이미지
                   </button>
                 </ChangeDelete>
               </ProfileImage2>
