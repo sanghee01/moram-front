@@ -1,6 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineComment } from "react-icons/ai";
+import { GrGroup } from "react-icons/gr";
+import { AiOutlineDeliveredProcedure } from "react-icons/ai";
 
 function Intro() {
   const navigate = useNavigate();
@@ -32,27 +35,33 @@ function Intro() {
       <ContainerBox2>
         <h2>우리의 목표</h2>
         <Goal>
-          <div>
-            <span>[아이콘]</span>
+          <GoalBox1>
+            <span>
+              <AiOutlineDeliveredProcedure size="25" />
+            </span>
             <div>
-              <p>목표 1</p>
+              <p>첫번째 목표</p>
               <p>다양한 지식 공유</p>
             </div>
-          </div>
-          <div>
-            <span>[아이콘]</span>
+          </GoalBox1>
+          <GoalBox2>
+            <span>
+              <AiOutlineComment size="25" />
+            </span>
             <div>
-              <p>목적 2</p>
-              <p>대학생 통합 커뮤니티</p>
+              <p>두번째 목표</p>
+              <p>대학생 소통 통로</p>
             </div>
-          </div>
-          <div>
-            <span>[아이콘]</span>
+          </GoalBox2>
+          <GoalBox3>
+            <span>
+              <GrGroup size="25" />
+            </span>
             <div>
-              <p>목표 3</p>
-              <p></p>
+              <p>세번째 목표</p>
+              <p>활동성 향상</p>
             </div>
-          </div>
+          </GoalBox3>
         </Goal>
       </ContainerBox2>
     </Container>
@@ -86,17 +95,20 @@ const IntroTitle = styled.div`
     background-color: #d6d3fb;
     outline: 0;
     border: 0;
-    transition: background-color 0.5s ease;
+    transition: background-color 0.7s ease;
   }
   & button:hover {
     background-color: #6c6ce3;
     color: white;
+    cursor: pointer;
+    transform: scale(1.1);
   }
   & span {
     font-size: 40px;
     color: purple;
     font-weight: 1000;
   }
+
   & p {
     font-size: 16px;
   }
@@ -106,29 +118,84 @@ const IntroImg = styled.div`
   margin: 3rem 0;
   margin-left: 4rem;
   width: 300px;
+  min-width: 150px;
   height: 300px;
+  min-height: 150px;
   display: flex;
   align-items: center;
-  & img {
-  }
 `;
 
 const ContainerBox2 = styled.div`
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
   width: 65%;
+  height: 220px;
   display: flex;
   justify-content: center;
+  background-color: #eeedff;
+  border-radius: 25px;
   align-items: center;
   flex-direction: column;
   gap: 2rem;
+
+  & h2 {
+  }
 `;
 
 const Goal = styled.div`
   display: flex;
-  width: 80%;
+  width: 85%;
   justify-content: space-between;
-  & div {
-    display: flex;
+
+  :hover {
+    cursor: pointer;
+    opacity: 0.8;
+    transform: scale(1.05);
+    transform: scale(1.05) rotate(-2deg);
+  }
+`;
+const GoalBox1 = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  height: 80px;
+  align-items: center;
+  gap: 2rem;
+  border-radius: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  div p:first-child {
+    font-weight: bold;
+  }
+`;
+const GoalBox2 = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  height: 80px;
+  gap: 2rem;
+  border-radius: 20px;
+  background-color: #e9f9f9;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  div p:first-child {
+    font-weight: bold;
+  }
+`;
+const GoalBox3 = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 30%;
+  height: 80px;
+  align-items: center;
+  gap: 2rem;
+  border-radius: 20px;
+  background-color: #f9f7e9;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  div p:first-child {
+    font-weight: bold;
   }
 `;
 
