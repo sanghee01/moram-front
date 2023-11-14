@@ -174,7 +174,7 @@ function Qna() {
           </SendButton>
         </QnaMain>
       </QnaContainer>
-      <p>*문의 내용을 작성하시면 입력하신 본인의 메일로 알림이 갑니다.*</p>
+      <p>*문의 내용을 작성하시면 입력하신 본인의 메일로 알림이 갑니다.</p>
     </Container>
   );
 }
