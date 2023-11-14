@@ -599,7 +599,7 @@ const BigCategory = styled.div<any>`
   & button {
     display: flex;
     justify-content: space-between;
-    padding: 0 20px;
+    padding: 0 12px 0 20px;
     align-items: center;
     width: 100%;
     height: 50px;
