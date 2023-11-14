@@ -109,9 +109,9 @@ function Write() {
           content: content.replace(/\n/g, "<br/>"), //줄바꿈 구현을 위해 replace 함수 사용
           category: category,
           tag: tag,
-          img1Url: imageurl[0]?.imageUrl,
-          img2Url: imageurl[1]?.imageUrl,
-          img3Url: imageurl[2]?.imageUrl,
+          // img1Url: imageurl[0]?.imageUrl,
+          // img2Url: imageurl[1]?.imageUrl,
+          // img3Url: imageurl[2]?.imageUrl,
         }
       );
       alert(response.data.message);

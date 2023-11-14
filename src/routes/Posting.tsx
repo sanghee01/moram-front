@@ -351,7 +351,7 @@ function Posting() {
 
 const Container = styled.div`
   width: calc(100% - 30px);
-  max-width: 800px;
+  max-width: 900px;
   padding: 15px;
   margin: 15px auto;
   background-color: whitesmoke;
