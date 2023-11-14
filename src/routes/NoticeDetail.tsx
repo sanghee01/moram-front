@@ -96,11 +96,14 @@ function NoticeDetail() {
 const Container = styled.div`
   width: calc(100% - 30px);
   max-width: 800px;
-  min-height: 600px;
+  min-height: calc(100dvh - 272px);
   padding: 15px;
   margin: 60px auto;
   background-color: whitesmoke;
   border-radius: 15px;
+  @media screen and (max-width: 900px) {
+    margin: 30px auto;
+  }
 `;
 
 const ContentText = styled.div`

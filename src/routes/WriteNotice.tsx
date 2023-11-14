@@ -95,6 +95,12 @@ const Container = styled.div`
   width: 50%;
   margin: auto;
   margin-top: 50px;
+  @media screen and (max-width: 1200px) {
+    width: 70%;
+  }
+  @media screen and (max-width: 900px) {
+    width: 90%;
+  }
 `;
 
 const Title = styled.h3`

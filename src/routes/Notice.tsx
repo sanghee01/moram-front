@@ -76,6 +76,9 @@ const Container = styled.div`
   width: 70%;
   min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   margin: auto;
+  @media screen and (max-width: 900px) {
+    width: 90%;
+  }
 `;
 
 const WriteBtn = styled.div`
