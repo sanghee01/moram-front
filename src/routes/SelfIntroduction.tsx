@@ -47,7 +47,7 @@ function SelfIntroDuction() {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/gpt`,
         { content: text },
-        { timeout: 100000 }
+        { timeout: 200000 }
       );
       setResult(response.data.content); //포스팅 데이터 받기
       setIsLoading(false);
