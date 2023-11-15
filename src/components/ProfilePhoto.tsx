@@ -10,10 +10,14 @@ const Img = styled.img`
   border-radius: 20px !important;
   margin: 5px 5px 0px 0px;
   transition: 0.5s all;
-  &:hover {
+  /* &:hover {
     width: 80px !important;
     height: 80px !important;
     border-radius: 30px !important;
+  } */
+  @media screen and (max-width: 600px) {
+    width: 30px !important;
+    height: 30px !important;
   }
 `;
 
