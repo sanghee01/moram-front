@@ -64,17 +64,25 @@ function Login() {
         }}
       />
       <LoginBtn onClick={() => login()}>로그인</LoginBtn>
-      <SpanBox>
-        <span>비밀번호 찾기</span>
-        <span onClick={() => navigate("/register")}>회원가입</span>
-      </SpanBox>
+      <DetailBox>
+        <Find>
+          <div>
+            <input id="check" type="checkbox" />
+            <label htmlFor="check">로그인 유지</label>
+          </div>
+          <span>비밀번호 찾기</span>
+        </Find>
+        <IsFistTime>
+          모람모람에 처음이신가요?{" "}
+          <span onClick={() => navigate("/register")}>회원가입</span>
+        </IsFistTime>
+      </DetailBox>
       <EasyLoginBox>
+        <hr />
         <span>간편로그인</span>
         <KakaoLoginBtn
-          src="/assets/kakaoLogo.svg"
-          onClick={() =>
-            navigate(`${process.env.REACT_APP_APIADDRESS}/user/kakao`)
-          }
+          href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
+          target="_self"
         />
       </EasyLoginBox>
     </Container>
@@ -108,7 +116,6 @@ const Input = styled.input`
 
 const LoginBtn = styled.div`
   width: 100%;
-
   padding: 9px;
   margin: 5px 0;
   font-size: 1rem;
@@ -122,31 +129,74 @@ const LoginBtn = styled.div`
   }
 `;
 
-const SpanBox = styled.div`
+const DetailBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
 
-  display: flex;
-  justify-content: space-between;
-  & span {
+  & span,
+  label {
     cursor: pointer;
     color: rgba(0, 0, 0, 0.7);
   }
 `;
 
-const EasyLoginBox = styled.div`
+const Find = styled.div`
+  display: flex;
+  justify-content: space-between;
   width: 100%;
-  margin-top: 30px;
-  border-top: 1px solid lightgray;
+`;
+
+const IsFistTime = styled.div`
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 23px;
+
   & span {
-    color: rgba(0, 0, 0, 0.7);
+    margin-left: 5px;
+    color: #5a59ff;
+    font-weight: 500;
   }
 `;
 
-const KakaoLoginBtn = styled.img`
+const EasyLoginBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  & hr {
+    position: relative;
+    bottom: -8px;
+    display: block;
+    margin: 0;
+    width: 100%;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border: none;
+  }
+  & span {
+    padding: 0 8px;
+    margin-bottom: 16px;
+    line-height: 16px;
+    letter-spacing: -0.3px;
+    color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    background-color: #fff;
+  }
+`;
+
+const KakaoLoginBtn = styled.a`
   height: 50px;
-  padding: 10px;
-  margin-top: 10px;
+  width: 50px;
+  margin-top: 7px;
+  background-image: url("/assets/kakaoLogo.svg");
+  background-repeat: no-repeat;
   background-color: #fddc3f;
+  background-position: center center;
+  background-size: 30px;
   border-radius: 10px;
 `;
+
 export default Login;
