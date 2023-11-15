@@ -103,6 +103,9 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 50px 0;
+  @media screen and (max-width: 450px) {
+    width: 300px;
+  }
 `;
 
 const Input = styled.input`
