@@ -273,6 +273,9 @@ const VerifyBtn = styled.button`
   &:hover {
     filter: contrast(200%);
   }
+  @media screen and (max-width: 450px) {
+    right: -243px;
+  }
 `;
 
 const VerifyOkBtn = styled.button`
@@ -305,6 +308,10 @@ const ResendBtn = styled.button`
   color: white;
   &:hover {
     filter: contrast(200%);
+  }
+
+  @media screen and (max-width: 450px) {
+    right: -87px;
   }
 `;
 export default Register;
