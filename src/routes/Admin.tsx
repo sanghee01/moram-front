@@ -7,16 +7,16 @@ function Admin() {
       <Container>
         <Tabs>
           <Tab>
-            <Link to="">Users</Link>
+            <Link to="">유저 관리</Link>
           </Tab>
           <Tab>
-            <Link to="allPosts">AllPosts</Link>
+            <Link to="allPosts">게시물 관리</Link>
           </Tab>
           <Tab>
-            <Link to="allComments">AllComments</Link>
+            <Link to="allComments">댓글 관리</Link>
           </Tab>
           <Tab>
-            <Link to="reports">Reports</Link>
+            <Link to="reports">신고 관리</Link>
           </Tab>
         </Tabs>
         <Outlet />

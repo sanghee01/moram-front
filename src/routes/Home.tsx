@@ -65,6 +65,7 @@ function Home() {
                   title={item.title}
                   date={handleDateChange(item.writeTime)}
                   tag={item.tag}
+                  profileImg={item.profileImg}
                 />
               );
             })
@@ -90,6 +91,7 @@ function Home() {
                   date={handleDateChange(item.writeTime)}
                   content={item.content}
                   tag={item.tag}
+                  profileImg={item.profileImg}
                 />
               );
             })

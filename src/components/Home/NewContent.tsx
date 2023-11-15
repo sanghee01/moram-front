@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { Tag, Category } from "../../styles/Tag_CatagoryStyles";
+import ProfilePhoto from "../ProfilePhoto";
 
 interface NewContentProps {
   id: number;
@@ -14,6 +15,7 @@ interface NewContentProps {
   date: string;
   content: string;
   tag: string;
+  profileImg: string;
 }
 
 function NewContent({
@@ -28,6 +30,7 @@ function NewContent({
   date,
   content,
   tag,
+  profileImg,
 }: NewContentProps) {
   const navigate = useNavigate();
 
@@ -49,6 +52,7 @@ function NewContent({
           <div>{title}</div>
         </Title>
         <Info>
+          <ProfilePhoto name={profileImg} />
           {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
         </Info>
         <ContentText>{content.split("<br/>").join(" ")}</ContentText>
@@ -101,7 +105,9 @@ const Title = styled.div`
   }
 `;
 
-const Info = styled.span`
+const Info = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: 500;
   font-size: 0.9rem;
   @media screen and (max-width: 450px) {

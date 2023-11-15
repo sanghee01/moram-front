@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { userState } from "../state";
 
 function ProfileEdit() {
   const [nickname, setNickname] = useState("");
@@ -12,11 +15,10 @@ function ProfileEdit() {
   const [pwValue2, setPw2] = useState("");
   const [imgSelect, setImgSelect] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [deletUser, setDeletUser] = useState("");
+  const setUser = useSetRecoilState(userState); //유저 설정
 
   const profileImageChange = (defaultImg = false) => {
-    if (!defaultImg) setImgSelect(true);
-    else setSelectedImage(defaultImage);
+    setImgSelect(true);
   };
   const profileImageNot = () => {
     setImgSelect(false);
@@ -59,7 +61,7 @@ function ProfileEdit() {
       profileImageNot();
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
   useEffect(() => {
@@ -74,7 +76,7 @@ function ProfileEdit() {
       setSelectedImage(`./assets/profileselectimage/${imageName}.jpg`);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
@@ -90,15 +92,17 @@ function ProfileEdit() {
             nickname: nickname,
           }
         );
+        getUser();
         alert(response.data.message);
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-        alert(error.response.data);
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생");
       }
     }
   };
 
   const getSchoolData = async (univName: string) => {
+    if (univName.length === 0) return;
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/user/univsearch`,
@@ -110,7 +114,7 @@ function ProfileEdit() {
       console.log(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
   const handleSchoolEmailInput = (
@@ -135,7 +139,7 @@ function ProfileEdit() {
         alert(response.data.message);
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-        alert(error.response.data.message);
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생");
       }
     }
   };
@@ -144,9 +148,11 @@ function ProfileEdit() {
       const response = await axios.delete(
         `${process.env.REACT_APP_APIADDRESS}/user/univ`
       );
+      alert(response.data.message);
+      console.log(response.data);
     } catch (error: any) {
       console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-      alert(error.response.data.message);
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
@@ -167,11 +173,12 @@ function ProfileEdit() {
         alert(response.data.message);
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-        alert(error.response.data);
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생");
       }
     }
   };
 
+  const navigate = useNavigate();
   const handleDeleteUser = async () => {
     const confirmed = window.confirm(
       `정말로 탈퇴 하시겠습니까? \n탈퇴 후에는 복구할 수 없습니다.`
@@ -181,10 +188,11 @@ function ProfileEdit() {
         const response = await axios.delete(
           `${process.env.REACT_APP_APIADDRESS}/user`
         );
-        setDeletUser(response.data);
+        alert(response.data.message);
+        navigate("/main");
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
-        alert(error.response.data);
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생");
       }
     }
   };
@@ -239,6 +247,18 @@ function ProfileEdit() {
     setNickname("");
   };
 
+  const getUser = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/user/check`
+      );
+      setUser(response.data.content);
+      console.log("user check : ", response.data.content);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생.");
+    }
+  };
+
   return (
     <Container1>
       <Container2>
@@ -262,9 +282,6 @@ function ProfileEdit() {
                 <ChangeDelete>
                   <button onClick={() => profileImageChange()}>
                     사진 변경
-                  </button>
-                  <button onClick={() => profileImageChange(true)}>
-                    기본 이미지
                   </button>
                 </ChangeDelete>
               </ProfileImage2>
@@ -340,8 +357,18 @@ function ProfileEdit() {
                   type="text"
                   placeholder="학교 이메일 입력"
                   value={schoolEmail}
+                  autoComplete="new-password"
                   onChange={handleSchoolEmailInput}
                 />
+                <input
+                  style={{
+                    width: "0px",
+                    height: "0px",
+                    filter: "opacity(0)",
+                    margin: "-8px",
+                  }}
+                />
+                {/* 자동완성 방지 숨김용 input */}
                 <OkButton>
                   <button onClick={OkClick2}>확인</button>
                   <button onClick={resetInputs}>취소</button>
@@ -723,6 +750,7 @@ const OkButton = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 0.2rem;
+  margin-top: 5px;
   & button {
     background-color: transparent;
     outline: 0;

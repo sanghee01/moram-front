@@ -214,7 +214,7 @@ const NotiContainer = styled.div<any>`
   display: flex;
   flex-direction: column;
   transition: 0.5s all;
-  box-shadow: 3px 3px 7px black;
+  box-shadow: 3px 3px 9px rgba(0, 0, 0, 0.6);
   &:hover {
     cursor: pointer;
     transform: scale(1.02);
@@ -223,8 +223,9 @@ const NotiContainer = styled.div<any>`
 
 const DeleteBtn = styled(SmallBtn)`
   height: 27px !important;
-  background: "gray";
+  background: #f88570 !important;
   color: "white";
+  margin-top: 5px;
 
   &:hover {
     background: tomato;

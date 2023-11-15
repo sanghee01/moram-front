@@ -9,6 +9,7 @@ import { userState } from "../state";
 import { BsReplyFill } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
 import { handleDateChange } from "../dateChange";
+import ProfilePhoto from "../components/ProfilePhoto";
 
 function Posting() {
   const params = useParams();
@@ -172,8 +173,12 @@ function Posting() {
             {posting.title}
           </h2>
           <h4>
-            {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount} 💬
-            {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <ProfilePhoto name={posting.profileImg} />
+              {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
+              💬
+              {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
+            </div>
             {posting.userId === user?.id && (
               <>
                 <SmallBtn
@@ -346,7 +351,7 @@ function Posting() {
 
 const Container = styled.div`
   width: calc(100% - 30px);
-  max-width: 800px;
+  max-width: 900px;
   padding: 15px;
   margin: 15px auto;
   background-color: whitesmoke;
