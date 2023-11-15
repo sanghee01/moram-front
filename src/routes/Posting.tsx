@@ -10,6 +10,7 @@ import { BsReplyFill } from "react-icons/bs";
 import { LuDelete } from "react-icons/lu";
 import { handleDateChange } from "../dateChange";
 import ProfilePhoto from "../components/ProfilePhoto";
+import { FiRefreshCcw } from "react-icons/fi";
 
 function Posting() {
   const params = useParams();
@@ -242,7 +243,9 @@ function Posting() {
           )}
 
           <hr />
-          <h2>댓글</h2>
+          <Row>
+            댓글 <FiRefreshCcw onClick={() => getComments()} />
+          </Row>
           {replyId && (
             <ReplyText
               onClick={() => {
@@ -292,10 +295,15 @@ function Posting() {
             >
               <>
                 <Comment>
-                  <span style={{ color: "#5a59ff" }}>{comment.nickname}</span> :{" "}
-                  {comment.content}{" "}
-                  <div style={{ color: "gray" }}>
-                    {handleDateChange(comment.writeTime)}
+                  <div
+                    style={{
+                      color: "#5a59ff",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <ProfilePhoto name={comment.profileImg} />
+                    {comment.nickname}
                     {user?.id === comment.userId && (
                       <SmallBtn
                         $padding="4px 10px"
@@ -311,15 +319,24 @@ function Posting() {
                         삭제
                       </SmallBtn>
                     )}
+                  </div>{" "}
+                  {comment.content}{" "}
+                  <div style={{ color: "gray" }}>
+                    {handleDateChange(comment.writeTime)}
                   </div>
                 </Comment>
                 {reply(comment.id).map((reply: any) => (
-                  <Comment key={reply.id}>
-                    &nbsp;&nbsp;&nbsp;ㄴ{" "}
-                    <span style={{ color: "#5a59ff" }}>{reply.nickname}</span> :{" "}
-                    {reply.content}
-                    <div style={{ color: "gray", marginLeft: "16px" }}>
-                      {handleDateChange(reply.writeTime)}
+                  <Comment key={reply.id} $marginL={"15px"}>
+                    <div
+                      style={{
+                        color: "#5a59ff",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      ㄴ&nbsp;
+                      <ProfilePhoto name={reply.profileImg} />
+                      {reply.nickname}
                       {user?.id === reply.userId && (
                         <SmallBtn
                           $padding="3px 10px"
@@ -335,6 +352,10 @@ function Posting() {
                           삭제
                         </SmallBtn>
                       )}
+                    </div>{" "}
+                    {reply.content}
+                    <div style={{ color: "gray" }}>
+                      {handleDateChange(reply.writeTime)}
                     </div>
                   </Comment>
                 ))}
@@ -387,7 +408,7 @@ const Btn = styled(SmallBtn)<any>`
 const CommentContainer = styled.div`
   transition: 0.5s all;
   border-radius: 15px;
-  padding: 10px;
+  padding: 10px 15px;
 
   &:hover {
     cursor: pointer;
@@ -456,9 +477,22 @@ const ContentText = styled.div`
   white-space: pre-wrap;
   margin-top: 10px;
 `;
-const Comment = styled.div`
+const Comment = styled.div<any>`
   font-size: 1rem;
   font-weight: 600;
   margin: 5px 0;
+  margin-left: ${(props) => props.$marginL || 0};
+`;
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: bolder;
+
+  & *:hover {
+    cursor: pointer;
+  }
 `;
 export default Posting;
