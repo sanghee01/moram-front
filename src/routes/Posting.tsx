@@ -165,168 +165,140 @@ function Posting() {
 
   return (
     <Container>
-      {posting ? (
-        <>
-          <h2>
-            <span style={{ color: "gray" }}>
-              [{posting.category}] [{posting.tag}]
-            </span>{" "}
-            {posting.title}
-          </h2>
-          <h4>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <ProfilePhoto name={posting.profileImg} />
-              {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
-              💬
-              {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
-            </div>
-            {posting.userId === user?.id && (
-              <>
-                <SmallBtn
-                  $padding="4px 10px"
-                  $margin="5px"
-                  $background="tomato"
-                  $backgroundHover="red"
-                  $color="white"
-                  onClick={() => deletePosting()}
-                >
-                  글 삭제
-                </SmallBtn>
-                <SmallBtn
-                  $padding="4px 10px"
-                  $margin="5px"
-                  $background="skyblue"
-                  $backgroundHover="lightblue"
-                  $color="white"
-                  onClick={() =>
-                    navigate(`/write/${posting.id}`, {
-                      state: posting,
-                    })
+      <FormContainer>
+        {posting ? (
+          <>
+            <h2>
+              <span style={{ color: "gray" }}>
+                [{posting.category}] [{posting.tag}]
+              </span>{" "}
+              {posting.title}
+            </h2>
+            <h4>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <ProfilePhoto name={posting.profileImg} />
+                {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
+                💬
+                {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
+              </div>
+              {posting.userId === user?.id && (
+                <>
+                  <SmallBtn
+                    $padding="4px 10px"
+                    $margin="5px"
+                    $background="tomato"
+                    $backgroundHover="red"
+                    $color="white"
+                    onClick={() => deletePosting()}
+                  >
+                    글 삭제
+                  </SmallBtn>
+                  <SmallBtn
+                    $padding="4px 10px"
+                    $margin="5px"
+                    $background="skyblue"
+                    $backgroundHover="lightblue"
+                    $color="white"
+                    onClick={() =>
+                      navigate(`/write/${posting.id}`, {
+                        state: posting,
+                      })
+                    }
+                  >
+                    글 수정
+                  </SmallBtn>
+                </>
+              )}
+            </h4>
+            <hr />
+            <ContentText>{posting.content}</ContentText>
+            <Img src={posting.img1Url} />
+            <Img src={posting.img2Url} />
+            <Img src={posting.img3Url} />
+            <BtnContainer>
+              <LikeBtn $isLiked={isLiked} onClick={() => postLike()}>
+                ❤️ {posting.likesCount}
+              </LikeBtn>
+              <ReportBtn onClick={() => setIsReportOpen((prev) => !prev)}>
+                🚨
+              </ReportBtn>
+            </BtnContainer>
+            {isReportOpen && (
+              <InputContainer>
+                <CommentInput
+                  // ref={inputRef}
+                  onChange={(e) => setReportText(e.target.value)}
+                  onKeyUp={(e) => {
+                    if (e.key === "Enter") postReport();
+                  }}
+                  placeholder="신고할 내용을 요약해 주세요."
+                  value={reportText}
+                />
+                <Btn
+                  onClick={() => postReport()}
+                  style={
+                    user ? { background: "orange" } : { background: "gray" }
                   }
                 >
-                  글 수정
-                </SmallBtn>
-              </>
+                  {user ? "전송" : "로그인 필요"}
+                </Btn>
+              </InputContainer>
             )}
-          </h4>
-          <hr />
-          <ContentText>{posting.content}</ContentText>
-          <Img src={posting.img1Url} />
-          <Img src={posting.img2Url} />
-          <Img src={posting.img3Url} />
-          <BtnContainer>
-            <LikeBtn $isLiked={isLiked} onClick={() => postLike()}>
-              ❤️ {posting.likesCount}
-            </LikeBtn>
-            <ReportBtn onClick={() => setIsReportOpen((prev) => !prev)}>
-              🚨
-            </ReportBtn>
-          </BtnContainer>
-          {isReportOpen && (
+
+            <hr />
+            <Row>
+              댓글 {posting.commentCount}{" "}
+              <FiRefreshCcw onClick={() => getComments()} />
+            </Row>
+            {replyId && (
+              <ReplyText
+                onClick={() => {
+                  setReplyId(null);
+                  setReplyNickname(null);
+                  setReplyComment(null);
+                }}
+              >
+                <div>
+                  <BsReplyFill fill="white" /> &nbsp;[@{replyNickname} :{" "}
+                  {replyComment}] 에게 답글을 남기는 중... &nbsp;&nbsp;
+                  <LuDelete stroke="white" size="20" />
+                </div>
+              </ReplyText>
+            )}
             <InputContainer>
               <CommentInput
-                // ref={inputRef}
-                onChange={(e) => setReportText(e.target.value)}
+                ref={inputRef}
+                onChange={onChange}
                 onKeyUp={(e) => {
-                  if (e.key === "Enter") postReport();
+                  if (e.key === "Enter") postComment();
                 }}
-                placeholder="신고할 내용을 요약해 주세요."
-                value={reportText}
+                value={commentContent}
               />
               <Btn
-                onClick={() => postReport()}
-                style={user ? { background: "orange" } : { background: "gray" }}
+                onClick={() => postComment()}
+                style={user || { background: "gray " }}
               >
-                {user ? "전송" : "로그인 필요"}
+                {user ? "작성" : "로그인 필요"}
               </Btn>
             </InputContainer>
-          )}
-
-          <hr />
-          <Row>
-            댓글 <FiRefreshCcw onClick={() => getComments()} />
-          </Row>
-          {replyId && (
-            <ReplyText
-              onClick={() => {
-                setReplyId(null);
-                setReplyNickname(null);
-                setReplyComment(null);
-              }}
-            >
-              <div>
-                <BsReplyFill fill="white" /> &nbsp;[@{replyNickname} :{" "}
-                {replyComment}] 에게 답글을 남기는 중... &nbsp;&nbsp;
-                <LuDelete stroke="white" size="20" />
-              </div>
-            </ReplyText>
-          )}
-          <InputContainer>
-            <CommentInput
-              ref={inputRef}
-              onChange={onChange}
-              onKeyUp={(e) => {
-                if (e.key === "Enter") postComment();
-              }}
-              value={commentContent}
-            />
-            <Btn
-              onClick={() => postComment()}
-              style={user || { background: "gray " }}
-            >
-              {user ? "작성" : "로그인 필요"}
-            </Btn>
-          </InputContainer>
-        </>
-      ) : (
-        <h1>Loading...</h1>
-      )}
-      {comments ? (
-        comments.map((comment: any) =>
-          !comment.parentId ? (
-            <CommentContainer
-              key={comment.id}
-              onClick={() => {
-                setReplyId(comment.id);
-                setReplyNickname(comment.nickname);
-                setReplyComment(comment.content);
-                inputRef.current.focus();
-              }}
-            >
-              <>
-                <Comment>
-                  <div
-                    style={{
-                      color: "#5a59ff",
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <ProfilePhoto name={comment.profileImg} />
-                    {comment.nickname}
-                    {user?.id === comment.userId && (
-                      <SmallBtn
-                        $padding="4px 10px"
-                        $margin="0 8px"
-                        $background="tomato"
-                        $backgroundHover="red"
-                        $color="white"
-                        onClick={(e: any) => {
-                          e.stopPropagation();
-                          deleteComment(comment.id);
-                        }}
-                      >
-                        삭제
-                      </SmallBtn>
-                    )}
-                  </div>{" "}
-                  {comment.content}{" "}
-                  <div style={{ color: "gray" }}>
-                    {handleDateChange(comment.writeTime)}
-                  </div>
-                </Comment>
-                {reply(comment.id).map((reply: any) => (
-                  <Comment key={reply.id} $marginL={"15px"}>
+          </>
+        ) : (
+          <h1>Loading...</h1>
+        )}
+        {comments ? (
+          comments.map((comment: any) =>
+            !comment.parentId ? (
+              <CommentContainer
+                key={comment.id}
+                onClick={() => {
+                  setReplyId(comment.id);
+                  setReplyNickname(comment.nickname);
+                  setReplyComment(comment.content);
+                  inputRef.current.focus();
+                }}
+              >
+                <>
+                  <Comment>
                     <div
                       style={{
                         color: "#5a59ff",
@@ -334,12 +306,11 @@ function Posting() {
                         alignItems: "center",
                       }}
                     >
-                      ㄴ&nbsp;
-                      <ProfilePhoto name={reply.profileImg} />
-                      {reply.nickname}
-                      {user?.id === reply.userId && (
+                      <ProfilePhoto name={comment.profileImg} />
+                      {comment.nickname}
+                      {user?.id === comment.userId && (
                         <SmallBtn
-                          $padding="3px 10px"
+                          $padding="4px 10px"
                           $margin="0 8px"
                           $background="tomato"
                           $backgroundHover="red"
@@ -353,28 +324,68 @@ function Posting() {
                         </SmallBtn>
                       )}
                     </div>{" "}
-                    {reply.content}
+                    {comment.content}{" "}
                     <div style={{ color: "gray" }}>
-                      {handleDateChange(reply.writeTime)}
+                      {handleDateChange(comment.writeTime)}
                     </div>
                   </Comment>
-                ))}
-              </>
-            </CommentContainer>
-          ) : null
-        )
-      ) : (
-        <div>댓글 로딩 중...</div>
-      )}
+                  {reply(comment.id).map((reply: any) => (
+                    <Comment key={reply.id} $marginL={"15px"}>
+                      <div
+                        style={{
+                          color: "#5a59ff",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        ㄴ&nbsp;
+                        <ProfilePhoto name={reply.profileImg} />
+                        {reply.nickname}
+                        {user?.id === reply.userId && (
+                          <SmallBtn
+                            $padding="3px 10px"
+                            $margin="0 8px"
+                            $background="tomato"
+                            $backgroundHover="red"
+                            $color="white"
+                            onClick={(e: any) => {
+                              e.stopPropagation();
+                              deleteComment(comment.id);
+                            }}
+                          >
+                            삭제
+                          </SmallBtn>
+                        )}
+                      </div>{" "}
+                      {reply.content}
+                      <div style={{ color: "gray" }}>
+                        {handleDateChange(reply.writeTime)}
+                      </div>
+                    </Comment>
+                  ))}
+                </>
+              </CommentContainer>
+            ) : null
+          )
+        ) : (
+          <div>댓글 로딩 중...</div>
+        )}
+      </FormContainer>
     </Container>
   );
 }
-
 const Container = styled.div`
+  display: flex;
+  width: 100%;
+  min-height: calc(100dvh - var(--headerHeight) - var(--footerHeight));
+`;
+
+const FormContainer = styled.div`
   width: calc(100% - 30px);
   max-width: 900px;
+  height: auto;
   padding: 15px;
-  margin: 15px auto;
+  margin: 20px auto;
   background-color: whitesmoke;
   border-radius: 15px;
 `;
