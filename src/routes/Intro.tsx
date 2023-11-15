@@ -72,13 +72,24 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  max-width: 900px;
+  margin: auto;
   width: 100%;
   min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
+  @media screen and (max-width: 900px) {
+    width: 80%;
+  }
 `;
 const ContainerBox = styled.div`
-  width: 65%;
+  width: 100%;
   margin: 3rem 0;
   display: flex;
+  @media screen and (max-width: 900px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 0;
+  }
 `;
 
 const IntroTitle = styled.div`
@@ -112,6 +123,10 @@ const IntroTitle = styled.div`
   & p {
     font-size: 16px;
   }
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    align-items: center;
+  }
 `;
 const Span1 = styled.div`
   display: inline-block;
@@ -128,11 +143,15 @@ const IntroImg = styled.div`
   min-height: 150px;
   display: flex;
   align-items: center;
+  @media screen and (max-width: 900px) {
+    margin-left: 0;
+    margin-top: 0;
+  }
 `;
 
 const ContainerBox2 = styled.div`
   margin-bottom: 5rem;
-  width: 65%;
+  width: 100%;
   height: 220px;
   display: flex;
   justify-content: center;
@@ -144,6 +163,10 @@ const ContainerBox2 = styled.div`
 
   & h2 {
     font-size: 26px;
+  }
+  @media screen and (max-width: 900px) {
+    height: 380px;
+    width: 100%;
   }
 `;
 
@@ -157,6 +180,12 @@ const Goal = styled.div`
     opacity: 0.8;
     transform: scale(1.05);
     transform: scale(1.05) rotate(-2deg);
+  }
+  @media screen and (max-width: 900px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
   }
 `;
 const GoalBox1 = styled.div`
@@ -173,6 +202,9 @@ const GoalBox1 = styled.div`
   div p:first-child {
     font-weight: bold;
   }
+  @media screen and (max-width: 900px) {
+    width: 200px;
+  }
 `;
 const GoalBox2 = styled.div`
   display: flex;
@@ -188,6 +220,9 @@ const GoalBox2 = styled.div`
   div p:first-child {
     font-weight: bold;
   }
+  @media screen and (max-width: 900px) {
+    width: 200px;
+  }
 `;
 const GoalBox3 = styled.div`
   display: flex;
@@ -202,6 +237,9 @@ const GoalBox3 = styled.div`
   transition: all 0.3s ease;
   div p:first-child {
     font-weight: bold;
+  }
+  @media screen and (max-width: 900px) {
+    width: 200px;
   }
 `;
 
