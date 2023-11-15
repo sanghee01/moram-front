@@ -44,7 +44,7 @@ function Home() {
 
   return (
     <>
-      <img src="https://moram.b1nd.com/static/media/DefaultBanner.36c8f1c1.jpg" />
+      <img src="/assets/mainImage.png" />
       <Container>
         <h1>인기 게시글</h1>
         <PopularContentBox>

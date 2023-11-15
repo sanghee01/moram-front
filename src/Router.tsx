@@ -24,6 +24,7 @@ import WriteNotice from "./routes/WriteNotice";
 import AllComments from "./components/Admin/AllComments";
 import Reports from "./components/Admin/Reports";
 import EmptyPage from "./routes/EmptyPage";
+import PasswordReset from "./routes/PasswordReset";
 
 function AppRouter() {
   const user = useRecoilValue(userState);
@@ -63,11 +64,16 @@ function AppRouter() {
                 path="/register"
                 element={<EmptyPage wrongAccess={true} />}
               />
+              <Route
+                path="/pw-reset"
+                element={<EmptyPage wrongAccess={true} />}
+              />
             </>
           ) : (
             <>
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/pw-reset" element={<PasswordReset />} />
               <Route path="*" element={<EmptyPage needLogin={true} />} />
             </>
           )}
