@@ -3,10 +3,12 @@ import { styled } from "styled-components";
 import { useEffect, useState } from "react";
 import { Title, Table, Row } from "../../styles/TableStyles";
 import { handleDateChange } from "../../dateChange";
+import { useNavigate } from "react-router-dom";
 
 function Users() {
   const [usersData, SetUsersData] = useState<null | any>(null);
   const [loading, setLoding] = useState(true);
+  const navigate = useNavigate();
   useEffect(() => {
     getUserInfo();
   }, [usersData]);
@@ -19,6 +21,7 @@ function Users() {
       SetUsersData(userData);
       setLoding(false);
     } catch (error: any) {
+      navigate("/");
       alert(error.response.data);
     }
   };

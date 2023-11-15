@@ -17,7 +17,7 @@ function LoginSuccess() {
         console.log("paresedUser", parsedUser);
         // Recoil 상태 설정
         setUser(parsedUser);
-        //navigate("/");
+        navigate("/");
       } catch (error) {
         console.error("사용자 정보 파싱 중 오류 발생:", error);
       }

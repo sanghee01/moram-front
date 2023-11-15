@@ -566,7 +566,7 @@ const Sidebar = styled.div<any>`
   width: 300px;
   height: calc(100dvh - var(--headerHeight) - 20px);
   border-radius: 10px;
-  background-color: #8e8efd;
+  background-color: #7a7afc;
   display: flex;
   position: sticky;
   top: 143px;
@@ -577,6 +577,11 @@ const Sidebar = styled.div<any>`
   gap: 10px;
   overflow-y: scroll;
   z-index: 0;
+  scrollbar-width: none; /* 파이어폭스를 위한 설정 */
+  -ms-overflow-style: none; /* IE와 엣지를 위한 설정 */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   @media screen and (max-width: 900px) {
     height: calc(100dvh - var(--headerHeight) + 1px);
@@ -592,7 +597,7 @@ const Sidebar = styled.div<any>`
 
 const BigCategory = styled.div<any>`
   width: 100%;
-  background-color: ${(props) => (props.$isOpen ? "#7070ff" : "")};
+  background-color: ${(props) => (props.$isOpen ? "#6464f4" : "")};
   border-radius: 10px;
   padding: 10px;
 

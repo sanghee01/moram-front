@@ -153,9 +153,9 @@ const Container = styled.div<any>`
   width: 50px;
   height: 100%;
   & #notification {
-    padding: 7px;
+    padding: 5px;
     padding-top: 8px;
-    width: 40px;
+    width: 50px;
     height: 100%;
     border-radius: 10px;
     transition: 0.5s all;
@@ -166,16 +166,15 @@ const Container = styled.div<any>`
     background-color: #b9b9ff;
   }
   @media screen and (max-width: 700px) {
-    & #notification {
-      padding: 10px;
+    width: 45px;
+    & span {
+      font-size: 0.9rem;
+    }
+    @media screen and (max-width: 480px) {
       width: 40px;
-      height: 100%;
-      border-radius: 10px;
-      transition: 0.5s all;
-      background-color: ${(props) => props.$isOpen && "#bbbbff"};
     }
     & span {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
     }
   }
 `;

@@ -155,6 +155,7 @@ function Write() {
       };
     } catch (error: any) {
       console.log(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
 
