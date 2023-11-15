@@ -79,7 +79,7 @@ function Login() {
       </DetailBox>
       <EasyLoginBox>
         <hr />
-        <span>간편로그인</span>
+        <span>간편로그인 | 회원가입</span>
         <KakaoLoginBtn
           href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
           target="_self"
@@ -157,7 +157,7 @@ const IsFistTime = styled.div`
   margin-top: 23px;
 
   & span {
-    margin-left: 5px;
+    margin-left: 3px;
     color: #5a59ff;
     font-weight: 500;
   }

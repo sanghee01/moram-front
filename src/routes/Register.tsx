@@ -1,14 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Logo,
-  Container,
-  Form,
-  Input,
-  Buttons,
-  Label,
-} from "../styles/LoginStyles";
 import styled from "styled-components";
 
 function Register() {
@@ -72,7 +64,8 @@ function Register() {
   };
 
   /**인증번호 전송 버튼 누르면 실행하는 함수 */
-  const sendVerify = async () => {
+  const sendVerify = async (e: any) => {
+    e.preventDefault();
     if (isLoading) return;
 
     setIsLoading(true);
@@ -96,7 +89,8 @@ function Register() {
   };
 
   /**인증번호 입력 후 인증번호 확인 버튼 누르면 실행하는 함수  */
-  const checkVerify = async () => {
+  const checkVerify = async (e: any) => {
+    e.preventDefault();
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/register/mailverify`,
@@ -121,16 +115,14 @@ function Register() {
   };
   return (
     <Container>
-      <Form>
-        <Logo>모람모람 회원가입하기</Logo>
-        <Label>닉네임</Label>
+      <Logo src="/assets/logo.png" onClick={() => navigate("/")} />
+      <form>
         <Input
           id="nickname"
           placeholder="닉네임"
           onChange={onChange}
           value={nickname}
         />
-        <Label>이메일</Label>
         <Input
           id="email"
           type="email"
@@ -138,7 +130,6 @@ function Register() {
           onChange={onChange}
           value={email}
         />
-        <Label>인증번호</Label>
         {!verified ? (
           <VerifyContainer>
             {count <= 300 && (
@@ -150,20 +141,18 @@ function Register() {
               />
             )}
             {count === 301 ? (
-              <button
-                onClick={() => sendVerify()}
+              <VerifyBtn
+                onClick={sendVerify}
                 style={isLoading ? { background: "gray" } : {}}
               >
-                인증번호 전송
-              </button>
+                인증
+              </VerifyBtn>
             ) : (
-              <button onClick={() => checkVerify()}>인증번호 확인</button>
+              <VerifyOkBtn onClick={checkVerify}>인증완료</VerifyOkBtn>
             )}
           </VerifyContainer>
         ) : (
-          <CountNum style={{ fontSize: "1.15rem", color: "green" }}>
-            이메일 인증 완료!
-          </CountNum>
+          <CountNum style={{ color: "green" }}>이메일 인증 완료!</CountNum>
         )}
 
         {count <= 300 && !verified && (
@@ -172,14 +161,13 @@ function Register() {
               ? `인증 유효 시간: ${displayTime()}`
               : `인증 시간이 만료됨`}
             <ResendBtn
-              onClick={() => sendVerify()}
+              onClick={sendVerify}
               style={isLoading ? { background: "gray" } : {}}
             >
-              메일 재전송
+              재전송
             </ResendBtn>
           </CountNum>
         )}
-        <Label>비밀번호</Label>
         <Input
           id="password"
           type="password"
@@ -190,49 +178,70 @@ function Register() {
             if (e.key === "Enter") register();
           }}
         />
-        <Label>비밀번호 확인</Label>
         <Input
           id="passwordVerify"
           type="password"
-          placeholder="비밀번호"
+          placeholder="비밀번호 확인"
           onChange={onChange}
           value={passwordVerify}
           onKeyUp={(e) => {
             if (e.key === "Enter") register();
           }}
         />
-        <Buttons>
+        <div>
           {verified ? (
-            <button
-              style={{ backgroundColor: "rgb(93, 165, 0)" }}
-              onClick={register}
-            >
-              회원가입
-            </button>
+            <SummitBtn onClick={register}>회원가입</SummitBtn>
           ) : (
-            <button
-              style={{ backgroundColor: "gray" }}
-              onClick={() => alert("메일을 인증해주세요.")}
-            >
+            <SummitBtn onClick={() => alert("메일을 인증해주세요.")}>
               회원가입
-            </button>
+            </SummitBtn>
           )}
-
-          <a
-            href={`${process.env.REACT_APP_APIADDRESS}/user/kakao`}
-            target="_self"
-          >
-            카카오로 로그인/회원가입
-          </a>
-
-          <button onClick={() => navigate("/login")}>
-            이메일로 로그인하기
-          </button>
-        </Buttons>
-      </Form>
+        </div>
+      </form>
     </Container>
   );
 }
+const Logo = styled.img`
+  height: 70px;
+  margin-bottom: 20px;
+`;
+const Container = styled.div`
+  width: 400px;
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  @media screen and (max-width: 450px) {
+    width: 300px;
+  }
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 7px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid gray;
+`;
+
+const SummitBtn = styled.div`
+  width: 100%;
+  padding: 9px;
+  margin: 5px 0;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #5a59ff;
+  color: white;
+  &:hover {
+    cursor: pointer;
+    filter: contrast(200%);
+  }
+`;
 
 const VerifyContainer = styled.div`
   width: 100%;
@@ -240,39 +249,62 @@ const VerifyContainer = styled.div`
   padding: 0;
   margin: 5px 0;
   gap: 7px;
-
   display: flex;
-  & * {
-    border-radius: 15px;
-    border: 2px solid gray;
-  }
+
   & input {
-    width: 100px;
-    padding: 0 10px;
-    flex-grow: 3;
+    padding: 7px;
+    margin: 5px 0;
+    border-radius: 8px;
+    border: 1px solid gray;
   }
-  & button {
-    flex-grow: 1;
-    white-space: nowrap;
+`;
+
+const VerifyBtn = styled.button`
+  background-color: #5f5fe0;
+  margin: 9px;
+  width: 43px;
+  border-radius: 5px;
+  position: relative;
+  right: -315px;
+  top: -54px;
+  border: none;
+  color: white;
+  font-size: 0.8rem;
+  &:hover {
+    filter: contrast(200%);
+  }
+`;
+
+const VerifyOkBtn = styled.button`
+  background-color: #5a59ff;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  margin: 5px;
+  font-size: 0.8rem;
+  &:hover {
+    filter: contrast(200%);
   }
 `;
 
 const CountNum = styled.div`
-  width: 100%;
-  height: 30px;
   color: red;
 `;
 
 const ResendBtn = styled.button`
-  height: 33px;
-  width: auto;
-  border-radius: 15px;
-  margin: 5px 5px;
-  padding: 0 15px;
-  border: 0;
-  background-color: #9d9dff;
+  position: relative;
+  right: -160px;
+  top: -102px;
+  padding: 5px;
+  width: 55px;
+  margin: 5px 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.8rem;
+  background-color: #5f5fe0;
   color: white;
-  transition: all 0.5s;
-  font-size: 1.05rem;
+  &:hover {
+    filter: contrast(200%);
+  }
 `;
 export default Register;
