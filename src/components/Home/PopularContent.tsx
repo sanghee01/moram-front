@@ -41,7 +41,7 @@ function PopularContent({
       {img ? (
         <img src={img} alt="이미지" />
       ) : (
-        <img src="https://i.ibb.co/2Y3sQX2/noImage.png" alt="기본이미지" />
+        <img src="/assets/noImage3.png" alt="기본이미지" />
       )}
       <Title>
         <div>
