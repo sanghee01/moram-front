@@ -10,11 +10,11 @@ function Home() {
   const [lastPosts, setLastPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
-
   useEffect(() => {
     getPopularPosting();
     getLastPosting();
   }, []);
+  const [banner, setBanner] = useState("");
 
   const getPopularPosting = async () => {
     try {
@@ -42,9 +42,19 @@ function Home() {
     }
   };
 
+  const banners = [
+    "/assets/banner0.png",
+    "/assets/banner1.png",
+    "/assets/banner2.png",
+  ];
+
+  useEffect(() => {
+    setBanner(banners[Math.floor(Math.random() * banners.length)]);
+  }, []);
+
   return (
     <>
-      <img src="/assets/mainImage.png" />
+      <img src={banner} />
       <Container>
         <h1>인기 게시글</h1>
         <PopularContentBox>
