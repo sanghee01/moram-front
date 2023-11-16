@@ -190,6 +190,7 @@ function ProfileEdit() {
         );
         alert(response.data.message);
         navigate("/main");
+        window.location.reload();
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
         alert(error?.response?.data?.message || "알 수 없는 에러 발생");
