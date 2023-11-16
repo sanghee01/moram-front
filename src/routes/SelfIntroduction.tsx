@@ -12,6 +12,7 @@ function SelfIntroDuction() {
   const textareaRef = useRef<any>(null);
   const [gptCount, setGptCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [randomKey, setRandomKey] = useState("");
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   useEffect(() => {
@@ -26,6 +27,12 @@ function SelfIntroDuction() {
       getGptCount();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (randomKey) {
+      checkGpt();
+    }
+  }, [randomKey]);
 
   const getGptCount = async () => {
     try {
@@ -46,12 +53,29 @@ function SelfIntroDuction() {
       setResult("인공지능이 열심히 작성 중...");
       const response = await axios.post(
         `${process.env.REACT_APP_APIADDRESS}/gpt`,
-        { content: text },
-        { timeout: 500000 }
+        { content: text }
       );
-      setResult(response.data.content); //포스팅 데이터 받기
+      setRandomKey(response.data.content); //랜덤키 저장
+    } catch (error: any) {
       setIsLoading(false);
-      getGptCount();
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
+  };
+
+  const checkGpt = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_APIADDRESS}/gpt/check?randomKey=${randomKey}`
+      );
+      if (response.status === 200) {
+        setIsLoading(false);
+        setResult(response.data.content);
+        getGptCount();
+      } else if (response.status === 202) {
+        setTimeout(() => {
+          checkGpt();
+        }, 5000);
+      }
     } catch (error: any) {
       setIsLoading(false);
       alert(error?.response?.data?.message || "알 수 없는 에러 발생");

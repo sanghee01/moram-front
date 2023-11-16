@@ -28,7 +28,7 @@ function PasswordReset() {
     <Container>
       <FormContainer>
         <Label>
-          가입했던 이메일 주소를 입력하면 비밀전호 재설정 링크를 보내드립니다
+          가입했던 이메일 주소를 입력하면 비밀전호 재설정 링크를 보내드립니다.
         </Label>
         <Input
           onChange={(e) => {
@@ -63,7 +63,7 @@ const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: 30px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bolder;
   gap: 30px;
   border-radius: 15px;
@@ -74,11 +74,11 @@ const FormContainer = styled.div`
 `;
 
 const Label = styled.div`
-  font-size: 1.5rem;
+  font-size: 1.3rem;
 `;
 
 const Input = styled.input`
-  width: 80%;
+  width: 90%;
   max-width: 500px;
   height: 50px;
   padding: 0 10px;
@@ -96,7 +96,7 @@ const Btn = styled.button<any>`
   width: auto;
   height: auto;
   display: flex;
-  padding: 15px;
+  padding: 10px 15px;
   justify-content: center;
   align-items: center;
   border-radius: 10px;
