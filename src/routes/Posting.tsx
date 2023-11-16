@@ -11,6 +11,7 @@ import { LuDelete } from "react-icons/lu";
 import { handleDateChange } from "../dateChange";
 import ProfilePhoto from "../components/ProfilePhoto";
 import { FiRefreshCcw } from "react-icons/fi";
+import { Tag, Category } from "../styles/Tag_CatagoryStyles";
 
 function Posting() {
   const params = useParams();
@@ -169,9 +170,7 @@ function Posting() {
         {posting ? (
           <>
             <h2>
-              <span style={{ color: "gray" }}>
-                [{posting.category}] [{posting.tag}]
-              </span>{" "}
+              <Category>{posting.category}</Category> <Tag>{posting.tag}</Tag>
               {posting.title}
             </h2>
             <h4>
@@ -388,6 +387,12 @@ const FormContainer = styled.div`
   margin: 20px auto;
   background-color: whitesmoke;
   border-radius: 15px;
+
+  & h2 {
+    display: flex;
+    gap: 7px;
+    align-items: center;
+  }
 `;
 
 const Img = styled.img`
