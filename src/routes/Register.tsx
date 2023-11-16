@@ -117,12 +117,14 @@ function Register() {
     <Container>
       <Logo src="/assets/logo.png" onClick={() => navigate("/")} />
       <form>
+        <Label>닉네임</Label>
         <Input
           id="nickname"
           placeholder="닉네임"
           onChange={onChange}
           value={nickname}
         />
+        <Label>이메일</Label>
         <Input
           id="email"
           type="email"
@@ -157,9 +159,11 @@ function Register() {
 
         {count <= 300 && !verified && (
           <CountNum>
-            {count > 0
-              ? `인증 유효 시간: ${displayTime()}`
-              : `인증 시간이 만료됨`}
+            <div>
+              {count > 0
+                ? `인증 유효 시간: ${displayTime()}`
+                : `인증 시간이 만료됨`}
+            </div>
             <ResendBtn
               onClick={sendVerify}
               style={isLoading ? { background: "gray" } : {}}
@@ -168,6 +172,7 @@ function Register() {
             </ResendBtn>
           </CountNum>
         )}
+        <Label>비밀번호</Label>
         <Input
           id="password"
           type="password"
@@ -178,6 +183,7 @@ function Register() {
             if (e.key === "Enter") register();
           }}
         />
+        <Label>비밀번호 확인</Label>
         <Input
           id="passwordVerify"
           type="password"
@@ -206,7 +212,8 @@ const Logo = styled.img`
   margin-bottom: 20px;
 `;
 const Container = styled.div`
-  width: 400px;
+  width: 90%;
+  max-width: 400px;
   min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   display: flex;
   flex-direction: column;
@@ -214,11 +221,17 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   padding: 50px 0;
-  @media screen and (max-width: 450px) {
-    width: 300px;
+  & form {
+    width: 100%;
+    margin: 0;
   }
 `;
 
+const Label = styled.div`
+  margin-top: 10px;
+  font-size: 1.3rem;
+  font-weight: bolder;
+`;
 const Input = styled.input`
   width: 100%;
   padding: 7px;
@@ -252,6 +265,7 @@ const VerifyContainer = styled.div`
   display: flex;
 
   & input {
+    width: 75%;
     padding: 7px;
     margin: 5px 0;
     border-radius: 8px;
@@ -261,58 +275,54 @@ const VerifyContainer = styled.div`
 
 const VerifyBtn = styled.button`
   background-color: #5f5fe0;
-  margin: 9px;
-  width: 45px;
+  margin: 0px;
+  width: 100%;
+  height: 35px;
   border-radius: 5px;
-  position: relative;
-  right: -340px;
-  top: -54px;
   border: none;
   white-space: nowrap;
   color: white;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   &:hover {
     filter: contrast(200%);
-  }
-  @media screen and (max-width: 450px) {
-    right: -240px;
   }
 `;
 
 const VerifyOkBtn = styled.button`
   background-color: #5a59ff;
+  min-width: 60px;
+  flex-grow: 1;
+  height: 38px;
   border: none;
   color: white;
   border-radius: 8px;
-  margin: 5px;
+  margin: 5px 0;
   font-size: 0.8rem;
+  white-space: nowrap;
   &:hover {
     filter: contrast(200%);
   }
 `;
 
 const CountNum = styled.div`
+  display: flex;
+  align-items: center;
   color: red;
+  gap: 10px;
 `;
 
 const ResendBtn = styled.button`
-  position: relative;
-  right: -160px;
-  top: -102px;
-  padding: 5px;
-  width: 55px;
-  margin: 5px 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 0.8rem;
   background-color: #5f5fe0;
+  margin: 0px;
+  width: 55px;
+  height: 35px;
+  border-radius: 5px;
+  border: none;
+  white-space: nowrap;
   color: white;
+  font-size: 0.9rem;
   &:hover {
     filter: contrast(200%);
-  }
-
-  @media screen and (max-width: 450px) {
-    right: -87px;
   }
 `;
 export default Register;
