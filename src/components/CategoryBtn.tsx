@@ -12,11 +12,10 @@ function CategoryBtn({ category, tag, marginL, marginR }: any) {
       $marginL={marginL}
       $marginR={marginR}
       onClick={() => {
-        if (location.pathname !== "/community") {
-          // setPostings("");
-          // setIds([99999, 0]);
-        }
-
+        //   if (location.pathname !== "/community") {
+        //     // setPostings("");
+        //     // setIds([99999, 0]);
+        //   }
         navigate(
           `/community?category=${category}&tag=${tag || ""}&reload=true`
         );

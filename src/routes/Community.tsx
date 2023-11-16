@@ -105,10 +105,13 @@ function Community() {
     /**커뮤니티 버튼을 다시 눌렀을 경우 새로고침 */
     if (queryParams.get("reload") === "true") {
       setIds([99999, 0]);
-      setPostings("");
-      changeQuery(queryParams.get("category"), queryParams.get("tag")); //reload 쿼리 초기화
+      //setPostings("");
+      changeQuery(
+        queryParams.get("category") || "",
+        queryParams.get("tag") || ""
+      ); //reload 쿼리 초기화
     }
-  }, [location.search]); // location 객체가 변경될 때마다 실행됩니다.
+  }, [location]); // location 객체가 변경될 때마다 실행됩니다.
 
   const loadSidebar = () => {
     /**좌측 패널 확장 기록 불러오기 */
