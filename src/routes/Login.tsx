@@ -8,6 +8,7 @@ import styled from "styled-components";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
   const setUser = useSetRecoilState(userState);
   const navigate = useNavigate();
 
@@ -28,6 +29,7 @@ function Login() {
         {
           email,
           password,
+          remember,
         }
       );
       const user = response.data.content;
@@ -67,8 +69,14 @@ function Login() {
       <DetailBox>
         <Find>
           <div>
-            <input id="check" type="checkbox" />
-            <label htmlFor="check">로그인 유지</label>
+            <input
+              type="checkbox"
+              checked={remember}
+              onChange={() => setRemember((prev) => !prev)}
+            />
+            <span onClick={() => setRemember((prev) => !prev)}>
+              로그인 유지
+            </span>
           </div>
           <span>비밀번호 찾기</span>
         </Find>
