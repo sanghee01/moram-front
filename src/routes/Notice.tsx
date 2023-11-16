@@ -76,6 +76,7 @@ const Container = styled.div`
   min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   margin: auto;
   margin-bottom: 70px;
+  margin-top: 50px;
   @media screen and (max-width: 900px) {
     width: 90%;
   }
@@ -86,6 +87,8 @@ const WriteBtn = styled.div`
   justify-content: right;
   max-width: 800px;
   margin: auto;
+  margin-top: -50px;
+
   & button {
     transition: 0.5s all;
     padding: 10px 20px;
