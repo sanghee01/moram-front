@@ -6,17 +6,14 @@ interface NoticePostProps {
   id: number;
   title: string;
   writeTime: string;
-  nickname: string;
 }
 
-function NoticePost({ id, title, nickname, writeTime }: NoticePostProps) {
+function NoticePost({ id, title, writeTime }: NoticePostProps) {
   return (
     <Container>
       <Link to={`/notice/${id}`}>
         <div>{title}</div>
-        <div>
-          {nickname} | {handleDateChange(writeTime)}
-        </div>
+        <div>{handleDateChange(writeTime)}</div>
       </Link>
     </Container>
   );
@@ -27,11 +24,24 @@ export default NoticePost;
 const Container = styled.div`
   & a {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     max-width: 800px;
-    padding: 15px;
+    padding: 20px;
     margin: 15px auto;
     background-color: whitesmoke;
     border-radius: 15px;
+
+    & div:last-child {
+      color: rgba(0, 0, 0, 0.4);
+      font-size: 0.9rem;
+    }
+  }
+  @media screen and (max-width: 800px) {
+    & a {
+      flex-direction: column;
+      & div:last-child {
+        font-size: 0.8rem;
+      }
+    }
   }
 `;
