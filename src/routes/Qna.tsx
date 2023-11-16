@@ -104,7 +104,7 @@ function Qna() {
               궁금한 점
             </button>
             <button
-              className={categoryButton === "요류 신고" ? "active" : ""}
+              className={categoryButton === "오류 신고" ? "active" : ""}
               onClick={() => CategoryButtonClick("오류 신고")}
             >
               오류 신고
