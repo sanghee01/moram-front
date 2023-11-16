@@ -307,14 +307,17 @@ const VerifyOkBtn = styled.button`
 const CountNum = styled.div`
   display: flex;
   align-items: center;
-  color: red;
+  & div {
+    color: red;
+  }
+
   gap: 10px;
 `;
 
 const ResendBtn = styled.button`
   background-color: #5f5fe0;
   margin: 0px;
-  width: 55px;
+  padding: 0 15px;
   height: 35px;
   border-radius: 5px;
   border: none;
