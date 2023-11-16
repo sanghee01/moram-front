@@ -301,7 +301,7 @@ function Posting() {
                   <Comment>
                     <div
                       style={{
-                        color: "#5a59ff",
+                        fontWeight: 600,
                         display: "flex",
                         alignItems: "center",
                       }}
@@ -333,7 +333,7 @@ function Posting() {
                     <Comment key={reply.id} $marginL={"15px"}>
                       <div
                         style={{
-                          color: "#5a59ff",
+                          fontWeight: 600,
                           display: "flex",
                           alignItems: "center",
                         }}
@@ -490,7 +490,6 @@ const ContentText = styled.div`
 `;
 const Comment = styled.div<any>`
   font-size: 1rem;
-  font-weight: 600;
   margin: 5px 0;
   margin-left: ${(props) => props.$marginL || 0};
 `;
@@ -499,7 +498,7 @@ const Row = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   font-weight: bolder;
 
   & *:hover {

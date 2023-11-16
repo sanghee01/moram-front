@@ -5,8 +5,8 @@ function ProfilePhoto({ name }: any) {
 }
 
 const Img = styled.img`
-  width: 40px !important;
-  height: 40px !important;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 20px !important;
   margin: 5px 5px 0px 0px;
   transition: 0.5s all;
@@ -15,10 +15,6 @@ const Img = styled.img`
     height: 80px !important;
     border-radius: 30px !important;
   } */
-  @media screen and (max-width: 600px) {
-    width: 30px !important;
-    height: 30px !important;
-  }
 `;
 
 export default ProfilePhoto;
