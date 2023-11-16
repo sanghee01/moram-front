@@ -31,10 +31,10 @@ function Login() {
         }
       );
       const user = response.data.content;
+      navigate("/");
       setUser(user);
       console.log(user);
-      alert(response?.data.message);
-      navigate(-1);
+      //alert(response?.data.message);
     } catch (error: any) {
       alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
     }

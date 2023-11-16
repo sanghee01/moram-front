@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function EmptyPage({ needLogin, wrongAccess }: any) {
@@ -20,7 +19,7 @@ function EmptyPage({ needLogin, wrongAccess }: any) {
 
 const Container = styled.div`
   width: 100%;
-  height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
+  min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -28,15 +27,20 @@ const Container = styled.div`
   padding: 20px;
   font-size: 2rem;
   font-weight: bolder;
-  gap: 15px;
+  gap: 25px;
   & div {
     color: tomato;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 700px) {
+    font-size: 1.5rem;
   }
 `;
 
 const Img = styled.img`
   width: 80%;
-  max-width: 400px;
+  max-width: 250px;
   height: auto;
   border-radius: 560px;
 `;
@@ -51,6 +55,12 @@ const HomeBtn = styled.button`
   border: 0px;
   background-color: #e2e2e2;
   font-size: 1.5rem;
+
+  @media screen and (max-width: 700px) {
+    width: 150px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
 `;
 
 export default EmptyPage;
