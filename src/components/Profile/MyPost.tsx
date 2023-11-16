@@ -41,19 +41,19 @@ function MyPost({
       {img ? (
         <img src={img} alt="이미지" />
       ) : (
-        <img src="https://i.ibb.co/2Y3sQX2/noImage.png" alt="기본이미지" />
+        <img src="/assets/noImage3.png" alt="기본이미지" />
       )}
       <div>
         <Title>
-          <div>
-            <CategoryBtn category={category} />
+          <TagAndCategory>
+            <Category>{category}</Category>
             <Tag>{tag}</Tag>
-            {title}
-          </div>
-          <Info>
-            {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
-          </Info>
+          </TagAndCategory>
+          <div>{title}</div>
         </Title>
+        <Info>
+          {nickname} | ❤️{likesCount} 👀{hitCount} 💬{commentCount} | {date}
+        </Info>
         <ContentText>{content.split("<br/>").join(" ")}</ContentText>
       </div>
     </Container>
@@ -79,8 +79,6 @@ const Container = styled.div`
   & p {
     margin: 5px 0;
   }
-  & div {
-  }
 
   @media screen and (max-width: 1000px) {
     & img {
@@ -89,40 +87,31 @@ const Container = styled.div`
     }
   }
   @media screen and (max-width: 600px) {
-    & img {
-      width: 50px;
-      height: 50px;
-    }
+    gap: 10px;
   }
 `;
 
 const Title = styled.div`
   display: flex;
-  align-items: center;
   font-weight: bold;
   gap: 5px;
-  flex-direction: column;
-  align-items: start;
-
-  & div {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: 600px) {
     flex-direction: column;
-    align-items: start;
-    gap: 5px;
-    & div {
-      width: inherit;
-    }
+    font-size: 0.9rem;
   }
 `;
-
-const Info = styled.span`
+const TagAndCategory = styled.div`
+  display: flex;
+  gap: 5px;
+`;
+const Info = styled.div`
+  display: flex;
+  align-items: center;
   font-weight: 500;
   font-size: 0.9rem;
+  @media screen and (max-width: 600px) {
+    font-size: 0.7rem;
+  }
 `;
 
 const ContentText = styled.div`
@@ -134,6 +123,9 @@ const ContentText = styled.div`
   line-height: 1.7;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  @media screen and (max-width: 450px) {
+    margin-top: 2px;
+    font-size: 0.7rem;
+  }
 `;
-
 export default MyPost;

@@ -74,12 +74,12 @@ function Profile() {
                   )}
                 </SettingIcon>
 
-                <h1>{nickname}</h1>
+                <h2>{nickname}</h2>
                 <h3>{school}</h3>
                 <h4>{email}</h4>
               </ProfileContent>
               <ProfileWrite>
-                <button
+                <div
                   onClick={() => {
                     getMyData();
                     setShowPosts(true);
@@ -87,8 +87,8 @@ function Profile() {
                   }}
                 >
                   작성한 글
-                </button>
-                <button
+                </div>
+                <div
                   onClick={() => {
                     getMyData();
                     setShowPosts(false);
@@ -96,7 +96,7 @@ function Profile() {
                   }}
                 >
                   작성한 댓글
-                </button>
+                </div>
               </ProfileWrite>
             </InformationBox>
           </ProfileInpromation>
@@ -110,24 +110,28 @@ function Profile() {
             ) : posts?.length < 1 ? (
               <span>게시글이 없습니다.</span>
             ) : (
-              posts?.map((item) => {
-                return (
-                  <MyPost
-                    key={item.id}
-                    id={item.id}
-                    nickname={item.nickname}
-                    hitCount={item.hitCount}
-                    likesCount={item.likesCount}
-                    commentCount={item.commentCount}
-                    img={item.img1Url}
-                    category={item.category}
-                    title={item.title}
-                    date={handleDateChange(item.writeTime)}
-                    content={item.content}
-                    tag={item.tag}
-                  />
-                );
-              })
+              posts
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((item) => {
+                  return (
+                    <MyPost
+                      key={item.id}
+                      id={item.id}
+                      nickname={item.nickname}
+                      hitCount={item.hitCount}
+                      likesCount={item.likesCount}
+                      commentCount={item.commentCount}
+                      img={item.img1Url}
+                      category={item.category}
+                      title={item.title}
+                      date={handleDateChange(item.writeTime)}
+                      content={item.content}
+                      tag={item.tag}
+                    />
+                  );
+                })
             )}
           </PostContentBox>
         )}
@@ -138,16 +142,20 @@ function Profile() {
             ) : comments?.length < 1 ? (
               <span>게시글이 없습니다.</span>
             ) : (
-              comments?.map((item) => {
-                return (
-                  <MyComment
-                    key={item.id}
-                    postId={item.postId}
-                    date={handleDateChange(item.writeTime)}
-                    content={item.content}
-                  />
-                );
-              })
+              comments
+                ?.sort((a: any, b: any) => {
+                  return b.id - a.id;
+                })
+                .map((item) => {
+                  return (
+                    <MyComment
+                      key={item.id}
+                      postId={item.postId}
+                      date={handleDateChange(item.writeTime)}
+                      content={item.content}
+                    />
+                  );
+                })
             )}
           </CommentBox>
         )}
@@ -167,6 +175,12 @@ const MainContainer = styled.div`
   & section {
     display: flex;
     width: 100%;
+  }
+  @media screen and (max-width: 1200px) {
+    width: 75%;
+  }
+  @media screen and (max-width: 600px) {
+    width: 90%;
   }
 `;
 
@@ -206,65 +220,21 @@ const ProfileInpromation = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
-  & h3 {
-    font-size: 23px;
-  }
-  @media screen and (max-width: 1000px) {
-    & h1 {
-      font-size: 30px;
-    }
-    & h3 {
-      font-size: 19px;
-    }
-    & h4 {
-      font-size: 16px;
-    }
-  }
-  @media screen and (max-width: 800px) {
-    & h1 {
-      font-size: 25px;
-    }
-    & h3 {
-      font-size: 16px;
-    }
-    & h4 {
-      font-size: 11px;
-    }
-  }
-  @media screen and (max-width: 600px) {
-    & h1 {
-      font-size: 22px;
-    }
-    & h3 {
-      font-size: 13px;
-    }
-    & h4 {
-      font-size: 9px;
-    }
-  }
 `;
 
 const ProfileContent = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  width: 300px;
-  @media screen and (max-width: 600px) {
-    & h1 {
-      font-size: 22px;
-    }
-    & h4 {
-      font-size: 9px;
-    }
-  }
 `;
 
 const InformationBox = styled.div`
   display: flex;
-  justify-content: space-between;
   width: 100%;
   gap: 0.8rem;
-  @media screen and (max-width: 1400px) {
+  justify-content: space-between;
+
+  @media screen and (max-width: 1000px) {
     flex-direction: column;
     justify-content: center;
   }
@@ -281,36 +251,41 @@ const SettingIcon = styled.button`
 
 const ProfileWrite = styled.div`
   display: flex;
-  width: 75%;
   align-items: center;
-  gap: 0.5rem;
-  & button {
+  gap: 10px;
+
+  & div {
+    text-align: center;
     background-color: transparent;
-    font-size: 15px;
+    font-size: 1rem;
+
     font-weight: 600;
     outline: 0;
     border: 0;
+    width: 200px;
+    padding: 5px;
     background-color: #e6e6e6d6;
-    width: 100%;
-    height: 35px;
     border-radius: 10px;
-    gap: 0.2rem;
-    transition: background-color 0.5s ease;
   }
-  & button:hover {
-    background-color: #d6d3fb;
+  & div:hover {
+    filter: contrast(70%);
   }
-  @media screen and (max-width: 1000px) {
-    & button {
-      width: 160px;
-      height: 30px;
+
+  @media screen and (max-width: 800px) {
+    & div {
+      font-size: 0.8rem;
+
+      width: 170px;
     }
   }
-  @media screen and (max-width: 800px) {
-    & button {
+  @media screen and (max-width: 600px) {
+    & div {
       width: 130px;
-      height: 30px;
-      font-size: 13px;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    & div {
+      width: 100px;
     }
   }
 `;

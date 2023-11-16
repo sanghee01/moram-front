@@ -60,7 +60,6 @@ function Notice() {
                 key={item.id}
                 id={item.id}
                 title={item.title}
-                nickname={item.nickname}
                 writeTime={item.writeTime}
               />
             );
@@ -76,6 +75,7 @@ const Container = styled.div`
   width: 70%;
   min-height: calc(100dvh - (var(--headerHeight) + var(--footerHeight)));
   margin: auto;
+  margin-bottom: 70px;
   @media screen and (max-width: 900px) {
     width: 90%;
   }

@@ -5,16 +5,16 @@ function ProfilePhoto({ name }: any) {
 }
 
 const Img = styled.img`
-  width: 40px !important;
-  height: 40px !important;
+  width: 30px !important;
+  height: 30px !important;
   border-radius: 20px !important;
   margin: 5px 5px 0px 0px;
   transition: 0.5s all;
-  &:hover {
+  /* &:hover {
     width: 80px !important;
     height: 80px !important;
     border-radius: 30px !important;
-  }
+  } */
 `;
 
 export default ProfilePhoto;

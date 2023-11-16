@@ -10,11 +10,11 @@ function Home() {
   const [lastPosts, setLastPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [loading2, setLoading2] = useState(true);
-
   useEffect(() => {
     getPopularPosting();
     getLastPosting();
   }, []);
+  const [banner, setBanner] = useState("");
 
   const getPopularPosting = async () => {
     try {
@@ -42,9 +42,19 @@ function Home() {
     }
   };
 
+  const banners = [
+    "/assets/banner0.png",
+    "/assets/banner1.png",
+    "/assets/banner2.png",
+  ];
+
+  useEffect(() => {
+    setBanner(banners[Math.floor(Math.random() * banners.length)]);
+  }, []);
+
   return (
     <>
-      <img src="/assets/mainImage.png" />
+      <img src={banner} />
       <Container>
         <h1>인기 게시글</h1>
         <PopularContentBox>
@@ -113,14 +123,14 @@ const Container = styled.div`
   }
 
   @media screen and (max-width: 1200px) {
-    width: 80%;
+    width: 85%;
     font-size: 0.9rem;
     & h1 {
       font-size: 1.2rem;
     }
   }
   @media screen and (max-width: 450px) {
-    width: 85%;
+    width: 90%;
     font-size: 0.7rem;
   }
 `;

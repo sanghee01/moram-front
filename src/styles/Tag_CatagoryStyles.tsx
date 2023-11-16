@@ -21,9 +21,9 @@ export const Tag = styled.div<any>`
     cursor: pointer;
   }
 
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 600px) {
     padding: 3px;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -37,8 +37,8 @@ export const Category = styled.div<any>`
   &:hover {
     background-color: #606ffc;
   }
-  @media screen and (max-width: 450px) {
-    padding: 3px;
-    font-size: 0.7rem;
+  @media screen and (max-width: 600px) {
+    padding: 3px 5px;
+    font-size: 0.8rem;
   }
 `;

@@ -30,6 +30,17 @@ const Container = styled.div`
   &:hover {
     cursor: pointer;
   }
+
+  & span {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: 1200px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: normal;
+    gap: 5px;
+  }
 `;
 
 const ContentText = styled.div`

@@ -43,12 +43,14 @@ function NewContent({
       {img ? (
         <img src={img} alt="이미지" />
       ) : (
-        <img src="https://i.ibb.co/2Y3sQX2/noImage.png" alt="기본이미지" />
+        <img src="/assets/noImage3.png" alt="기본이미지" />
       )}
       <div>
         <Title>
-          <Category>{category}</Category>
-          <Tag>{tag}</Tag>
+          <TagAndCategory>
+            <Category>{category}</Category>
+            <Tag>{tag}</Tag>
+          </TagAndCategory>
           <div>{title}</div>
         </Title>
         <Info>
@@ -81,8 +83,6 @@ const Container = styled.div`
   & p {
     margin: 5px 0;
   }
-  & div {
-  }
 
   @media screen and (max-width: 1000px) {
     & img {
@@ -97,20 +97,23 @@ const Container = styled.div`
 
 const Title = styled.div`
   display: flex;
-  align-items: center;
   font-weight: bold;
   gap: 5px;
-  @media screen and (max-width: 450px) {
-    font-size: 0.7rem;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    font-size: 0.9rem;
   }
 `;
-
+const TagAndCategory = styled.div`
+  display: flex;
+  gap: 5px;
+`;
 const Info = styled.div`
   display: flex;
   align-items: center;
   font-weight: 500;
   font-size: 0.9rem;
-  @media screen and (max-width: 450px) {
+  @media screen and (max-width: 600px) {
     font-size: 0.7rem;
   }
 `;
