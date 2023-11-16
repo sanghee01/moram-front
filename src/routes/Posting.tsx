@@ -57,14 +57,25 @@ function Posting() {
   };
 
   const deletePosting = async () => {
+    let endPoint = "";
+    if (user.role === "user") endPoint = `posting/${postId}`;
+    else if (user.role === "admin") endPoint = `admin/posting/${postId}`;
     try {
       const response = await axios.delete(
-        `${process.env.REACT_APP_APIADDRESS}/posting/${postId}`
+        `${process.env.REACT_APP_APIADDRESS}/${endPoint}`
       );
-      alert(response.data.message);
+      if (user.role === "user") alert(response.data.message);
+      else if (user.role === "admin")
+        alert(`[어드민] ${response.data.message}`);
       navigate("/community?reload=true");
     } catch (error: any) {
-      alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+      if (user.role === "user")
+        alert(error?.response?.data?.message || "알 수 없는 에러 발생.");
+      else if (user.role === "admin")
+        alert(
+          `[어드민] ${error?.response?.data?.message}` ||
+            "알 수 없는 에러 발생."
+        );
     }
   };
 
@@ -182,7 +193,7 @@ function Posting() {
                 💬
                 {posting.commentCount} | {handleDateChange(posting.writeTime)}{" "}
               </div>
-              {posting.userId === user?.id && (
+              {(posting.userId === user?.id || user?.role === "admin") && (
                 <>
                   <SmallBtn
                     $padding="4px 10px"
@@ -194,20 +205,22 @@ function Posting() {
                   >
                     글 삭제
                   </SmallBtn>
-                  <SmallBtn
-                    $padding="4px 10px"
-                    $margin="5px"
-                    $background="skyblue"
-                    $backgroundHover="lightblue"
-                    $color="white"
-                    onClick={() =>
-                      navigate(`/write/${posting.id}`, {
-                        state: posting,
-                      })
-                    }
-                  >
-                    글 수정
-                  </SmallBtn>
+                  {posting.userId === user?.id && (
+                    <SmallBtn
+                      $padding="4px 10px"
+                      $margin="5px"
+                      $background="skyblue"
+                      $backgroundHover="lightblue"
+                      $color="white"
+                      onClick={() =>
+                        navigate(`/write/${posting.id}`, {
+                          state: posting,
+                        })
+                      }
+                    >
+                      글 수정
+                    </SmallBtn>
+                  )}
                 </>
               )}
             </h4>
