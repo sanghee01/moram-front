@@ -12,7 +12,7 @@ function AllComments() {
 
   useEffect(() => {
     getAllComments();
-  }, [allCommentsData]);
+  }, []);
 
   const getAllComments = async () => {
     try {
@@ -33,6 +33,7 @@ function AllComments() {
       const response = await axios.delete(
         `${process.env.REACT_APP_APIADDRESS}/admin/comment/${e.target.id}`
       );
+      getAllComments();
       alert(response.data.message);
     } catch (error: any) {
       alert(error.response.data);

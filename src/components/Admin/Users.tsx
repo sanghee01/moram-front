@@ -11,7 +11,7 @@ function Users() {
   const navigate = useNavigate();
   useEffect(() => {
     getUserInfo();
-  }, [usersData]);
+  }, []);
   const getUserInfo = async () => {
     try {
       const response = await axios.get(
@@ -32,6 +32,7 @@ function Users() {
       const response = await axios.delete(
         `${process.env.REACT_APP_APIADDRESS}/admin/user/${e.target.id}`
       );
+      getUserInfo();
       alert(response.data.message);
     } catch (error: any) {
       alert(error.response.data);

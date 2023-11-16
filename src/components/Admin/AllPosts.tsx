@@ -12,7 +12,7 @@ function AllPosts() {
 
   useEffect(() => {
     getAllPosts();
-  }, [allPostsData]);
+  }, []);
 
   const getAllPosts = async () => {
     try {
@@ -32,6 +32,7 @@ function AllPosts() {
       const response = await axios.delete(
         `${process.env.REACT_APP_APIADDRESS}/admin/posting/${e.target.id}`
       );
+      getAllPosts();
       alert(response.data.message);
     } catch (error: any) {
       alert(error.response.data);
