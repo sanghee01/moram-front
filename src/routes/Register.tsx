@@ -262,19 +262,20 @@ const VerifyContainer = styled.div`
 const VerifyBtn = styled.button`
   background-color: #5f5fe0;
   margin: 9px;
-  width: 43px;
+  width: 45px;
   border-radius: 5px;
   position: relative;
-  right: -315px;
+  right: -340px;
   top: -54px;
   border: none;
+  white-space: nowrap;
   color: white;
   font-size: 0.8rem;
   &:hover {
     filter: contrast(200%);
   }
   @media screen and (max-width: 450px) {
-    right: -243px;
+    right: -240px;
   }
 `;
 
