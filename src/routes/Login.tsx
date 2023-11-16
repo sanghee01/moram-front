@@ -78,7 +78,7 @@ function Login() {
               로그인 유지
             </span>
           </div>
-          <span>비밀번호 찾기</span>
+          <span onClick={() => navigate("/pw-reset")}>비밀번호 찾기</span>
         </Find>
         <IsFistTime>
           모람모람에 처음이신가요?{" "}

@@ -53,6 +53,7 @@ function SelfIntroDuction() {
       setIsLoading(false);
       getGptCount();
     } catch (error: any) {
+      setIsLoading(false);
       alert(error?.response?.data?.message || "알 수 없는 에러 발생");
     }
   };
