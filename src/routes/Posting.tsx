@@ -170,7 +170,9 @@ function Posting() {
         {posting ? (
           <>
             <h2>
-              <Category>{posting.category}</Category> <Tag>{posting.tag}</Tag>
+              <div>
+                <Category>{posting.category}</Category> <Tag>{posting.tag}</Tag>
+              </div>
               {posting.title}
             </h2>
             <h4>
@@ -390,8 +392,23 @@ const FormContainer = styled.div`
 
   & h2 {
     display: flex;
-    gap: 7px;
+    gap: 10px;
     align-items: center;
+
+    & div {
+      display: flex;
+      gap: 7px;
+      & div {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    & h2 {
+      flex-direction: column;
+      align-items: normal;
+    }
   }
 `;
 
