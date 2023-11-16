@@ -229,8 +229,7 @@ const Container = styled.div`
 
 const Label = styled.div`
   margin-top: 10px;
-  font-size: 1.3rem;
-  font-weight: bolder;
+  font-size: 1rem;
 `;
 const Input = styled.input`
   width: 100%;
@@ -315,7 +314,7 @@ const CountNum = styled.div`
 `;
 
 const ResendBtn = styled.button`
-  background-color: #5f5fe0;
+  background-color: #5a59ff;
   margin: 0px;
   padding: 0 15px;
   height: 35px;
