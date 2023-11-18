@@ -364,7 +364,7 @@ function Posting() {
                             $color="white"
                             onClick={(e: any) => {
                               e.stopPropagation();
-                              deleteComment(comment.id);
+                              deleteComment(reply.id);
                             }}
                           >
                             삭제
