@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { AiOutlineComment } from "react-icons/ai";
 import { GrGroup } from "react-icons/gr";
 import { AiOutlineDeliveredProcedure } from "react-icons/ai";
+import { useRecoilValue } from "recoil";
+import { userState } from "../state";
 
 function Intro() {
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   return (
     <Container>
@@ -15,7 +18,7 @@ function Intro() {
             지금부터 우리의 <br />
             <span>모람모람</span>을 소개합니다.
           </h1>
-          <p>
+          <div>
             학과에 대한 정보를 얻는데 <br />
             어려움을 느끼고 계시나요? <br />
             모람모람은 <Span1>대학 게시판 커뮤니티</Span1>로
@@ -23,10 +26,14 @@ function Intro() {
             당신의 대학생활을 더욱 풍요롭게 만들어 줄 사이트입니다. <br />
             다앙한 학교, 다양한 학과에 대한 정보부터 <br />
             많은 사람들의 꿀팁까지 확인하실 수 있습니다.
-          </p>
-          <div>
-            <button onClick={() => navigate("/register")}>가입하고 시작</button>
           </div>
+          {!user && (
+            <div>
+              <button onClick={() => navigate("/register")}>
+                가입하고 시작
+              </button>
+            </div>
+          )}
         </IntroTitle>
         <IntroImg>
           <img src="./assets/introimage.png" />

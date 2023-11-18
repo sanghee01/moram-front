@@ -6,9 +6,11 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "../state";
 
 function ProfileEdit() {
+  const [filteredSchools, setFilteredSchools] = useState<any>([]);
   const [nickname, setNickname] = useState("");
   const [schoolcertify, setSchoolCertify] = useState<any>("");
   const [schoolList, setSchoolList] = useState<string[]>([]);
+  const [schoolSelected, setSchoolSelected] = useState<any>("");
   const [schoolEmail, setSchoolEmail] = useState<any>("");
   const [prePwValue, setPrePw] = useState("");
   const [pwValue1, setPw1] = useState("");
@@ -123,16 +125,17 @@ function ProfileEdit() {
     setSchoolEmail(event.target.value);
   };
   const schoolData = async () => {
+    if (!schoolSelected) return alert("학교를 검색하여 선택해주세요.");
     const confirmed = window.confirm(
-      `학교를 "${schoolcertify}"로 인증하시겠습니까?`
+      `학교를 "${schoolSelected}"로 인증하시겠습니까?`
     );
     if (confirmed) {
       try {
-        console.log(`${schoolcertify},${schoolEmail}`);
+        console.log(`${schoolSelected},${schoolEmail}`);
         const response = await axios.post(
           `${process.env.REACT_APP_APIADDRESS}/user/certuniv`,
           {
-            univName: schoolcertify,
+            univName: schoolSelected,
             receivedEmail: schoolEmail,
           }
         );
@@ -220,12 +223,17 @@ function ProfileEdit() {
     getSchoolData(univName);
   };
 
-  const filteredSchools = schoolList.filter((school) => {
-    if (typeof school === "string") {
-      return school.toLowerCase().includes(schoolcertify.toLowerCase());
-    }
-    return false;
-  });
+  useEffect(() => {
+    const filteredSchools = schoolList.filter((school: any) => {
+      if (typeof school === "string") {
+        return school.toLowerCase().includes(schoolcertify.toLowerCase());
+      }
+      return [];
+    });
+    if (filteredSchools.length === 0) setSchoolSelected("");
+    if (filteredSchools.length === 1) setSchoolSelected(filteredSchools);
+    setFilteredSchools([...filteredSchools]);
+  }, [schoolList]);
 
   const OkClick1 = () => {
     console.log("닉네임변경");
@@ -339,16 +347,18 @@ function ProfileEdit() {
               <SchoolSelect>
                 <input
                   type="text"
-                  placeholder="본인의 학교 입력"
+                  placeholder="대학교 검색"
                   value={schoolcertify}
                   onChange={handleSchoolCertifyInput}
                 />
                 <select
-                  value={schoolList}
-                  onChange={(event) => setSchoolCertify(event.target.value)}
+                  value={schoolSelected}
+                  onChange={(event) => setSchoolSelected(event.target.value)}
                 >
-                  <option value="">학교 찾기</option>
-                  {filteredSchools.map((school) => (
+                  {filteredSchools?.length !== 1 && (
+                    <option value="">학교 선택</option>
+                  )}
+                  {filteredSchools?.map((school: any) => (
                     <option key={school} value={school}>
                       {school}
                     </option>

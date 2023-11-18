@@ -376,49 +376,51 @@ function Community() {
         </TagContainer>
         {(categoryFilter || tagFilter || searchFilter) && (
           <FilterContainer>
-            현재 게시물 필터{" "}
-            {categoryFilter && (
-              <TagBtn
-                $background={"#f77676"}
-                $color={"white"}
-                onClick={() => {
-                  setCategoryFilter("");
-                  changeQuery("", tagQuery);
-                }}
-              >
-                <div>
-                  학과 - {categoryFilter} <LuDelete size="23" />
-                </div>
-              </TagBtn>
-            )}
-            {tagFilter && (
-              <TagBtn
-                $background={"#f77676"}
-                $color={"white"}
-                onClick={() => {
-                  setTagFilter("");
-                  changeQuery(categoryQuery, "");
-                }}
-              >
-                <div>
-                  태그 - {tagFilter} <LuDelete size="23" />
-                </div>
-              </TagBtn>
-            )}
-            {searchFilter && (
-              <TagBtn
-                $background={"#f77676"}
-                $color={"white"}
-                onClick={() => {
-                  setSearch("");
-                  changeQuery(categoryQuery, tagQuery, "");
-                }}
-              >
-                <div>
-                  검색어 - {searchFilter} <LuDelete size="23" />
-                </div>
-              </TagBtn>
-            )}
+            <div>현재 게시물 필터 </div>
+            <div>
+              {categoryFilter && (
+                <TagBtn
+                  $background={"#f77676"}
+                  $color={"white"}
+                  onClick={() => {
+                    setCategoryFilter("");
+                    changeQuery("", tagQuery);
+                  }}
+                >
+                  <div>
+                    학과 - {categoryFilter} <LuDelete size="23" />
+                  </div>
+                </TagBtn>
+              )}
+              {tagFilter && (
+                <TagBtn
+                  $background={"#f77676"}
+                  $color={"white"}
+                  onClick={() => {
+                    setTagFilter("");
+                    changeQuery(categoryQuery, "");
+                  }}
+                >
+                  <div>
+                    태그 - {tagFilter} <LuDelete size="23" />
+                  </div>
+                </TagBtn>
+              )}
+              {searchFilter && (
+                <TagBtn
+                  $background={"#f77676"}
+                  $color={"white"}
+                  onClick={() => {
+                    setSearch("");
+                    changeQuery(categoryQuery, tagQuery, "");
+                  }}
+                >
+                  <div>
+                    검색어 - {searchFilter} <LuDelete size="23" />
+                  </div>
+                </TagBtn>
+              )}
+            </div>
           </FilterContainer>
         )}
         {/* 포스팅 목록 */}
@@ -558,11 +560,20 @@ const FilterContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row;
+  justify-content: center;
   width: 100%;
   background-color: #c6c2f7;
   border-radius: 20px;
   padding: 15px;
   gap: 15px;
+  flex-wrap: wrap;
+  & div {
+    display: flex;
+    justify-content: center;
+    white-space: nowrap;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
 `;
 
 const Sidebar = styled.div<any>`
@@ -579,6 +590,7 @@ const Sidebar = styled.div<any>`
   align-items: center;
   gap: 10px;
   overflow-y: scroll;
+  overflow: hidden;
   z-index: 0;
   scrollbar-width: none; /* 파이어폭스를 위한 설정 */
   -ms-overflow-style: none; /* IE와 엣지를 위한 설정 */
