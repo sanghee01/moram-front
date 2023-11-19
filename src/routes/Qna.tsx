@@ -59,20 +59,26 @@ function Qna() {
   // };
 
   const handleSubmit = async () => {
-    setIsSubmitted(true);
-    console.log("전송");
-    const response = await axios.post(
-      `${process.env.REACT_APP_APIADDRESS}/user/ask`,
-      {
-        category: categoryButton,
-        email: emailValue,
-        title: titleValue,
-        content: contentValue,
-      }
-    );
-    console.log(response.data);
-    alert(response?.data.message);
+    try {
+      setIsSubmitted(true);
+      console.log("전송");
+      const response = await axios.post(
+        `${process.env.REACT_APP_APIADDRESS}/user/ask`,
+        {
+          category: categoryButton,
+          email: emailValue,
+          title: titleValue,
+          content: contentValue,
+        }
+      );
+      console.log(response.data);
+      alert(response?.data.message);
+    } catch (error: any) {
+      console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
+      alert(error?.response?.data?.message || "알 수 없는 에러 발생");
+    }
   };
+
   return (
     <Container>
       <QnaTtilePosition>

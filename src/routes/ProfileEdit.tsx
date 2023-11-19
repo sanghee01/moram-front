@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userState } from "../state";
 
@@ -181,7 +180,6 @@ function ProfileEdit() {
     }
   };
 
-  const navigate = useNavigate();
   const handleDeleteUser = async () => {
     const confirmed = window.confirm(
       `정말로 탈퇴 하시겠습니까? \n탈퇴 후에는 복구할 수 없습니다.`
@@ -192,7 +190,6 @@ function ProfileEdit() {
           `${process.env.REACT_APP_APIADDRESS}/user`
         );
         alert(response.data.message);
-        navigate("/main");
         window.location.reload();
       } catch (error: any) {
         console.error(error?.response?.data?.message || "알 수 없는 에러 발생");
