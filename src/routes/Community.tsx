@@ -481,6 +481,7 @@ const Container = styled.div`
   margin: auto;
   padding: 10px;
   gap: 10px;
+  overflow: hidden;
 `;
 
 const Article = styled.article`
@@ -583,14 +584,12 @@ const Sidebar = styled.div<any>`
   background-color: #7a7afc;
   display: flex;
   position: sticky;
-  top: 143px;
   flex-direction: column;
   padding: 15px 15px;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
   overflow-y: scroll;
-  overflow: hidden;
   z-index: 0;
   scrollbar-width: none; /* 파이어폭스를 위한 설정 */
   -ms-overflow-style: none; /* IE와 엣지를 위한 설정 */
@@ -665,21 +664,23 @@ const CategoryContainer = styled.div`
 `;
 
 const TagBtn = styled.button<any>`
+  max-width: 200px;
   background-color: ${(props) => props.$background || "#ced3ff"};
   padding: 5px 5px;
   border-radius: 5px;
   transition: 0.5s all;
   border: 0;
   margin-right: 5px;
-  white-space: nowrap;
   & * {
     color: ${(props) => props.$color || "black"};
   }
   & div {
     display: flex;
+    height: auto;
     justify-content: center;
     align-items: center;
     gap: 5px;
+    white-space: pre-wrap;
   }
   &:hover {
     filter: contrast(130%);
