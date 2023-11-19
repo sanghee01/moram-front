@@ -358,6 +358,7 @@ function Community() {
               onChange={onChange}
               value={search}
               placeholder="제목+내용"
+              maxLength={10}
               onKeyDown={(e) => {
                 if (e.key === "Enter")
                   changeQuery(categoryFilter, tagFilter, search);
@@ -481,7 +482,6 @@ const Container = styled.div`
   margin: auto;
   padding: 10px;
   gap: 10px;
-  overflow: hidden;
 `;
 
 const Article = styled.article`
@@ -571,6 +571,7 @@ const FilterContainer = styled.div`
   & div {
     display: flex;
     justify-content: center;
+    align-items: center;
     white-space: nowrap;
     gap: 5px;
     flex-wrap: wrap;
@@ -584,6 +585,7 @@ const Sidebar = styled.div<any>`
   background-color: #7a7afc;
   display: flex;
   position: sticky;
+  top: 143px;
   flex-direction: column;
   padding: 15px 15px;
   justify-content: flex-start;
@@ -664,13 +666,14 @@ const CategoryContainer = styled.div`
 `;
 
 const TagBtn = styled.button<any>`
-  max-width: 200px;
+  max-width: 250px;
   background-color: ${(props) => props.$background || "#ced3ff"};
   padding: 5px 5px;
   border-radius: 5px;
   transition: 0.5s all;
   border: 0;
   margin-right: 5px;
+  white-space: nowrap;
   & * {
     color: ${(props) => props.$color || "black"};
   }
