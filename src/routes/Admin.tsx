@@ -29,7 +29,7 @@ export default Admin;
 
 const Container = styled.div`
   display: flex;
-  height: 200vh;
+  min-height: 600vh;
 `;
 
 const Tabs = styled.div`
