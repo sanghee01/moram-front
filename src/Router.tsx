@@ -40,11 +40,11 @@ function AppRouter() {
           <Route path="/notice/:id" element={<NoticeDetail />} />
           <Route path="/qna" element={<Qna />} />
           <Route path="/intro" element={<Intro />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/profile-edit" element={<ProfileEdit />} />
-          <Route path="/login-success" element={<LoginSuccess />} />
           {user ? (
             <>
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/profile-edit" element={<ProfileEdit />} />
+              <Route path="/login-success" element={<LoginSuccess />} />
               <Route path="/admin" element={<Admin />}>
                 <Route path="/admin" element={<Users />}></Route>
                 <Route path="/admin/allPosts" element={<AllPosts />}></Route>
