@@ -12,8 +12,12 @@ import { SmallBtn } from "../styles/ButtonStyles";
 import ProfilePhoto from "../components/ProfilePhoto";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoClose } from "react-icons/io5";
-import { MdExpandMore } from "react-icons/md";
-import { MdExpandLess } from "react-icons/md";
+import {
+  MdExpandMore,
+  MdExpandLess,
+  MdFavorite,
+  MdFavoriteBorder,
+} from "react-icons/md";
 
 function Community() {
   const location = useLocation();
@@ -320,9 +324,11 @@ function Community() {
                   >
                     {category}
                     <Star onClick={(e) => postBookmark(e, category)}>
-                      {categoryList["즐겨찾는 학과"].includes(category)
-                        ? "❤️"
-                        : "🤍"}
+                      {categoryList["즐겨찾는 학과"].includes(category) ? (
+                        <MdFavorite fill="white" />
+                      ) : (
+                        <MdFavoriteBorder fill="white" />
+                      )}
                     </Star>
                   </button>
                 ))}
@@ -759,6 +765,7 @@ const SearchContainer = styled.div`
 const Star = styled.div`
   margin-left: auto;
   margin-right: -5px;
+  margin-top: 5px;
   color: yellow;
   font-size: 1.5rem;
 

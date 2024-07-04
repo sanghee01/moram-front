@@ -54,7 +54,7 @@ function Home() {
 
   return (
     <>
-      <img src={banner} />
+      <BannerImg src={banner} alt="홈배너" />
       <Container>
         <h1>인기 게시글</h1>
         <PopularContentBox>
@@ -144,6 +144,12 @@ const PopularContentBox = styled.div`
 const NewContentBox = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const BannerImg = styled.img`
+  width: 100%;
+  max-height: 350px;
+  object-fit: cover;
 `;
 
 export default Home;
