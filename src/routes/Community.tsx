@@ -8,7 +8,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { idsState, postingState, userState } from "../state";
 import { AiOutlineSearch } from "react-icons/ai";
 import { LuDelete } from "react-icons/lu";
-import { SmallBtn } from "../styles/ButtonStyles";
 import ProfilePhoto from "../components/ProfilePhoto";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoClose } from "react-icons/io5";
@@ -18,6 +17,7 @@ import {
   MdFavorite,
   MdFavoriteBorder,
 } from "react-icons/md";
+import { handleDateChange } from "../dateChange";
 
 function Community() {
   const location = useLocation();
@@ -42,14 +42,12 @@ function Community() {
   const [tagFilter, setTagFilter] = useState<any>(tagQuery || ""); // 태그('자유','질문'...) 필터
   const [searchFilter, setSearchFilter] = useState<any>(searchQuery || ""); // 태그('자유','질문'...) 필터
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [ids, setIds] = useRecoilState(idsState);
+  const [ids, setIds] = useRecoilState(idsState); //마지막 페이지인지 확인하기 위한 변수
   const [isbottom, setIsBottom] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [categoryList, setCategoryList] = useState(loadedCategory);
   const [search, setSearch] = useState(searchQuery || "");
   const user = useRecoilValue(userState);
-  //const [lastId, setLastId] = useState<any>(99999);
-  //const [endPostId, setEndPostId] = useState(0);
 
   let loading = false;
   const scrollContainerRef = useRef<any>(null);
@@ -89,18 +87,22 @@ function Community() {
     loadSidebar();
     setIsOpen(true);
   }, [categoryFilter, tagFilter, searchFilter]);
+
   useEffect(() => {
     if (!postings) {
       console.log("useEffect Posting -> ");
       getPostings();
     }
   }, [postings]);
+
   useEffect(() => {
     if (user) getBookmark();
   }, [user]);
+
   useEffect(() => {
     if (isbottom && postings) getPostings();
   }, [isbottom]);
+
   useEffect(() => {
     setCategoryFilter(queryParams.get("category") || "");
     setTagFilter(queryParams.get("tag") || "");
@@ -109,7 +111,6 @@ function Community() {
     /**커뮤니티 버튼을 다시 눌렀을 경우 새로고침 */
     if (queryParams.get("reload") === "true") {
       setIds([99999, 0]);
-      //setPostings("");
       changeQuery(
         queryParams.get("category") || "",
         queryParams.get("tag") || ""
@@ -246,33 +247,21 @@ function Community() {
     const scrollPosition = window.scrollY;
     console.log(windowHeight);
 
-    //console.log(windowHeight + scrollPosition + 2, fullHeight);
     if (!loading && windowHeight + scrollPosition + 2 >= fullHeight) {
       //스크롤이 맨 밑일 경우
       setIsBottom(true);
-      //getPostings();
       loading = true;
       setTimeout(() => {
         loading = false;
       }, 300);
       console.log("맨밑");
     } else setIsBottom(false);
-    //console.log(document.documentElement.scrollHeight, scrollPosition);
   };
 
   const onChange = (e: any) => {
     setSearch(e.target.value);
   };
-  /** 날짜 형식 변환 함수 */
-  const date = (dateStr: string) => {
-    const dateObj = new Date(dateStr);
-    return `${dateObj.getFullYear()}-${String(dateObj.getMonth() + 1).padStart(
-      2,
-      "0"
-    )}-${String(dateObj.getDate()).padStart(2, "0")} ${String(
-      dateObj.getHours()
-    ).padStart(2, "0")}:${String(dateObj.getMinutes()).padStart(2, "0")}`;
-  };
+
   return (
     <Container ref={scrollContainerRef}>
       <HamburgerMenu onClick={toggleSidebar} open={isSidebarOpen}>
@@ -286,14 +275,7 @@ function Community() {
       <Sidebar open={isSidebarOpen}>
         {Object.keys(categoryList).map((bigCategory: any) => (
           <BigCategory key={bigCategory} $isOpen={isExpanded[bigCategory]}>
-            <button
-              onClick={() => toggleBigCategory(bigCategory)}
-              // style={
-              //   isExpanded[bigCategory]
-              //     ? { background: "white", color: "black" }
-              //     : { backgroundColor: "#9758af" }
-              // }
-            >
+            <button onClick={() => toggleBigCategory(bigCategory)}>
               {bigCategory}{" "}
               {isExpanded[bigCategory] ? (
                 <MdExpandLess size={30} fill={"#6060fa"} />
@@ -450,26 +432,11 @@ function Community() {
                 </TagBtn>
                 &nbsp;
                 <Link to={`/community/${posting.id}`}> {posting.title} </Link>
-                {/* {(user?.id === posting.userId || user?.role === "admin") && (
-                  <SmallBtn
-                    $padding="4px 10px"
-                    $margin="0 8px"
-                    $background="tomato"
-                    $backgroundHover="red"
-                    $color="white"
-                    onClick={(e: any) => {
-                      e.stopPropagation();
-                      deletePosting(posting.id);
-                    }}
-                  >
-                    삭제
-                  </SmallBtn>
-                )} */}
               </div>
               <div>
                 <ProfilePhoto name={posting.profileImg} />
                 {posting.nickname} | ❤️{posting.likesCount} 👀{posting.hitCount}{" "}
-                💬{posting.commentCount} | {date(posting.writeTime)}
+                💬{posting.commentCount} | {handleDateChange(posting.writeTime)}
               </div>
             </Content>
           ))}
